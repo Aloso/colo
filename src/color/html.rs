@@ -156,7 +156,7 @@ impl HtmlColors {
         Self {
             map: HTML_COLOR_NAMES
                 .iter()
-                .map(|&(name, hex)| (name, Rgb::from_hex(hex)))
+                .map(|&(name, hex)| (name, from_hex(hex)))
                 .collect(),
         }
     }
@@ -175,6 +175,14 @@ pub fn get_single(name: &str) -> Option<Rgb> {
     HTML_COLOR_NAMES
         .iter()
         .filter(|&&(k, _)| k == name)
-        .map(|&(_, hex)| Rgb::from_hex(hex))
+        .map(|&(_, hex)| from_hex(hex))
         .next()
+}
+
+fn from_hex(hex: u32) -> Rgb {
+    Rgb {
+        r: ((hex >> 16) & 0xff) as f64,
+        g: ((hex >> 8) & 0xff) as f64,
+        b: (hex & 0xff) as f64,
+    }
 }

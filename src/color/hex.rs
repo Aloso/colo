@@ -73,3 +73,12 @@ fn format_hex(numbers: &[u8]) -> String {
         .map(|&n| std::char::from_digit(n as u32, 16).unwrap())
         .collect::<String>()
 }
+
+pub fn from_rgb(rgb: spaces::Rgb) -> String {
+    format!(
+        "#{:02X}{:02X}{:02X}",
+        rgb.r.round() as u8,
+        rgb.g.round() as u8,
+        rgb.b.round() as u8
+    )
+}

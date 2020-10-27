@@ -9,39 +9,42 @@ use crate::color::{hex, html, json, spaces, Color};
 
 pub fn show(color: Color) -> Result<()> {
     match color {
-        Color::Rgb(c) => show_generic(c),
-        Color::Cmy(c) => show_generic(c),
-        Color::Cmyk(c) => show_generic(c),
-        Color::Hsv(c) => show_generic(c),
-        Color::Hsl(c) => show_generic(c),
-        Color::Lch(c) => show_generic(c),
-        Color::Luv(c) => show_generic(c),
-        Color::Lab(c) => show_generic(c),
-        Color::HunterLab(c) => show_generic(c),
-        Color::Xyz(c) => show_generic(c),
-        Color::Yxy(c) => show_generic(c),
+        Color::Rgb(c) => show_generic(c, None),
+        Color::Cmy(c) => show_generic(c, None),
+        Color::Cmyk(c) => show_generic(c, None),
+        Color::Hsv(c) => show_generic(c, None),
+        Color::Hsl(c) => show_generic(c, None),
+        Color::Lch(c) => show_generic(c, None),
+        Color::Luv(c) => show_generic(c, None),
+        Color::Lab(c) => show_generic(c, None),
+        Color::HunterLab(c) => show_generic(c, None),
+        Color::Xyz(c) => show_generic(c, None),
+        Color::Yxy(c) => show_generic(c, None),
     }
 }
 
 pub fn show_hex_or_html(color: &str) -> Result<()> {
     if let Some(rgb) = html::get_single(color) {
-        show_generic(rgb)?;
+        show_generic(rgb, Some(color.to_string() + " = " + &hex::from_rgb(rgb)))?;
     } else {
         let rgb = hex::parse(color)?;
-        show_generic(rgb)?;
+        show_generic(rgb, Some(format!("{} = {:?}", hex::from_rgb(rgb), rgb)))?;
     }
     Ok(())
 }
 
-fn show_generic(color: impl ToRgb + Debug) -> Result<()> {
+fn show_generic(color: impl ToRgb + Debug, msg: Option<String>) -> Result<()> {
     let color_dbg = format!("{:?}", color);
     let rgb = color.to_rgb();
     let rgb_dbg = format!("{:?}", rgb);
-    let msg = if color_dbg == rgb_dbg {
-        color_dbg
-    } else {
-        color_dbg + " = " + &rgb_dbg
-    };
+
+    let msg = msg.unwrap_or_else(|| {
+        if color_dbg == rgb_dbg {
+            color_dbg
+        } else {
+            color_dbg + " = " + &rgb_dbg
+        }
+    });
 
     show_impl(rgb, msg)
 }
