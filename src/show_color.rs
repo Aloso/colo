@@ -8,45 +8,39 @@ use std::io::{stdout, Write};
 use crate::color::{hex, html, json, spaces, Color};
 
 pub fn show(color: Color) -> Result<()> {
+    let printed = color.to_string();
     match color {
-        Color::Rgb(c) => show_generic(c, None),
-        Color::Cmy(c) => show_generic(c, None),
-        Color::Cmyk(c) => show_generic(c, None),
-        Color::Hsv(c) => show_generic(c, None),
-        Color::Hsl(c) => show_generic(c, None),
-        Color::Lch(c) => show_generic(c, None),
-        Color::Luv(c) => show_generic(c, None),
-        Color::Lab(c) => show_generic(c, None),
-        Color::HunterLab(c) => show_generic(c, None),
-        Color::Xyz(c) => show_generic(c, None),
-        Color::Yxy(c) => show_generic(c, None),
+        Color::Rgb(c) => show_generic(c, printed, Some(hex::from_rgb(c))),
+        Color::Cmy(c) => show_generic(c, printed, None),
+        Color::Cmyk(c) => show_generic(c, printed, None),
+        Color::Hsv(c) => show_generic(c, printed, None),
+        Color::Hsl(c) => show_generic(c, printed, None),
+        Color::Lch(c) => show_generic(c, printed, None),
+        Color::Luv(c) => show_generic(c, printed, None),
+        Color::Lab(c) => show_generic(c, printed, None),
+        Color::HunterLab(c) => show_generic(c, printed, None),
+        Color::Xyz(c) => show_generic(c, printed, None),
+        Color::Yxy(c) => show_generic(c, printed, None),
     }
 }
 
 pub fn show_hex_or_html(color: &str) -> Result<()> {
-    if let Some(rgb) = html::get_single(color) {
-        show_generic(rgb, Some(color.to_string() + " = " + &hex::from_rgb(rgb)))?;
-    } else {
-        let rgb = hex::parse(color)?;
-        show_generic(rgb, Some(format!("{} = {:?}", hex::from_rgb(rgb), rgb)))?;
-    }
+    let rgb = html::get_single(color).map_or_else(|| hex::parse(color), Ok)?;
+    show_generic(rgb, hex::from_rgb(rgb), None)?;
     Ok(())
 }
 
-fn show_generic(color: impl ToRgb + Debug, msg: Option<String>) -> Result<()> {
-    let color_dbg = format!("{:?}", color);
+fn show_generic(
+    color: impl ToRgb + Debug,
+    mut input: String,
+    converted: Option<String>,
+) -> Result<()> {
     let rgb = color.to_rgb();
-    let rgb_dbg = format!("{:?}", rgb);
 
-    let msg = msg.unwrap_or_else(|| {
-        if color_dbg == rgb_dbg {
-            color_dbg
-        } else {
-            color_dbg + " = " + &rgb_dbg
-        }
-    });
+    input.push_str(" ~ ");
+    input.push_str(&converted.unwrap_or_else(|| Color::Rgb(rgb).to_string()));
 
-    show_impl(rgb, msg)
+    show_impl(rgb, input)
 }
 
 fn show_impl(rgb: spaces::Rgb, msg: String) -> Result<()> {

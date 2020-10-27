@@ -26,7 +26,7 @@ Color spaces other than RGB are supported as well:
 
 ![usage with other color spaces](docs/colo2.png)
 
-If `colo` is used outside of a terminal, it outputs JSON, because it is the most ubiquitous data format:
+If `colo` is used outside of a terminal, it outputs JSON, because it is the most ubiquitous data exchange format:
 
 ![json usage](docs/colo3.png)
 

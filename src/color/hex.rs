@@ -74,6 +74,12 @@ fn format_hex(numbers: &[u8]) -> String {
         .collect::<String>()
 }
 
+/// Converts an RGB color to hexadecimal notation
+///
+/// ```rust
+/// # use spaces::Rgb;
+/// assert_eq!(from_rgb(Rgb { r: 15.0, g: 0.0, b: 255.0 }), String::from("#0F00FF"));
+/// ```
 pub fn from_rgb(rgb: spaces::Rgb) -> String {
     format!(
         "#{:02X}{:02X}{:02X}",
