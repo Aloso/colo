@@ -1,4 +1,4 @@
-use color_space::Rgb;
+use super::spaces::Rgb;
 use std::collections::HashMap;
 
 const HTML_COLOR_NAMES: &[(&str, u32)] = &[
@@ -149,25 +149,32 @@ pub struct HtmlColors {
     map: HashMap<&'static str, Rgb>,
 }
 
+#[allow(unused)]
 impl HtmlColors {
+    /// Creates an HTML color map for fast lookup.
     pub fn new() -> Self {
         Self {
             map: HTML_COLOR_NAMES
                 .iter()
-                .map(|&(name, rgb)| (name, rgb_to_color(rgb)))
+                .map(|&(name, hex)| (name, Rgb::from_hex(hex)))
                 .collect(),
         }
     }
 
+    /// Gets an HTML color. The name (e.g. `Rebeccapurple`) is converted to lowercase first.
     pub fn get(&self, name: &str) -> Option<Rgb> {
-        let lower = name.to_lowercase();
-        self.map.get(lower.as_str()).copied()
+        let name = name.to_lowercase();
+        self.map.get(name.as_str()).copied()
     }
 }
 
-fn rgb_to_color(rgb: u32) -> Rgb {
-    let r = ((rgb & 0xFF0000) >> 16) as f64;
-    let g = ((rgb & 0xFF00) >> 8) as f64;
-    let b = (rgb & 0xFF) as f64;
-    Rgb { r, g, b }
+/// Gets an HTML color. The name (e.g. `Rebeccapurple`) is converted to lowercase first.
+/// If this function is called many times, it's more efficient to use the `HtmlColors` struct.
+pub fn get_single(name: &str) -> Option<Rgb> {
+    let name = name.to_lowercase();
+    HTML_COLOR_NAMES
+        .iter()
+        .filter(|&&(k, _)| k == name)
+        .map(|&(_, hex)| Rgb::from_hex(hex))
+        .next()
 }

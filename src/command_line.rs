@@ -1,7 +1,7 @@
 use anyhow::{bail, Context, Result};
 use clap::{App, Arg, ArgGroup};
 
-use crate::colors::ColorSpace;
+use crate::color::{Color, ColorSpace};
 
 macro_rules! color_arg {
     ($name:expr, $($rest:tt)*) => {
@@ -126,7 +126,7 @@ fn clap_args() -> clap::ArgMatches<'static> {
 pub enum Input {
     Terminal,
     ColorString(String),
-    Color(ColorSpace, Vec<f64>),
+    Color(Color),
 }
 
 pub fn parse_args() -> Result<Input> {
@@ -142,7 +142,7 @@ pub fn parse_args() -> Result<Input> {
                 .to_string(),
         )
     } else if let Some(values) = matches.args.get("color_group") {
-        let values = values
+        let components = values
             .vals
             .iter()
             .map(|s| s.to_str().context("UTF-8").and_then(|s| Ok(s.parse()?)))
@@ -173,8 +173,7 @@ pub fn parse_args() -> Result<Input> {
         } else {
             bail!("No color space found")
         };
-        Input::Color(color_space, values)
-    // show_color::show_color(color_space, values);
+        Input::Color(Color::new(color_space, &components)?)
     } else {
         bail!("No argument was provided\n\nFor more information try `--help`")
     })
