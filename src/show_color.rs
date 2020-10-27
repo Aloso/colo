@@ -186,7 +186,7 @@ fn show_impl(rgb: color_space::Rgb, msg: String) -> Result<()> {
         queue!(
             stdout,
             SetForegroundColor(crossterm_color),
-            Print(" ▄▄▄▄▄▄▄▄▄▄\n ██████████\n ██████████\n ██████████\n ██████████\n ▀▀▀▀▀▀▀▀▀▀\n"),
+            Print(&make_square(4)),
             ResetColor,
         )?;
     } else {
@@ -198,4 +198,32 @@ fn show_impl(rgb: color_space::Rgb, msg: String) -> Result<()> {
 
 fn rgb_to_json(rgb: color_space::Rgb) -> String {
     format!(r#"{{"r":{},"g":{},"b":{}}}"#, rgb.r, rgb.g, rgb.b)
+}
+
+fn make_square(size: u32) -> String {
+    if size == 0 {
+        return String::new();
+    }
+
+    let mut s = String::from(" ");
+    for _ in 0..size {
+        s.push('▄');
+        s.push('▄');
+    }
+    s.push('\n');
+    s.push(' ');
+    for _ in 0..size - 1 {
+        for _ in 0..size {
+            s.push('█');
+            s.push('█');
+        }
+        s.push('\n');
+        s.push(' ');
+    }
+    for _ in 0..size {
+        s.push('▀');
+        s.push('▀');
+    }
+    s.push('\n');
+    s
 }
