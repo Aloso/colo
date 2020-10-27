@@ -54,14 +54,7 @@ Hexadecimal colors are just a different notation for RGB colors. They are usuall
 
 Hexadecimal colors can be specified with varying precision: Each color channel can be between 1 and 8 digits long, for example
 
-```fish
-$ colo 111222333    # equivalent to 112233 or 123
-
-$ colo 231_442_532  # underscores improve readability
-
-$ colo 12345        # doesn't work
-Error: "12345" doesn't have a length divisible by 3
-```
+![hex numbers](docs/colo5.png)
 
 ## Default terminal colors
 
