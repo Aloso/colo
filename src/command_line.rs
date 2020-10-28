@@ -52,7 +52,7 @@ The input color. Supported formats:
 
 fn clap_args() -> clap::ArgMatches<'static> {
     App::new("colo")
-        .version("0.1.1")
+        .version(env!("CARGO_PKG_VERSION"))
         .version_short("v")
         .author("Ludwig Stecher <ludwig.stecher@gmx.de>")
         .about("\nDisplays colors in various color spaces.")
