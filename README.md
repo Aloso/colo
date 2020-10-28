@@ -6,7 +6,7 @@ Command-line tool for displaying colors, written in Rust
 
 ### Jump to...
 
-* [Status](#status)
+* [Changelog](#changelog)
 * [Installation](#installation)
 * [Usage](#usage)
     * [Supported color spaces](#supported-color-spaces)
@@ -17,13 +17,15 @@ Command-line tool for displaying colors, written in Rust
 * [Contributing](#contributing)
 
 
-## Status
+## Changelog
 
-Experimental – expect to see some big changes in the next releases. See the [changelog](./CHANGELOG.md).
+[The changelog can be found here](./CHANGELOG.md).
+
+Note that `colo` is very young and evolving rapidly. There will likely be big changes in the next releases.
 
 ## Installation
 
-Installation is explained on the [release page](https://github.com/Aloso/colo/releases).
+Installation is explained on the [releases page](https://github.com/Aloso/colo/releases).
 
 If you want to build `colo` from source, make sure you have the Rust toolchain (including Cargo) installed. Then clone this repository and run
 
@@ -67,7 +69,7 @@ There are also flags for the most common input color spaces, e.g. `colo -i rgb 1
 
 ### Specifying hexadecimal colors
 
-Hexadecimal colors are a different notation for RGB colors. They can optionally prefixed with a `#`, e.g. `colo "#F00"`.
+Hexadecimal colors are a different notation for RGB colors. They can optionally be prefixed with a `#`, e.g. `colo "#F00"`.
 
 Hexadecimal colors can be specified with varying precision: Each color channel can be between 1 and 8 digits long, for example
 
