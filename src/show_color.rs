@@ -43,10 +43,11 @@ fn show_impl(rgb: space::Rgb, msg: String, json: String, size: u32) -> Result<()
 
     if stdout.is_tty() {
         queue!(stdout, Print(msg), Print("\n"))?;
+        let square = make_square(size);
         queue!(
             stdout,
             SetForegroundColor(crossterm_color),
-            Print(&make_square(size)),
+            Print(&square),
             ResetColor,
         )?;
     } else {
