@@ -120,7 +120,6 @@ fn clap_args() -> clap::ArgMatches<'static> {
                     "yxy",
                 ])
                 .case_insensitive(true)
-                .default_value("rgb")
                 .conflicts_with("terminal"),
         )
         .group(
@@ -157,7 +156,7 @@ pub fn parse_args() -> Result<Input> {
 
     let output_color_space = matches
         .value_of("out")
-        .expect("no output")
+        .unwrap_or("rgb")
         .to_lowercase()
         .parse()
         .expect("invalid color space");
