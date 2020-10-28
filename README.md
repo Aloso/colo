@@ -11,6 +11,7 @@ Command-line tool for displaying colors, written in Rust
 * [Usage](#usage)
     * [Supported color spaces](#supported-color-spaces)
     * [Specifying hexadecimal colors](#specifying-hexadecimal-colors)
+    * [Color square size](#color-square-size)
     * [Default terminal colors](#default-terminal-colors)
 * [Code of Conduct](#code-of-conduct)
 * [Contributing](#contributing)
@@ -46,35 +47,43 @@ If `colo` is used outside of a terminal, it outputs JSON, because it is the most
 
 ### Supported color spaces
 
-| Name    | Short | Description                        | Range of values |
+| Name    | Flag  | Description                        | Range of values |
 |---------|-------|------------------------------------|-----------------|
-| `rgb`   | `r`   | red, green, blue                   | 0 to 255        |
-| `cmy`   | `c`   | cyan, magenta, yellow              | 0 to 1          |
-| `cmyk`  | `k`   | cyan, magenta, yellow, key         | 0 to 1          |
-| `hsv`   | `v`   | hue, saturation, value             | hue: 0 to 360, saturation: 0 to 1, value: 0 to 1     |
-| `hsl`   | `l`   | hue, saturation, light             | hue: 0 to 360, saturation: 0 to 1, light: 0 to 1     |
+| `rgb`   | `R`   | red, green, blue                   | 0 to 255        |
+| `cmy`   | `C`   | cyan, magenta, yellow              | 0 to 1          |
+| `cmyk`  | `K`   | cyan, magenta, yellow, key         | 0 to 1          |
+| `hsv`   | `V`   | hue, saturation, value             | hue: 0 to 360, saturation: 0 to 1, value: 0 to 1     |
+| `hsl`   | `L`   | hue, saturation, light             | hue: 0 to 360, saturation: 0 to 1, light: 0 to 1     |
 | `lch`   |       | luminance, chroma, hue             | luminance: 0 to 100, chroma: 0 to 100, hue: 0 to 360 |
 | `luv`   |       | CIELUV color (luminance, u, v)     | luminance: 0 to 100, u: -134 to 220, v: -140 to 122  |
-| `lab`   |       | CIELAB color (lightness, a, b)     | luminance: 0 to 100, a: ??, b: ??                    |
+| `lab`   |       | CIELAB color (lightness, a, b)     | lightness: 0 to 100, a: ??, b: ??                    |
 | `hunterlab` |   | Hunter Lab color (lightness, a, b) | lightness: 0 to 100, a: ??, b: ??                    |
 | `xyz`   |       | CIE 1931 XYZ color                 | ??              |
 | `yxy`   |       | CIE YXY color                      | ??              |
 
-The most common color spaces (rgb, cmy, cmyk, hsv, hsl) can be abbreviated with a single letter, so instead of writing `colo --rgb 15/0/255`, you can write `colo -r15/0/255`.
+The input color space can be specified with `--in` or `-i`. The output color space can be specified with `--out` or `-o`. If no input color space is entered, `colo` expects a hexadecimal or HTML color.
+
+There are also flags for the most common input color spaces, e.g. `colo -i rgb 15/0/255` can be abbreviated as `colo -R 15/0/255`.
 
 ### Specifying hexadecimal colors
 
-Hexadecimal colors are just a different notation for RGB colors. They are usually preceded with `#`, but `colo` allows you to omit this character.
+Hexadecimal colors are a different notation for RGB colors. They can optionally prefixed with a `#`, e.g. `colo "#F00"`.
 
 Hexadecimal colors can be specified with varying precision: Each color channel can be between 1 and 8 digits long, for example
 
-![hex numbers](docs/colo5.png)
+![hex numbers](docs/colo4.png)
+
+### Color square size
+
+The color square size can be adjusted with `--size` or `-s`:
+
+![color square size](docs/colo5.png)
 
 ### Default terminal colors
 
 With `--terminal` or `-t`, the default terminal colors are printed:
 
-![terminal usage](docs/colo4.png)
+![terminal usage](docs/colo6.png)
 
 ## Code of Conduct
 

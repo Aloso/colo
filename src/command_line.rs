@@ -61,7 +61,7 @@ fn clap_args() -> clap::ArgMatches<'static> {
                 .long("terminal")
                 .short("t")
                 .help("Show default terminal colors")
-                .conflicts_with_all(&["COLOR", "INPUT_ALIASES", "OUTPUT_COLOR_SPACE"]),
+                .conflicts_with_all(&["COLOR", "INPUT_ALIASES", "OUTPUT_COLOR_SPACE", "SIZE"]),
         )
         .arg(
             Arg::with_name("COLOR")
@@ -98,6 +98,16 @@ fn clap_args() -> clap::ArgMatches<'static> {
         .arg(alias("CMYK", "K", "Alias for `--in cmyk`"))
         .arg(alias("HSV", "V", "Alias for `--in hsv`"))
         .arg(alias("HSL", "L", "Alias for `--in hsl`"))
+        .arg(
+            Arg::with_name("SIZE")
+                .long("size")
+                .short("s")
+                .takes_value(true)
+                .help(
+                    "Size of the color square in terminal rows (default: 4). Set to 0 to hide it.",
+                )
+                .requires("COLOR"),
+        )
         .group(
             ArgGroup::with_name("INPUT_ALIASES")
                 .args(&["INPUT_COLOR_SPACE", "RGB", "CMY", "CMYK", "HSV", "HSL"])
@@ -109,8 +119,16 @@ fn clap_args() -> clap::ArgMatches<'static> {
 
 pub enum Input {
     Terminal,
-    ColorString(String, ColorSpace),
-    Color(Color, ColorSpace),
+    ColorInput {
+        input: ColorInput,
+        output: ColorSpace,
+        size: u32,
+    },
+}
+
+pub enum ColorInput {
+    HexOrHtml(String),
+    Color(Color),
 }
 
 pub fn parse_args() -> Result<Input> {
@@ -146,15 +164,30 @@ pub fn parse_args() -> Result<Input> {
                 let components = color_args
                     .map(|s| s.parse().context(format!("{:?} could not be parsed", s)))
                     .collect::<Result<Vec<f64>, anyhow::Error>>()?;
+                let color = Color::new(input, &components)?;
 
-                Input::Color(Color::new(input, &components)?, output)
+                Input::ColorInput {
+                    input: ColorInput::Color(color),
+                    output,
+                    size: matches
+                        .value_of("SIZE")
+                        .map(|s| s.parse())
+                        .unwrap_or(Ok(4))?,
+                }
             }
             None => {
                 if color_args.len() > 1 {
                     bail!("Too many arguments provided\n\nFor more information try `--help`");
                 }
                 if let Some(color_arg) = color_args.next() {
-                    Input::ColorString(color_arg.to_string(), output)
+                    Input::ColorInput {
+                        input: ColorInput::HexOrHtml(color_arg.to_string()),
+                        output,
+                        size: matches
+                            .value_of("SIZE")
+                            .map(|s| s.parse())
+                            .unwrap_or(Ok(4))?,
+                    }
                 } else {
                     bail!("No argument was provided\n\nFor more information try `--help`");
                 }

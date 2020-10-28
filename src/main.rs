@@ -1,5 +1,5 @@
 use anyhow::Result;
-use command_line::Input;
+use command_line::{ColorInput, Input};
 
 mod color;
 mod command_line;
@@ -11,11 +11,19 @@ fn main() -> Result<()> {
         Input::Terminal => {
             show_term_colors::show_term_colors()?;
         }
-        Input::ColorString(color, out) => {
-            show_color::show_hex_or_html(&color, out)?;
+        Input::ColorInput {
+            input: ColorInput::HexOrHtml(color),
+            output,
+            size,
+        } => {
+            show_color::show_hex_or_html(&color, output, size)?;
         }
-        Input::Color(color, out) => {
-            show_color::show(color, out)?;
+        Input::ColorInput {
+            input: ColorInput::Color(color),
+            output,
+            size,
+        } => {
+            show_color::show(color, output, size)?;
         }
     }
 
