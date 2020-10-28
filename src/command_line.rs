@@ -156,6 +156,14 @@ pub fn parse_args() -> Result<Input> {
         .parse()
         .expect("Invalid output color space");
 
+    let size = matches
+        .value_of("SIZE")
+        .map(|s| {
+            s.parse()
+                .context(format!("The size {:?} could not be parsed", s))
+        })
+        .unwrap_or(Ok(4))?;
+
     Ok(if matches.is_present("TERMINAL") {
         Input::Terminal
     } else if let Some(mut color_args) = matches.values_of("COLOR") {
@@ -169,10 +177,7 @@ pub fn parse_args() -> Result<Input> {
                 Input::ColorInput {
                     input: ColorInput::Color(color),
                     output,
-                    size: matches
-                        .value_of("SIZE")
-                        .map(|s| s.parse())
-                        .unwrap_or(Ok(4))?,
+                    size,
                 }
             }
             None => {
@@ -183,10 +188,7 @@ pub fn parse_args() -> Result<Input> {
                     Input::ColorInput {
                         input: ColorInput::HexOrHtml(color_arg.to_string()),
                         output,
-                        size: matches
-                            .value_of("SIZE")
-                            .map(|s| s.parse())
-                            .unwrap_or(Ok(4))?,
+                        size,
                     }
                 } else {
                     bail!("No argument was provided\n\nFor more information try `--help`");
