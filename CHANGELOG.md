@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.1] - 2020-10-29
+
+- [`1bab356`](https://github.com/Aloso/colo/commit/1bab3560157fe24a9a093805a69afbe091482ec1): Fix false version (the version in the CLI is now automatically kept up to date)
+
 ## [0.2] - 2020-10-29
 
 This release revamps the CLI arguments, adds the `--size` argument and fixes a few bugs.
