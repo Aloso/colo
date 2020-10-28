@@ -46,7 +46,7 @@ fn show_impl(rgb: space::Rgb, msg: String, json: String) -> Result<()> {
         queue!(
             stdout,
             SetForegroundColor(crossterm_color),
-            Print(&make_square(4)),
+            Print(make_square(4)),
             ResetColor,
         )?;
     } else {
