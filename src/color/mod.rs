@@ -1,32 +1,17 @@
 mod convert;
-mod display;
 
 pub mod hex;
 pub mod html;
 pub mod json;
+pub mod space;
 
-/// Module containing all color spaces
-pub mod spaces {
-    pub use color_space::{Cmy, Cmyk, Hsl, Hsv, HunterLab, Lab, Lch, Luv, Rgb, Xyz, Yxy};
-}
+use color_space::{FromRgb, ToRgb};
+pub use space::ColorSpace;
 
-use spaces::*;
+use space::*;
+use std::fmt;
 
-#[derive(Debug, Copy, Clone, Eq, PartialEq)]
-pub enum ColorSpace {
-    Rgb,
-    Cmy,
-    Cmyk,
-    Hsv,
-    Hsl,
-    Lch,
-    Luv,
-    Lab,
-    HunterLab,
-    Xyz,
-    Yxy,
-}
-
+/// A color enum that unifies the color types specific to a color space.
 #[derive(Debug, Copy, Clone, PartialEq)]
 pub enum Color {
     Rgb(Rgb),
@@ -43,12 +28,14 @@ pub enum Color {
 }
 
 impl Color {
+    /// Constructs a color from the color space and the color components.
     pub fn new(color_space: ColorSpace, components: &[f64]) -> Result<Self, convert::ParseError> {
         std::convert::TryFrom::try_from((color_space, components))
     }
 
-    pub fn divide(self) -> (ColorSpace, Vec<f64>) {
-        match self {
+    /// Return the color space and the color components separately.
+    pub fn divide(&self) -> (ColorSpace, Vec<f64>) {
+        match *self {
             Color::Rgb(color) => (ColorSpace::Rgb, vec![color.r, color.g, color.b]),
             Color::Cmy(color) => (ColorSpace::Cmy, vec![color.c, color.m, color.y]),
             Color::Cmyk(color) => (ColorSpace::Cmyk, vec![color.c, color.m, color.y, color.k]),
@@ -60,6 +47,65 @@ impl Color {
             Color::HunterLab(color) => (ColorSpace::HunterLab, vec![color.l, color.a, color.b]),
             Color::Xyz(color) => (ColorSpace::Xyz, vec![color.x, color.y, color.z]),
             Color::Yxy(color) => (ColorSpace::Yxy, vec![color.y1, color.x, color.y2]),
+        }
+    }
+
+    pub fn to_color_space(&self, color_space: ColorSpace) -> Self {
+        let (current_space, _) = self.divide();
+        if current_space == color_space {
+            return *self;
+        }
+        let rgb = self.to_rgb();
+        match color_space {
+            ColorSpace::Rgb => Color::Rgb(rgb),
+            ColorSpace::Cmy => Color::Cmy(Cmy::from_rgb(&rgb)),
+            ColorSpace::Cmyk => Color::Cmyk(Cmyk::from_rgb(&rgb)),
+            ColorSpace::Hsv => Color::Hsv(Hsv::from_rgb(&rgb)),
+            ColorSpace::Hsl => Color::Hsl(Hsl::from_rgb(&Rgb {
+                // TODO: fix this upstream
+                r: rgb.r / 255.0,
+                g: rgb.g / 255.0,
+                b: rgb.b / 255.0,
+            })),
+            ColorSpace::Lch => Color::Lch(Lch::from_rgb(&rgb)),
+            ColorSpace::Luv => Color::Luv(Luv::from_rgb(&rgb)),
+            ColorSpace::Lab => Color::Lab(Lab::from_rgb(&rgb)),
+            ColorSpace::HunterLab => Color::HunterLab(HunterLab::from_rgb(&rgb)),
+            ColorSpace::Xyz => Color::Xyz(Xyz::from_rgb(&rgb)),
+            ColorSpace::Yxy => Color::Yxy(Yxy::from_rgb(&rgb)),
+        }
+    }
+}
+
+impl fmt::Display for Color {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let (color_space, parts) = self.divide();
+        write!(f, "{}(", color_space)?;
+        let last = parts.len() - 1;
+        for (i, part) in parts.into_iter().enumerate() {
+            write!(f, "{}", (part * 100.0).round() / 100.0)?;
+            if i != last {
+                write!(f, ", ")?;
+            }
+        }
+        write!(f, ")")
+    }
+}
+
+impl ToRgb for Color {
+    fn to_rgb(&self) -> Rgb {
+        match *self {
+            Color::Rgb(color) => color,
+            Color::Cmy(color) => color.to_rgb(),
+            Color::Cmyk(color) => color.to_rgb(),
+            Color::Hsv(color) => color.to_rgb(),
+            Color::Hsl(color) => color.to_rgb(),
+            Color::Lch(color) => color.to_rgb(),
+            Color::Luv(color) => color.to_rgb(),
+            Color::Lab(color) => color.to_rgb(),
+            Color::HunterLab(color) => color.to_rgb(),
+            Color::Xyz(color) => color.to_rgb(),
+            Color::Yxy(color) => color.to_rgb(),
         }
     }
 }

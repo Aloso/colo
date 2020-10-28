@@ -1,5 +1,4 @@
-use super::spaces::Rgb;
-use std::collections::HashMap;
+use super::space::Rgb;
 
 const HTML_COLOR_NAMES: &[(&str, u32)] = &[
     ("pink", 0xffc0cb),
@@ -145,32 +144,9 @@ const HTML_COLOR_NAMES: &[(&str, u32)] = &[
     ("black", 0x000000),
 ];
 
-pub struct HtmlColors {
-    map: HashMap<&'static str, Rgb>,
-}
-
-#[allow(unused)]
-impl HtmlColors {
-    /// Creates an HTML color map for fast lookup.
-    pub fn new() -> Self {
-        Self {
-            map: HTML_COLOR_NAMES
-                .iter()
-                .map(|&(name, hex)| (name, from_hex(hex)))
-                .collect(),
-        }
-    }
-
-    /// Gets an HTML color. The name (e.g. `Rebeccapurple`) is converted to lowercase first.
-    pub fn get(&self, name: &str) -> Option<Rgb> {
-        let name = name.to_lowercase();
-        self.map.get(name.as_str()).copied()
-    }
-}
-
 /// Gets an HTML color. The name (e.g. `Rebeccapurple`) is converted to lowercase first.
 /// If this function is called many times, it's more efficient to use the `HtmlColors` struct.
-pub fn get_single(name: &str) -> Option<Rgb> {
+pub fn get(name: &str) -> Option<Rgb> {
     let name = name.to_lowercase();
     HTML_COLOR_NAMES
         .iter()
@@ -180,6 +156,7 @@ pub fn get_single(name: &str) -> Option<Rgb> {
 }
 
 fn from_hex(hex: u32) -> Rgb {
+    // TODO: Fix `Rgb::from_hex` upstream, so it can be used here
     Rgb {
         r: ((hex >> 16) & 0xff) as f64,
         g: ((hex >> 8) & 0xff) as f64,

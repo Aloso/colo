@@ -11,11 +11,11 @@ fn main() -> Result<()> {
         Input::Terminal => {
             show_term_colors::show_term_colors()?;
         }
-        Input::ColorString(color) => {
-            show_color::show_hex_or_html(&color)?;
+        Input::ColorString(color, out) => {
+            show_color::show_hex_or_html(&color, out)?;
         }
-        Input::Color(color) => {
-            show_color::show(color)?;
+        Input::Color(color, out) => {
+            show_color::show(color, out)?;
         }
     }
 

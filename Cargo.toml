@@ -7,7 +7,7 @@ edition = "2018"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-crossterm = "0.18.1"
-clap = { version = "2", features = ["wrap_help"] }
-color_space = "0.5.2"
+crossterm = "0.18.1" 
+clap = "2" 
+color_space = "=0.5.2" # TODO: This version has a few bugs for which I have hacky workarounds. Fix the bugs upstream, then update this dep and remove the workarounds
 anyhow = "1"

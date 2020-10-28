@@ -35,7 +35,6 @@ fn clap_args() -> clap::ArgMatches<'static> {
         .version("0.1")
         .author("Ludwig Stecher <ludwig.stecher@gmx.de>")
         .about("Displays colors in various color spaces.")
-        .usage("colo [FLAGS]\n    colo <COLOR>\n    colo [OPTIONS]")
         .arg(
             Arg::with_name("terminal")
                 .long("terminal")
@@ -73,7 +72,7 @@ fn clap_args() -> clap::ArgMatches<'static> {
         ))
         .arg(color_arg!("lch",
             value_names: &["luminance", "chroma", "hue"],
-            help: "LCH color. Requires three values (0-1)",
+            help: "LCH color (luminance: 0-100, chroma: 0-100, hue: 0-360)",
         ))
         .arg(color_arg!("luv",
             value_names: &["luminance", "u", "v"],
@@ -101,6 +100,29 @@ fn clap_args() -> clap::ArgMatches<'static> {
             value_names: &["y", "x", "y"],
             help: "CIE YXY color",
         ))
+        .arg(
+            Arg::with_name("out")
+                .long("out")
+                .short("o")
+                .takes_value(true)
+                .help("Color space to output")
+                .possible_values(&[
+                    "rgb",
+                    "cmy",
+                    "cmyk",
+                    "hsv",
+                    "hsl",
+                    "lch",
+                    "luv",
+                    "lab",
+                    "hunterlab",
+                    "xyz",
+                    "yxy",
+                ])
+                .case_insensitive(true)
+                .default_value("rgb")
+                .conflicts_with("terminal"),
+        )
         .group(
             ArgGroup::with_name("color_group")
                 .args(&[
@@ -120,17 +142,25 @@ fn clap_args() -> clap::ArgMatches<'static> {
                 .conflicts_with("terminal")
                 .multiple(false),
         )
+        .set_term_width(80)
         .get_matches()
 }
 
 pub enum Input {
     Terminal,
-    ColorString(String),
-    Color(Color),
+    ColorString(String, ColorSpace),
+    Color(Color, ColorSpace),
 }
 
 pub fn parse_args() -> Result<Input> {
     let matches = clap_args();
+
+    let output_color_space = matches
+        .value_of("out")
+        .expect("no output")
+        .to_lowercase()
+        .parse()
+        .expect("invalid color space");
 
     Ok(if matches.is_present("terminal") {
         Input::Terminal
@@ -140,6 +170,7 @@ pub fn parse_args() -> Result<Input> {
                 .to_str()
                 .context("Invalid UTF-8")?
                 .to_string(),
+            output_color_space,
         )
     } else if let Some(values) = matches.args.get("color_group") {
         let components = values
@@ -173,7 +204,8 @@ pub fn parse_args() -> Result<Input> {
         } else {
             bail!("No color space found")
         };
-        Input::Color(Color::new(color_space, &components)?)
+
+        Input::Color(Color::new(color_space, &components)?, output_color_space)
     } else {
         bail!("No argument was provided\n\nFor more information try `--help`")
     })

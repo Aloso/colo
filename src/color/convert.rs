@@ -1,6 +1,6 @@
 use std::{convert::TryFrom, error::Error, fmt};
 
-use super::spaces::*;
+use super::space::*;
 use super::{Color, ColorSpace};
 
 #[derive(Debug, Copy, Clone, PartialEq)]
@@ -166,9 +166,9 @@ try_from_color! { Hsl ->
     l: 0.0 to 1.0;
 }
 try_from_color! { Lch ->
-    l: 0.0 to 1.0;
-    c: 0.0 to 1.0;
-    h: 0.0 to 1.0;
+    l: 0.0 to 100.0;
+    c: 0.0 to 100.0;
+    h: 0.0 to 360.0;
 }
 try_from_color! { Luv ->
     l: 0.0 to 100.0;

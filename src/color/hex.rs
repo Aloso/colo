@@ -1,7 +1,7 @@
-use crate::color::spaces;
+use crate::color::space;
 use anyhow::{anyhow, bail, Result};
 
-pub fn parse(color: &str) -> Result<spaces::Rgb> {
+pub fn parse(color: &str) -> Result<space::Rgb> {
     let color = color.trim_start_matches('#');
     let chars: Vec<u8> = color
         .chars()
@@ -40,7 +40,7 @@ pub fn parse(color: &str) -> Result<spaces::Rgb> {
 
     let (r, g, b) = scale_down(r, g, b, len)?;
 
-    Ok(spaces::Rgb { r, g, b })
+    Ok(space::Rgb { r, g, b })
 }
 
 fn nibble_slice_to_u32(slice: &[u8]) -> u32 {
@@ -80,7 +80,7 @@ fn format_hex(numbers: &[u8]) -> String {
 /// # use spaces::Rgb;
 /// assert_eq!(from_rgb(Rgb { r: 15.0, g: 0.0, b: 255.0 }), String::from("#0F00FF"));
 /// ```
-pub fn from_rgb(rgb: spaces::Rgb) -> String {
+pub fn from_rgb(rgb: space::Rgb) -> String {
     format!(
         "#{:02X}{:02X}{:02X}",
         rgb.r.round() as u8,

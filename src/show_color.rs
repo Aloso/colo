@@ -2,48 +2,33 @@ use anyhow::Result;
 use color_space::ToRgb;
 use crossterm::style::{self, Print, ResetColor, SetForegroundColor};
 use crossterm::{queue, tty::IsTty};
-use std::fmt::Debug;
 use std::io::{stdout, Write};
 
-use crate::color::{hex, html, json, spaces, Color};
+use crate::color::{hex, html, json, space, Color, ColorSpace};
 
-pub fn show(color: Color) -> Result<()> {
-    let printed = color.to_string();
-    match color {
-        Color::Rgb(c) => show_generic(c, printed, Some(hex::from_rgb(c))),
-        Color::Cmy(c) => show_generic(c, printed, None),
-        Color::Cmyk(c) => show_generic(c, printed, None),
-        Color::Hsv(c) => show_generic(c, printed, None),
-        Color::Hsl(c) => show_generic(c, printed, None),
-        Color::Lch(c) => show_generic(c, printed, None),
-        Color::Luv(c) => show_generic(c, printed, None),
-        Color::Lab(c) => show_generic(c, printed, None),
-        Color::HunterLab(c) => show_generic(c, printed, None),
-        Color::Xyz(c) => show_generic(c, printed, None),
-        Color::Yxy(c) => show_generic(c, printed, None),
-    }
-}
-
-pub fn show_hex_or_html(color: &str) -> Result<()> {
-    let rgb = html::get_single(color).map_or_else(|| hex::parse(color), Ok)?;
-    show_generic(rgb, hex::from_rgb(rgb), None)?;
-    Ok(())
-}
-
-fn show_generic(
-    color: impl ToRgb + Debug,
-    mut input: String,
-    converted: Option<String>,
-) -> Result<()> {
+pub fn show(color: Color, out: ColorSpace) -> Result<()> {
     let rgb = color.to_rgb();
+    let input = color.to_string();
+    let converted = color.to_color_space(out).to_string();
 
-    input.push_str(" ~ ");
-    input.push_str(&converted.unwrap_or_else(|| Color::Rgb(rgb).to_string()));
+    let second_str = if input != converted {
+        converted
+    } else {
+        hex::from_rgb(rgb)
+    };
 
-    show_impl(rgb, input)
+    show_impl(rgb, input + " ~ " + &second_str)
 }
 
-fn show_impl(rgb: spaces::Rgb, msg: String) -> Result<()> {
+pub fn show_hex_or_html(color: &str, out: ColorSpace) -> Result<()> {
+    let rgb = html::get(color).map_or_else(|| hex::parse(color), Ok)?;
+    let input = hex::from_rgb(rgb);
+    let converted = Color::Rgb(rgb).to_color_space(out).to_string();
+
+    show_impl(rgb, input + " ~ " + &converted)
+}
+
+fn show_impl(rgb: space::Rgb, msg: String) -> Result<()> {
     let crossterm_color = style::Color::Rgb {
         r: rgb.r.round() as u8,
         g: rgb.g.round() as u8,
