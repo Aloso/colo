@@ -4,19 +4,31 @@ Command-line tool for displaying colors, written in Rust
 
 ![Crates.io](https://img.shields.io/crates/l/colo) ![Crates.io](https://img.shields.io/crates/v/colo)
 
+### Jump to...
+
+* [Status](#status)
+* [Installation](#installation)
+* [Usage](#usage)
+    * [Supported color spaces](#supported-color-spaces)
+    * [Specifying hexadecimal colors](#specifying-hexadecimal-colors)
+    * [Default terminal colors](#default-terminal-colors)
+* [Code of Conduct](#code-of-conduct)
+* [Contributing](#contributing)
+
+
 ## Status
 
-Experimental – expect to see some big changes in the next releases.
+Experimental – expect to see some big changes in the next releases. See the [changelog](./CHANGELOG.md).
 
-## How to install
+## Installation
 
-Since `colo` is written in Rust, you need the Rust compiler and the `cargo` package manager ([installation manual](https://www.rust-lang.org/tools/install)). Once you have installed the Rust toolchain, run
+Installation is explained on the [release page](https://github.com/Aloso/colo/releases).
 
-```shell
-$ cargo install colo
+If you want to build `colo` from source, make sure you have the Rust toolchain (including Cargo) installed. Then clone this repository and run
+
+```fish
+cargo install --path .
 ```
-
-You might have to add the `.cargo/bin` folder to your `PATH` afterwards.
 
 ## Usage
 
@@ -32,7 +44,7 @@ If `colo` is used outside of a terminal, it outputs JSON, because it is the most
 
 ![json usage](docs/colo3.png)
 
-## Supported color spaces
+### Supported color spaces
 
 | Name    | Short | Description                        | Range of values |
 |---------|-------|------------------------------------|-----------------|
@@ -50,7 +62,7 @@ If `colo` is used outside of a terminal, it outputs JSON, because it is the most
 
 The most common color spaces (rgb, cmy, cmyk, hsv, hsl) can be abbreviated with a single letter, so instead of writing `colo --rgb 15/0/255`, you can write `colo -r15/0/255`.
 
-## Specifying hexadecimal colors
+### Specifying hexadecimal colors
 
 Hexadecimal colors are just a different notation for RGB colors. They are usually preceded with `#`, but `colo` allows you to omit this character.
 
@@ -58,12 +70,26 @@ Hexadecimal colors can be specified with varying precision: Each color channel c
 
 ![hex numbers](docs/colo5.png)
 
-## Default terminal colors
+### Default terminal colors
 
 With `--terminal` or `-t`, the default terminal colors are printed:
 
 ![terminal usage](docs/colo4.png)
 
-## License
+## Code of Conduct
 
-MIT
+Since this program is written in Rust, the [Rust code of conduct](https://www.rust-lang.org/policies/code-of-conduct) applies. Please be friendly and treat everyone with respect.
+
+## Contributing
+
+I appreciate your help! The easiest way to help is to file bug reports or suggest new features in the [issue tracker](https://github.com/Aloso/colo/issues).
+
+If you want to create a pull request, make sure the following requirements are met:
+
+  * The code compiles on the latest stable Rust version
+  * The code is properly formatted with `cargo fmt`
+  * The code is documented
+  * If you add a dependency that includes unsafe code, please explain why it is required
+  * Please try to keep compile times small, if feasible
+
+That's it! If you have any questions, feel free to create an issue.
