@@ -2,9 +2,17 @@
 name = "colo"
 version = "0.1.0"
 authors = ["Ludwig Stecher <ludwig.stecher@gmx.de>"]
+description = "CLI tool to show and convert colors between various color spaces"
+categories = ["command-line-interface"]
+repository = "https://github.com/Aloso/colo"
+documentation = "https://docs.rs/colo"
+homepage = "https://github.com/Aloso/colo"
+readme = "README.md"
+exclude = ["docs/*"]
 edition = "2018"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+keywords = ["color", "cli"]
+license = "MIT"
 
 [dependencies]
 crossterm = "0.18.1" 
