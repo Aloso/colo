@@ -1,5 +1,6 @@
 use std::{fmt, str::FromStr};
 
+use anyhow::bail;
 pub use color_space::{Cmy, Cmyk, Hsl, Hsv, HunterLab, Lab, Lch, Luv, Rgb, Xyz, Yxy};
 
 /// A C-like enum listing all supported color spaces
@@ -41,7 +42,7 @@ impl fmt::Display for ColorSpace {
 }
 
 impl FromStr for ColorSpace {
-    type Err = ();
+    type Err = anyhow::Error;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         Ok(match s {
@@ -56,7 +57,7 @@ impl FromStr for ColorSpace {
             "hunterlab" => ColorSpace::HunterLab,
             "xyz" => ColorSpace::Xyz,
             "yxy" => ColorSpace::Yxy,
-            _ => return Err(()),
+            s => bail!("Invalid color space {:?}", s),
         })
     }
 }

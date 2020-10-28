@@ -3,143 +3,115 @@ use clap::{App, Arg, ArgGroup};
 
 use crate::color::{Color, ColorSpace};
 
-macro_rules! color_arg {
-    ($name:expr, $($rest:tt)*) => {
-        color_arg!(in Arg::with_name($name)
-            .long($name)
-            .use_delimiter(true)
-            .value_delimiter("/")
-            .allow_hyphen_values(true), $($rest)*)
-    };
-    (in $arg:expr, short: $short:expr, $($rest:tt)*) => {
-        color_arg!(in $arg.
-            short($short), $($rest)*)
-    };
-    (in $arg:expr, value_names: $value_names:expr, $($rest:tt)*) => {
-        color_arg!(in $arg
-            .number_of_values($value_names.len() as u64)
-            .value_names($value_names), $($rest)*)
-    };
-    (in $arg:expr, help: $help:literal, $($rest:tt)*) => {
-        color_arg!(in $arg
-            .long_help($help)
-            .help($help.split('\n').next().unwrap()), $($rest)*)
-    };
-    (in $arg:expr, ) => {
-        $arg
-    };
+fn alias<'a, 'b>(name: &'static str, short: &'static str, help: &'static str) -> Arg<'a, 'b> {
+    Arg::with_name(name).short(short).help(help)
 }
+
+const COLOR_SPACES: &[&str] = &[
+    "rgb",
+    "cmy",
+    "cmyk",
+    "hsv",
+    "hsl",
+    "lch",
+    "luv",
+    "lab",
+    "hunterlab",
+    "xyz",
+    "yxy",
+];
+
+const COLOR_SPACE_HELP: &str = "\
+The input color space. Use this argument together with [COLOR], e.g.
+
+$ colo -i cmy 1/0/.5
+
+Supported color spaces
+======================
+name      arguments                   values
+-------------------------------------------------------------------
+rgb       red, green, blue            0-255    0-255    0-255
+cmy       cyan, magenta, yellow       0-1      0-1      0-1
+cmyk      cyan, magenta, yellow, key  0-1      0-1      0-1     0-1
+hsv       hue, saturation, value      0-360    0-1      0-1
+hsl       hue, saturation, light      0-360    0-1      0-1
+lch       luminance, chroma, hue      0-100    0-100    0-360
+luv       luminance, u, v (CIELUV)    0-100 –134-220 –140-122
+lab       lightness, a, b (CIELAB)    0-100     ?        ?
+hunterlab lightness, a, b (CIELAB)    0-100     ?        ?
+xyz       x,y,z (CIE 1931 XYZ color)   ?        ?        ?
+yxy       y1,x,y2 (CIE YXY color)      ?        ?        ?
+ ";
+
+const COLOR_HELP_MESSAGE: &str = "\
+The input color. Supported formats:
+- HTML color name (e.g. 'rebeccapurple')
+- Hexadecimal RGB color (e.g. '07F', '0077FF')
+- Color components (e.g. '127/0/255')
+  use `--in` to specify the used color space";
 
 fn clap_args() -> clap::ArgMatches<'static> {
     App::new("colo")
-        .version("0.1")
+        .version("0.1.1")
+        .version_short("v")
         .author("Ludwig Stecher <ludwig.stecher@gmx.de>")
-        .about("Displays colors in various color spaces.")
+        .about("\nDisplays colors in various color spaces.")
         .arg(
-            Arg::with_name("terminal")
+            Arg::with_name("TERMINAL")
                 .long("terminal")
                 .short("t")
-                .help("Show default terminal colors"),
+                .help("Show default terminal colors")
+                .conflicts_with_all(&["COLOR", "INPUT_ALIASES", "OUTPUT_COLOR_SPACE", "SIZE"]),
         )
         .arg(
             Arg::with_name("COLOR")
-                .long_help(
-                    "The color to display. Supported formats:\n\
-                    - HTML color name (e.g. 'rebeccapurple')\n\
-                    - Hexadecimal RGB color (e.g. '07F', '0077FF', '000_777_FFF')\n",
-                )
-                .index(1),
+                .help(COLOR_HELP_MESSAGE)
+                .max_values(4)
+                .use_delimiter(true)
+                .value_delimiter("/"),
         )
-        .arg(color_arg!("rgb", short: "r",
-            value_names: &["red", "green", "blue"],
-            help: "RGB color. Requires three values (0-255)",
-        ))
-        .arg(color_arg!("cmy", short: "c",
-            value_names: &["cyan", "magenta", "yellow"],
-            help: "CMY color. Requires three values (0-1)",
-        ))
-        .arg(color_arg!("cmyk", short: "k",
-            value_names: &["cyan", "magenta", "yellow", "key"],
-            help: "CMYK color. Requires four values (0-1)",
-        ))
-        .arg(color_arg!("hsv", short: "v",
-            value_names: &["hue", "saturation", "value"],
-            help: "HSV color (hue: 0-360, saturation: 0-1, value: 0-1)",
-        ))
-        .arg(color_arg!("hsl", short: "l",
-            value_names: &["hue", "saturation", "light"],
-            help: "HSL color (hue: 0-360, saturation: 0-1, light: 0-1)",
-        ))
-        .arg(color_arg!("lch",
-            value_names: &["luminance", "chroma", "hue"],
-            help: "LCH color (luminance: 0-100, chroma: 0-100, hue: 0-360)",
-        ))
-        .arg(color_arg!("luv",
-            value_names: &["luminance", "u", "v"],
-            help: "CIELUV color (luminance: 0 to 100, u: -134 to 220, v: -140 to 122)",
-        ))
-        .arg(color_arg!("lab",
-            value_names: &["lightness", "a", "b"],
-            help: "CIELAB color\n\
-                <lightness>  (0 to 100)\n\
-                <a>          green (negative) and red (positive) component\n\
-                <b>          blue (negative) and yellow (positive) component",
-        ))
-        .arg(color_arg!("hunterlab",
-            value_names: &["lightness", "a", "b"],
-            help: "Hunter Lab color\n\
-                <lightness>  (0 to 100)\n\
-                <a>          green (negative) and red (positive) component\n\
-                <b>          blue (negative) and yellow (positive) component",
-        ))
-        .arg(color_arg!("xyz",
-            value_names: &["x", "y", "z"],
-            help: "CIE 1931 XYZ color",
-        ))
-        .arg(color_arg!("yxy",
-            value_names: &["y", "x", "y"],
-            help: "CIE YXY color",
-        ))
         .arg(
-            Arg::with_name("out")
+            Arg::with_name("INPUT_COLOR_SPACE")
+                .long("in")
+                .short("i")
+                .takes_value(true)
+                .possible_values(COLOR_SPACES)
+                .hide_possible_values(true)
+                .case_insensitive(true)
+                .help(
+                    "Input color space [possible values: rgb, cmy, \
+                    cmyk, hsv, hsl, lch, luv, lab, hunterlab, xyz, yxy]",
+                )
+                .long_help(COLOR_SPACE_HELP),
+        )
+        .arg(
+            Arg::with_name("OUTPUT_COLOR_SPACE")
                 .long("out")
                 .short("o")
                 .takes_value(true)
-                .help("Color space to output")
-                .possible_values(&[
-                    "rgb",
-                    "cmy",
-                    "cmyk",
-                    "hsv",
-                    "hsl",
-                    "lch",
-                    "luv",
-                    "lab",
-                    "hunterlab",
-                    "xyz",
-                    "yxy",
-                ])
-                .case_insensitive(true)
-                .conflicts_with("terminal"),
+                .help("Output color space")
+                .possible_values(COLOR_SPACES)
+                .case_insensitive(true),
+        )
+        .arg(alias("RGB", "R", "Alias for `--in rgb`"))
+        .arg(alias("CMY", "C", "Alias for `--in cmy`"))
+        .arg(alias("CMYK", "K", "Alias for `--in cmyk`"))
+        .arg(alias("HSV", "V", "Alias for `--in hsv`"))
+        .arg(alias("HSL", "L", "Alias for `--in hsl`"))
+        .arg(
+            Arg::with_name("SIZE")
+                .long("size")
+                .short("s")
+                .takes_value(true)
+                .help(
+                    "Size of the color square in terminal rows (default: 4). Set to 0 to hide it.",
+                )
+                .requires("COLOR"),
         )
         .group(
-            ArgGroup::with_name("color_group")
-                .args(&[
-                    "COLOR",
-                    "rgb",
-                    "cmy",
-                    "cmyk",
-                    "hsv",
-                    "hsl",
-                    "lch",
-                    "luv",
-                    "lab",
-                    "hunterlab",
-                    "xyz",
-                    "yxy",
-                ])
-                .conflicts_with("terminal")
-                .multiple(false),
+            ArgGroup::with_name("INPUT_ALIASES")
+                .args(&["INPUT_COLOR_SPACE", "RGB", "CMY", "CMYK", "HSV", "HSL"])
+                .requires("COLOR"),
         )
         .set_term_width(80)
         .get_matches()
@@ -147,64 +119,82 @@ fn clap_args() -> clap::ArgMatches<'static> {
 
 pub enum Input {
     Terminal,
-    ColorString(String, ColorSpace),
-    Color(Color, ColorSpace),
+    ColorInput {
+        input: ColorInput,
+        output: ColorSpace,
+        size: u32,
+    },
+}
+
+pub enum ColorInput {
+    HexOrHtml(String),
+    Color(Color),
 }
 
 pub fn parse_args() -> Result<Input> {
     let matches = clap_args();
 
-    let output_color_space = matches
-        .value_of("out")
+    let input = if matches.is_present("INPUT_ALIASES") {
+        let string = match matches.value_of("INPUT_COLOR_SPACE") {
+            Some(v) => v,
+            None if matches.is_present("RGB") => "rgb",
+            None if matches.is_present("CMY") => "cmy",
+            None if matches.is_present("CMYK") => "cmyk",
+            None if matches.is_present("HSV") => "hsv",
+            None if matches.is_present("HSL") => "hsl",
+            _ => bail!("No color space found"),
+        };
+        Some(string.parse()?)
+    } else {
+        None
+    };
+
+    let output = matches
+        .value_of("OUTPUT_COLOR_SPACE")
         .unwrap_or("rgb")
         .to_lowercase()
         .parse()
-        .expect("invalid color space");
+        .expect("Invalid output color space");
 
-    Ok(if matches.is_present("terminal") {
+    let size = matches
+        .value_of("SIZE")
+        .map(|s| {
+            s.parse()
+                .context(format!("The size {:?} could not be parsed", s))
+        })
+        .unwrap_or(Ok(4))?;
+
+    Ok(if matches.is_present("TERMINAL") {
         Input::Terminal
-    } else if let Some(color_arg) = matches.args.get("COLOR") {
-        Input::ColorString(
-            color_arg.vals[0]
-                .to_str()
-                .context("Invalid UTF-8")?
-                .to_string(),
-            output_color_space,
-        )
-    } else if let Some(values) = matches.args.get("color_group") {
-        let components = values
-            .vals
-            .iter()
-            .map(|s| s.to_str().context("UTF-8").and_then(|s| Ok(s.parse()?)))
-            .collect::<Result<Vec<f64>, _>>()?;
+    } else if let Some(mut color_args) = matches.values_of("COLOR") {
+        match input {
+            Some(input) => {
+                let components = color_args
+                    .map(|s| s.parse().context(format!("{:?} could not be parsed", s)))
+                    .collect::<Result<Vec<f64>, anyhow::Error>>()?;
+                let color = Color::new(input, &components)?;
 
-        let color_space = if matches.is_present("rgb") {
-            ColorSpace::Rgb
-        } else if matches.is_present("cmy") {
-            ColorSpace::Cmy
-        } else if matches.is_present("cmyk") {
-            ColorSpace::Cmyk
-        } else if matches.is_present("hsv") {
-            ColorSpace::Hsv
-        } else if matches.is_present("hsl") {
-            ColorSpace::Hsl
-        } else if matches.is_present("lch") {
-            ColorSpace::Lch
-        } else if matches.is_present("luv") {
-            ColorSpace::Luv
-        } else if matches.is_present("lab") {
-            ColorSpace::Lab
-        } else if matches.is_present("hunterlab") {
-            ColorSpace::HunterLab
-        } else if matches.is_present("xyz") {
-            ColorSpace::Xyz
-        } else if matches.is_present("yxy") {
-            ColorSpace::Yxy
-        } else {
-            bail!("No color space found")
-        };
-
-        Input::Color(Color::new(color_space, &components)?, output_color_space)
+                Input::ColorInput {
+                    input: ColorInput::Color(color),
+                    output,
+                    size,
+                }
+            }
+            None => {
+                if color_args.len() > 1 {
+                    bail!("Too many arguments provided\n\nFor more information try `--help`");
+                }
+                if let Some(color_arg) = color_args.next() {
+                    Input::ColorInput {
+                        input: ColorInput::HexOrHtml(color_arg.to_string()),
+                        output,
+                        size,
+                    }
+                } else {
+                    bail!("No argument was provided\n\nFor more information try `--help`");
+                }
+            }
+        }
     } else {
         bail!("No argument was provided\n\nFor more information try `--help`")
     })
