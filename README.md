@@ -35,15 +35,15 @@ cargo install --path .
 
 `colo` recognizes hexadecimal RGB colors as well as HTML color names:
 
-![usage](docs/colo1.png)
+![usage](docs/html_colors.png)
 
 Color spaces other than RGB are supported as well:
 
-![usage with other color spaces](docs/colo2.png)
+![usage with other color spaces](docs/color_spaces.png)
 
 If `colo` is used outside of a terminal, it outputs JSON, because it is the most ubiquitous data exchange format:
 
-![json usage](docs/colo3.png)
+![json usage](docs/json_output.png)
 
 ### Supported color spaces
 
@@ -71,19 +71,19 @@ Hexadecimal colors are a different notation for RGB colors. They can optionally 
 
 Hexadecimal colors can be specified with varying precision: Each color channel can be between 1 and 8 digits long, for example
 
-![hex numbers](docs/colo4.png)
+![hex numbers](docs/hex_colors.png)
 
 ### Color square size
 
 The color square size can be adjusted with `--size` or `-s`:
 
-![color square size](docs/colo5.png)
+![color square size](docs/square_sizes.png)
 
 ### Default terminal colors
 
 With `--terminal` or `-t`, the default terminal colors are printed:
 
-![terminal usage](docs/colo6.png)
+![terminal usage](docs/terminal_colors.png)
 
 ## Code of Conduct
 
