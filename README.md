@@ -10,10 +10,10 @@ Experimental – expect to see some big changes in the next releases.
 
 ## How to install
 
-Since `colo` is written in Rust, you need the Rust compiler and the `cargo` package manager ([installation manual](https://www.rust-lang.org/tools/install)). Once you have installed the Rust toolchain, clone this repository and run
+Since `colo` is written in Rust, you need the Rust compiler and the `cargo` package manager ([installation manual](https://www.rust-lang.org/tools/install)). Once you have installed the Rust toolchain, run
 
 ```shell
-$ cargo install --path .
+$ cargo install colo
 ```
 
 You might have to add the `.cargo/bin` folder to your `PATH` afterwards.
