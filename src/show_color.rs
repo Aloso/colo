@@ -9,7 +9,9 @@ use crate::color::{hex, html, json, space, Color, ColorSpace};
 pub fn show(color: Color, out: ColorSpace) -> Result<()> {
     let rgb = color.to_rgb();
     let input = color.to_string();
-    let converted = color.to_color_space(out).to_string();
+    let converted = color.to_color_space(out);
+    let json = json::from_color(converted);
+    let converted = converted.to_string();
 
     let second_str = if input != converted {
         converted
@@ -17,18 +19,20 @@ pub fn show(color: Color, out: ColorSpace) -> Result<()> {
         hex::from_rgb(rgb)
     };
 
-    show_impl(rgb, input + " ~ " + &second_str)
+    show_impl(rgb, input + " ~ " + &second_str, json)
 }
 
 pub fn show_hex_or_html(color: &str, out: ColorSpace) -> Result<()> {
     let rgb = html::get(color).map_or_else(|| hex::parse(color), Ok)?;
     let input = hex::from_rgb(rgb);
-    let converted = Color::Rgb(rgb).to_color_space(out).to_string();
+    let converted = Color::Rgb(rgb).to_color_space(out);
+    let json = json::from_color(converted);
+    let converted = converted.to_string();
 
-    show_impl(rgb, input + " ~ " + &converted)
+    show_impl(rgb, input + " ~ " + &converted, json)
 }
 
-fn show_impl(rgb: space::Rgb, msg: String) -> Result<()> {
+fn show_impl(rgb: space::Rgb, msg: String, json: String) -> Result<()> {
     let crossterm_color = style::Color::Rgb {
         r: rgb.r.round() as u8,
         g: rgb.g.round() as u8,
@@ -46,7 +50,7 @@ fn show_impl(rgb: space::Rgb, msg: String) -> Result<()> {
             ResetColor,
         )?;
     } else {
-        queue!(stdout, Print(json::from_rgb(rgb)))?;
+        queue!(stdout, Print(json))?;
     }
 
     Ok(())
