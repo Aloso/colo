@@ -61,12 +61,7 @@ impl Color {
             ColorSpace::Cmy => Color::Cmy(Cmy::from_rgb(&rgb)),
             ColorSpace::Cmyk => Color::Cmyk(Cmyk::from_rgb(&rgb)),
             ColorSpace::Hsv => Color::Hsv(Hsv::from_rgb(&rgb)),
-            ColorSpace::Hsl => Color::Hsl(Hsl::from_rgb(&Rgb {
-                // TODO: fix this upstream
-                r: rgb.r / 255.0,
-                g: rgb.g / 255.0,
-                b: rgb.b / 255.0,
-            })),
+            ColorSpace::Hsl => Color::Hsl(Hsl::from_rgb(&rgb)),
             ColorSpace::Lch => Color::Lch(Lch::from_rgb(&rgb)),
             ColorSpace::Luv => Color::Luv(Luv::from_rgb(&rgb)),
             ColorSpace::Lab => Color::Lab(Lab::from_rgb(&rgb)),

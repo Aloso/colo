@@ -1,5 +1,7 @@
 use super::space::Rgb;
 
+/// List of HTML color, taken from
+/// https://www.w3schools.com/colors/colors_groups.asp
 const HTML_COLOR_NAMES: &[(&str, u32)] = &[
     ("pink", 0xffc0cb),
     ("lightpink", 0xffb6c1),
@@ -145,21 +147,12 @@ const HTML_COLOR_NAMES: &[(&str, u32)] = &[
 ];
 
 /// Gets an HTML color. The name (e.g. `Rebeccapurple`) is converted to lowercase first.
-/// If this function is called many times, it's more efficient to use the `HtmlColors` struct.
+/// If this function is called many times, it's more efficient to build a HashMap.
 pub fn get(name: &str) -> Option<Rgb> {
     let name = name.to_lowercase();
     HTML_COLOR_NAMES
         .iter()
         .filter(|&&(k, _)| k == name)
-        .map(|&(_, hex)| from_hex(hex))
+        .map(|&(_, hex)| Rgb::from_hex(hex))
         .next()
-}
-
-fn from_hex(hex: u32) -> Rgb {
-    // TODO: Fix `Rgb::from_hex` upstream, so it can be used here
-    Rgb {
-        r: ((hex >> 16) & 0xff) as f64,
-        g: ((hex >> 8) & 0xff) as f64,
-        b: (hex & 0xff) as f64,
-    }
 }

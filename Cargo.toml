@@ -15,7 +15,7 @@ keywords = ["color", "cli"]
 license = "MIT"
 
 [dependencies]
-crossterm = "0.18.1" 
-clap = "2" 
-color_space = "=0.5.2" # TODO: This version has a few bugs for which I have hacky workarounds. Fix the bugs upstream, then update this dep and remove the workarounds
+crossterm = "0.18.1"
+clap = "2"
+color_space = "^0.5.3"
 anyhow = "1"
