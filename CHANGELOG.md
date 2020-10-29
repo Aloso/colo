@@ -6,7 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+#### Internal
+
+Improved documentation and tests
+
 ## [0.2.1] - 2020-10-29
+
+#### Bug fixes:
 
 - [`1bab356`](https://github.com/Aloso/colo/commit/1bab3560157fe24a9a093805a69afbe091482ec1): Fix false version (the version in the CLI is now automatically kept up to date)
 

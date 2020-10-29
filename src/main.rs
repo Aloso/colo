@@ -1,3 +1,7 @@
+//! Entry point for the application
+
+#![deny(unsafe_code)]
+
 use anyhow::Result;
 use command_line::{ColorInput, Input};
 

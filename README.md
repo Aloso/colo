@@ -2,12 +2,13 @@
 
 Command-line tool for displaying colors, written in Rust
 
-![Crates.io](https://img.shields.io/crates/l/colo) ![Crates.io](https://img.shields.io/crates/v/colo)
+[![Crates.io](https://img.shields.io/crates/l/colo)](./LICENSE) [![Crates.io](https://img.shields.io/crates/v/colo)](https://crates.io/crates/colo)
 
 ### Jump to...
 
 * [Changelog](#changelog)
 * [Installation](#installation)
+    * [Build from source](#build-from-source)
 * [Usage](#usage)
     * [Supported color spaces](#supported-color-spaces)
     * [Specifying hexadecimal colors](#specifying-hexadecimal-colors)
@@ -27,11 +28,21 @@ Note that `colo` is very young and evolving rapidly. There will likely be big ch
 
 Installation is explained on the [releases page](https://github.com/Aloso/colo/releases).
 
+### Build from source
+
 If you want to build `colo` from source, make sure you have the Rust toolchain (including Cargo) installed. Then clone this repository and run
 
 ```fish
 cargo install --path .
 ```
+
+Or, if you don't want to clone the repository, you can run
+
+```fish
+cargo install --git https://github.com/Aloso/colo
+```
+
+This builds the code from the main branch. You can specify a different branch with `--branch` or a tag with `--tag`.
 
 ## Usage
 
@@ -97,10 +108,15 @@ I appreciate your help! The easiest way to help is to file bug reports or sugges
 
 If you want to create a pull request, make sure the following requirements are met:
 
-  * The code compiles on the latest stable Rust version
-  * The code is properly formatted with `cargo fmt`
   * The code is documented
   * If you add a dependency that includes unsafe code, please explain why it is required
   * Please try to keep compile times small, if feasible
+
+Also, to pass continuous integration, the code must
+
+  * be properly formatted with `cargo fmt`
+  * pass `cargo clippy`
+  * compile on the latest stable Rust version
+  * all tests must succeed
 
 That's it! If you have any questions, feel free to create an issue.
