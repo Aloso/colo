@@ -26,16 +26,18 @@ fn main() -> Result<()> {
         Input::ColorInput {
             input: ColorInput::HexOrHtml(color),
             output,
+            text,
             size,
         } => {
-            show_color::show_hex_or_html(&color, output, size)?;
+            show_color::show_hex_or_html(&color, output, size, text)?;
         }
         Input::ColorInput {
             input: ColorInput::Color(color),
             output,
+            text,
             size,
         } => {
-            show_color::show(color, output, size)?;
+            show_color::show(color, output, size, text)?;
         }
     }
 
