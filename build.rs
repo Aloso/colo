@@ -5,7 +5,7 @@ fn main() {
     println!("cargo:rerun-if-changed=Cargo.lock");
 
     let output = Command::new("cargo")
-        .args(&["tree"])
+        .args(&["tree", "--quiet", "--color", "never"])
         .output()
         .expect("failed to execute `cargo tree`");
 
