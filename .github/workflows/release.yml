@@ -37,7 +37,7 @@ jobs:
 
             If you're running on Linux, macOS or Windows, you can use the binaries below.
 
-            Alternatively, you can build `colo` with Cargo, Rusts package manager. To install the Rust toolchain, see the ([installation manual](https://www.rust-lang.org/tools/install)). Then run
+            Alternatively, you can build `colo` with Cargo, Rusts package manager. To install the Rust toolchain, see the [installation manual](https://www.rust-lang.org/tools/install). Then run
 
             ```shell
             $ cargo install colo
@@ -48,17 +48,20 @@ jobs:
             Please file issues if you run into any problems or have suggestions.
 
   release_assets:
-    name: Build and release assets
+    name: Release assets
     needs: create_release
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         include:
           - os: ubuntu-latest
+            platform: linux
             file_ending: ''
           - os: macos-latest
+            platform: macos
             file_ending: ''
           - os: windows-latest
+            platform: windows
             file_ending: '.exe'
 
     steps:
@@ -84,6 +87,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ needs.create_release.outputs.upload_url }}
-          asset_name: colo_${{ matrix.os }}_${{ steps.vars.outputs.tag }}${{ matrix.file_ending }}
+          asset_name: colo_${{ matrix.platform }}_${{ steps.vars.outputs.tag }}${{ matrix.file_ending }}
           asset_path: target/release/colo${{ matrix.file_ending }}
           asset_content_type: application/octet-stream
