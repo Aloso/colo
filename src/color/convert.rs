@@ -1,8 +1,16 @@
+//! Module for converting a color space and color components to a `Color`.
+
 use std::{convert::TryFrom, error::Error, fmt};
 
 use super::space::*;
 use super::{Color, ColorSpace};
 
+/// Error caused by parsing a number in a certain color space.
+///
+/// This error can occur if the wrong number of color components
+/// was supplied (e.g. `rgb` with only 2 components), or if a
+/// color component is out of range (for example, `rgb` requires
+/// that all components are in 0..=255).
 #[derive(Debug, Copy, Clone, PartialEq)]
 pub enum ParseError {
     NumberOfComponents {
@@ -23,6 +31,8 @@ pub enum ParseError {
 
 impl Error for ParseError {}
 
+// Note that this could be simplified with `thiserror`, but I'm currently
+// reluctant to add more dependencies
 impl fmt::Display for ParseError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match *self {
@@ -53,77 +63,35 @@ impl fmt::Display for ParseError {
 impl TryFrom<(ColorSpace, &[f64])> for Color {
     type Error = ParseError;
 
-    fn try_from((space, values): (ColorSpace, &[f64])) -> Result<Self, Self::Error> {
+    fn try_from((space, vals): (ColorSpace, &[f64])) -> Result<Self, Self::Error> {
         let required_args = if space == ColorSpace::Cmyk { 4 } else { 3 };
 
-        if values.len() != required_args {
+        if vals.len() != required_args {
             return Err(ParseError::NumberOfComponents {
                 expected: required_args,
-                got: values.len(),
+                got: vals.len(),
             });
         }
 
+        // Create the color and check if the values are in the valid range
         match space {
-            ColorSpace::Rgb => Color::try_from(Rgb {
-                r: values[0],
-                g: values[1],
-                b: values[2],
-            }),
-            ColorSpace::Cmy => Color::try_from(Cmy {
-                c: values[0],
-                m: values[1],
-                y: values[2],
-            }),
-            ColorSpace::Cmyk => Color::try_from(Cmyk {
-                c: values[0],
-                m: values[1],
-                y: values[2],
-                k: values[3],
-            }),
-            ColorSpace::Hsv => Color::try_from(Hsv {
-                h: values[0],
-                s: values[1],
-                v: values[2],
-            }),
-            ColorSpace::Hsl => Color::try_from(Hsl {
-                h: values[0],
-                s: values[1],
-                l: values[2],
-            }),
-            ColorSpace::Lch => Color::try_from(Lch {
-                l: values[0],
-                c: values[1],
-                h: values[2],
-            }),
-            ColorSpace::Luv => Color::try_from(Luv {
-                l: values[0],
-                u: values[1],
-                v: values[2],
-            }),
-            ColorSpace::Lab => Color::try_from(Lab {
-                l: values[0],
-                a: values[1],
-                b: values[2],
-            }),
-            ColorSpace::HunterLab => Color::try_from(HunterLab {
-                l: values[0],
-                a: values[1],
-                b: values[2],
-            }),
-            ColorSpace::Xyz => Color::try_from(Xyz {
-                x: values[0],
-                y: values[1],
-                z: values[2],
-            }),
-            ColorSpace::Yxy => Color::try_from(Yxy {
-                y1: values[0],
-                x: values[1],
-                y2: values[2],
-            }),
+            ColorSpace::Rgb => Color::try_from(Rgb::new(vals[0], vals[1], vals[2])),
+            ColorSpace::Cmy => Color::try_from(Cmy::new(vals[0], vals[1], vals[2])),
+            ColorSpace::Cmyk => Color::try_from(Cmyk::new(vals[0], vals[1], vals[2], vals[3])),
+            ColorSpace::Hsv => Color::try_from(Hsv::new(vals[0], vals[1], vals[2])),
+            ColorSpace::Hsl => Color::try_from(Hsl::new(vals[0], vals[1], vals[2])),
+            ColorSpace::Lch => Color::try_from(Lch::new(vals[0], vals[1], vals[2])),
+            ColorSpace::Luv => Color::try_from(Luv::new(vals[0], vals[1], vals[2])),
+            ColorSpace::Lab => Color::try_from(Lab::new(vals[0], vals[1], vals[2])),
+            ColorSpace::HunterLab => Color::try_from(HunterLab::new(vals[0], vals[1], vals[2])),
+            ColorSpace::Xyz => Color::try_from(Xyz::new(vals[0], vals[1], vals[2])),
+            ColorSpace::Yxy => Color::try_from(Yxy::new(vals[0], vals[1], vals[2])),
         }
     }
 }
 
+/// Implements `TryFrom<$ty>` for `Color`. The conversion fails if any
+/// color component isn't in the valid range.
 macro_rules! try_from_color {
     ($ty:ident -> $( $component:ident : $min:literal to $max:literal );* $(;)?) => {
         impl TryFrom<$ty> for Color {
@@ -184,6 +152,8 @@ try_from_color! { HunterLab ->
 try_from_color! { Xyz -> }
 try_from_color! { Yxy -> }
 
+/// Checks that the value is in the specified range. If it isn't, an error is
+/// returned.
 fn min_max(component: &'static str, min: f64, max: f64, got: f64) -> Result<(), ParseError> {
     if got < min || got > max {
         if min == 0.0 && got < min {

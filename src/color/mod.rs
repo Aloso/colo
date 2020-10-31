@@ -50,6 +50,8 @@ impl Color {
         }
     }
 
+    /// Converts the color to a different color space. It is in the same color
+    /// space, this is a no-op.
     pub fn to_color_space(&self, color_space: ColorSpace) -> Self {
         let (current_space, _) = self.divide();
         if current_space == color_space {
@@ -102,5 +104,19 @@ impl ToRgb for Color {
             Color::Xyz(color) => color.to_rgb(),
             Color::Yxy(color) => color.to_rgb(),
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::{space, Color};
+
+    #[test]
+    fn test_color_display() {
+        let rgb = Color::Rgb(space::Rgb::new(255.0, 0.0, 127.5));
+        let hsv = Color::Hsv(space::Hsv::new(350.125, 0.9, 0.502));
+
+        assert_eq!(rgb.to_string().as_str(), "rgb(255, 0, 127.5)");
+        assert_eq!(hsv.to_string().as_str(), "hsv(350.13, 0.9, 0.5)");
     }
 }

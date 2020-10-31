@@ -3,10 +3,12 @@ use clap::{App, Arg, ArgGroup};
 
 use crate::color::{Color, ColorSpace};
 
+/// Creates an CLI flag that acts as an alias for a different input
 fn alias<'a, 'b>(name: &'static str, short: &'static str, help: &'static str) -> Arg<'a, 'b> {
     Arg::with_name(name).short(short).help(help)
 }
 
+/// Color spaces, as they can be provided in the command line
 const COLOR_SPACES: &[&str] = &[
     "rgb",
     "cmy",
@@ -21,6 +23,7 @@ const COLOR_SPACES: &[&str] = &[
     "yxy",
 ];
 
+/// Help about color spaces in the command line
 const COLOR_SPACE_HELP: &str = "\
 The input color space. Use this argument together with [COLOR], e.g.
 
@@ -50,6 +53,10 @@ The input color. Supported formats:
 - Color components (e.g. '127/0/255')
   use `--in` to specify the used color space";
 
+/// Returns the command line arguments parsed by clap.
+///
+/// Note that, if the `--version` or `--help` flag was provided,
+/// clap terminates the application, so this function never returns.
 fn clap_args() -> clap::ArgMatches<'static> {
     App::new("colo")
         .version(env!("CARGO_PKG_VERSION"))
@@ -117,8 +124,13 @@ fn clap_args() -> clap::ArgMatches<'static> {
         .get_matches()
 }
 
+/// The CLI input after parsing.
 pub enum Input {
+    /// If the `--terminal` flag was set
     Terminal,
+    /// If a color was provided. Additional arguments are
+    ///    - `output`: Output color space (default `Rgb`)
+    ///    - `size`: The size of the color square (default `4`)
     ColorInput {
         input: ColorInput,
         output: ColorSpace,
@@ -126,11 +138,17 @@ pub enum Input {
     },
 }
 
+/// The color provided to `colo`
 pub enum ColorInput {
+    /// A hexadecimal color (e.g. `FF7700`) or a HTML color name (e.g. `red`)
+    /// was provided. This has yet to be parsed.
     HexOrHtml(String),
+    /// A color space and a list of components (e.g. `--in cmy 1/0/.5`) was
+    /// provided. This has already been parsed.
     Color(Color),
 }
 
+/// Parses the CLI arguments,
 pub fn parse_args() -> Result<Input> {
     let matches = clap_args();
 

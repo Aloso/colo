@@ -9,7 +9,7 @@ on:
 jobs:
 
   rustfmt:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions-rs/toolchain@v1
         with:
@@ -25,26 +25,26 @@ jobs:
 
   clippy:
     needs: rustfmt
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
           override: true
           components: clippy
-      - uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v2
       - name: Run `cargo clippy`
-        uses: actions-rs/cargo@v1
+        uses: actions-rs/clippy-check@v1
         with:
-          command: clippy
-          args: --verbose
+          token: ${{ secrets.GITHUB_TOKEN }}
 
   build:
     needs: clippy
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-20.04, macos-latest, windows-latest]
+        os: [ubuntu-latest, macos-latest, windows-latest]
     steps:
       - uses: actions-rs/toolchain@v1
         with:
