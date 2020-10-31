@@ -18,6 +18,10 @@ fn main() -> Result<()> {
         Input::Terminal => {
             show_term_colors::show_term_colors()?;
         }
+        Input::Libraries => {
+            use command_line::{APP_NAME, APP_VERSION, DEPENDENCIES};
+            println!("{} v{}\n{}", APP_NAME, APP_VERSION, DEPENDENCIES);
+        }
         // TODO: Refactor the following two match arms into a single one
         Input::ColorInput {
             input: ColorInput::HexOrHtml(color),
