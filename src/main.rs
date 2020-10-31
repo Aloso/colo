@@ -1,6 +1,8 @@
 #![deny(unsafe_code)]
 
 use anyhow::Result;
+use color::{hex, html};
+use color_space::ToRgb;
 use command_line::{ColorInput, Input};
 
 mod color;
@@ -23,21 +25,39 @@ fn main() -> Result<()> {
             println!("{} v{}\n{}", APP_NAME, APP_VERSION, DEPENDENCIES);
         }
         // TODO: Refactor the following two match arms into a single one
-        Input::ColorInput {
-            input: ColorInput::HexOrHtml(color),
+        Input::ColorOutput {
+            input,
             output,
-            text,
             size,
+        } => match input {
+            ColorInput::HexOrHtml(color) => {
+                show_color::show_hex_or_html(&color, output, size)?;
+            }
+            ColorInput::Color(color) => {
+                show_color::show(color, output, size)?;
+            }
+        },
+
+        Input::TextOutput {
+            input,
+            mut text,
+            bold,
+            italic,
+            underlined,
+            no_newline,
         } => {
-            show_color::show_hex_or_html(&color, output, size, text)?;
-        }
-        Input::ColorInput {
-            input: ColorInput::Color(color),
-            output,
-            text,
-            size,
-        } => {
-            show_color::show(color, output, size, text)?;
+            if !no_newline {
+                text.push('\n');
+            }
+            match input {
+                ColorInput::HexOrHtml(color) => {
+                    let color = html::get(&color).map_or_else(|| hex::parse(&color), Ok)?;
+                    show_color::show_text(color.to_rgb(), None, text, italic, bold, underlined)?;
+                }
+                ColorInput::Color(color) => {
+                    show_color::show_text(color.to_rgb(), None, text, italic, bold, underlined)?;
+                }
+            }
         }
     }
 

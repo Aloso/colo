@@ -1,5 +1,5 @@
 use anyhow::{bail, Context, Result};
-use clap::{App, AppSettings, Arg, ArgGroup};
+use clap::{App, AppSettings, Arg, ArgGroup, ArgMatches, SubCommand};
 
 use crate::color::{Color, ColorSpace};
 
@@ -74,18 +74,79 @@ fn clap_args() -> clap::ArgMatches<'static> {
         .version_short("v")
         .author("Ludwig Stecher <ludwig.stecher@gmx.de>")
         .about("\nDisplays colors in various color spaces.")
-        .arg(
-            Arg::with_name("TERMINAL")
-                .long("terminal")
-                .short("t")
-                .help("Show default terminal colors")
-                .conflicts_with_all(&["LIBRARIES", "COLOR"]),
+        .subcommand(
+            SubCommand::with_name("term")
+                .about("\nDisplays the most common terminal colors")
+                .version_short("v")
+                .version(APP_VERSION),
         )
-        .arg(
-            Arg::with_name("LIBRARIES")
-                .long("libraries")
-                .help("Show dependency tree")
-                .conflicts_with_all(&["TERMINAL", "COLOR"]),
+        .subcommand(
+            SubCommand::with_name("libs")
+                .about("\nDisplays the dependency tree")
+                .version_short("v")
+                .version(APP_VERSION),
+        )
+        .subcommand(
+            SubCommand::with_name("print")
+                .about("\nPrint formatted text")
+                .version_short("v")
+                .version(APP_VERSION)
+                .arg(
+                    Arg::with_name("COLOR")
+                        .help(COLOR_HELP_MESSAGE)
+                        .max_values(4)
+                        .require_delimiter(true)
+                        .value_delimiter("/")
+                        .required(true),
+                )
+                .arg(
+                    Arg::with_name("INPUT_COLOR_SPACE")
+                        .long("in")
+                        .takes_value(true)
+                        .possible_values(COLOR_SPACES)
+                        .hide_possible_values(true)
+                        .case_insensitive(true)
+                        .help(
+                            "Input color space [possible values: rgb, cmy, \
+                            cmyk, hsv, hsl, lch, luv, lab, hunterlab, xyz, yxy]",
+                        )
+                        .long_help(COLOR_SPACE_HELP),
+                )
+                .arg(alias("RGB", "R", "Alias for `--in rgb`"))
+                .arg(alias("CMY", "C", "Alias for `--in cmy`"))
+                .arg(alias("CMYK", "K", "Alias for `--in cmyk`"))
+                .arg(alias("HSV", "V", "Alias for `--in hsv`"))
+                .arg(alias("HSL", "L", "Alias for `--in hsl`"))
+                .arg(
+                    Arg::with_name("TEXT")
+                        .takes_value(true)
+                        .help("Text to print in the specified color")
+                        .required(true),
+                )
+                .arg(
+                    Arg::with_name("BOLD")
+                        .long("bold")
+                        .short("b")
+                        .help("Print text in bold"),
+                )
+                .arg(
+                    Arg::with_name("ITALIC")
+                        .long("italic")
+                        .short("i")
+                        .help("Print text in italic"),
+                )
+                .arg(
+                    Arg::with_name("UNDERLINE")
+                        .long("underline")
+                        .short("u")
+                        .help("Print text underlined"),
+                )
+                .arg(
+                    Arg::with_name("NO_NEWLINE")
+                        .long("no_newline")
+                        .short("n")
+                        .help("Don't add new-line after text"),
+                ),
         )
         .arg(
             Arg::with_name("COLOR")
@@ -106,8 +167,7 @@ fn clap_args() -> clap::ArgMatches<'static> {
                     "Input color space [possible values: rgb, cmy, \
                     cmyk, hsv, hsl, lch, luv, lab, hunterlab, xyz, yxy]",
                 )
-                .long_help(COLOR_SPACE_HELP)
-                .requires("COLOR"),
+                .long_help(COLOR_SPACE_HELP),
         )
         .arg(
             Arg::with_name("OUTPUT_COLOR_SPACE")
@@ -136,17 +196,7 @@ fn clap_args() -> clap::ArgMatches<'static> {
                 .help(
                     "Size of the color square in terminal rows (default: 4). Set to 0 to hide it.",
                 )
-                .requires("COLOR")
-                .conflicts_with("TEXT"),
-        )
-        .arg(
-            Arg::with_name("TEXT")
-                .long("text")
-                .short("x")
-                .takes_value(true)
-                .help("Text to print in the specified color")
-                .requires("COLOR")
-                .conflicts_with("SIZE"),
+                .requires("COLOR"),
         )
         .group(
             ArgGroup::with_name("INPUT_ALIASES")
@@ -166,11 +216,18 @@ pub enum Input {
     /// If a color was provided. Additional arguments are
     ///    - `output`: Output color space (default `Rgb`)
     ///    - `size`: The size of the color square (default `4`)
-    ColorInput {
+    ColorOutput {
         input: ColorInput,
         output: ColorSpace,
-        text: Option<String>,
         size: u32,
+    },
+    TextOutput {
+        input: ColorInput,
+        text: String,
+        bold: bool,
+        italic: bool,
+        underlined: bool,
+        no_newline: bool,
     },
 }
 
@@ -184,11 +241,8 @@ pub enum ColorInput {
     Color(Color),
 }
 
-/// Parses the CLI arguments,
-pub fn parse_args() -> Result<Input> {
-    let matches = clap_args();
-
-    let input = if matches.is_present("INPUT_ALIASES") {
+fn get_input_color_space(matches: &ArgMatches) -> Result<Option<ColorSpace>> {
+    Ok(if matches.is_present("INPUT_ALIASES") {
         let string = match matches.value_of("INPUT_COLOR_SPACE") {
             Some(v) => v,
             None if matches.is_present("RGB") => "rgb",
@@ -201,7 +255,14 @@ pub fn parse_args() -> Result<Input> {
         Some(string.parse()?)
     } else {
         None
-    };
+    })
+}
+
+/// Parses the CLI arguments,
+pub fn parse_args() -> Result<Input> {
+    let matches = clap_args();
+
+    let input = get_input_color_space(&matches)?;
 
     let output = matches
         .value_of("OUTPUT_COLOR_SPACE")
@@ -218,11 +279,9 @@ pub fn parse_args() -> Result<Input> {
         })
         .unwrap_or(Ok(4))?;
 
-    let text = matches.value_of("TEXT").map(ToString::to_string);
-
-    Ok(if matches.is_present("TERMINAL") {
+    Ok(if matches.is_present("term") {
         Input::Terminal
-    } else if matches.is_present("LIBRARIES") {
+    } else if matches.is_present("libs") {
         Input::Libraries
     } else if let Some(mut color_args) = matches.values_of("COLOR") {
         match input {
@@ -232,10 +291,9 @@ pub fn parse_args() -> Result<Input> {
                     .collect::<Result<Vec<f64>, anyhow::Error>>()?;
                 let color = Color::new(input, &components)?;
 
-                Input::ColorInput {
+                Input::ColorOutput {
                     input: ColorInput::Color(color),
                     output,
-                    text,
                     size,
                 }
             }
@@ -244,11 +302,57 @@ pub fn parse_args() -> Result<Input> {
                     bail!("Too many arguments provided\n\nFor more information try `--help`");
                 }
                 if let Some(color_arg) = color_args.next() {
-                    Input::ColorInput {
+                    Input::ColorOutput {
                         input: ColorInput::HexOrHtml(color_arg.to_string()),
                         output,
-                        text,
                         size,
+                    }
+                } else {
+                    bail!("No argument was provided\n\nFor more information try `--help`");
+                }
+            }
+        }
+    } else if let Some(matches) = matches.subcommand_matches("print") {
+        let mut color_args = matches.values_of("COLOR").expect("No color provided");
+        let input = get_input_color_space(&matches)?;
+        let text = matches
+            .value_of("TEXT")
+            .expect("No text provided")
+            .to_string();
+
+        let bold = matches.is_present("BOLD");
+        let italic = matches.is_present("ITALIC");
+        let underlined = matches.is_present("UNDERLINE");
+        let no_newline = matches.is_present("NO_NEWLINE");
+
+        match input {
+            Some(input) => {
+                let components = color_args
+                    .map(|s| s.parse().context(format!("{:?} could not be parsed", s)))
+                    .collect::<Result<Vec<f64>, anyhow::Error>>()?;
+                let color = Color::new(input, &components)?;
+
+                Input::TextOutput {
+                    input: ColorInput::Color(color),
+                    text,
+                    bold,
+                    italic,
+                    underlined,
+                    no_newline,
+                }
+            }
+            None => {
+                if color_args.len() > 1 {
+                    bail!("Too many arguments provided\n\nFor more information try `--help`");
+                }
+                if let Some(color_arg) = color_args.next() {
+                    Input::TextOutput {
+                        input: ColorInput::HexOrHtml(color_arg.to_string()),
+                        text,
+                        bold,
+                        italic,
+                        underlined,
+                        no_newline,
                     }
                 } else {
                     bail!("No argument was provided\n\nFor more information try `--help`");

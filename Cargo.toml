@@ -18,7 +18,8 @@ license = "MIT"
 lto = "thin"
 
 [dependencies]
-crossterm = "0.18.1"
+colored = "2.0.0"
 clap = "2"
+atty = "0.2"
 color_space = "^0.5.3"
 anyhow = "1"

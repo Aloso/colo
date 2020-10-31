@@ -1,12 +1,12 @@
 use anyhow::Result;
+use atty::Stream;
 use color_space::ToRgb;
-use crossterm::style::{self, Print, ResetColor, SetForegroundColor};
-use crossterm::{queue, tty::IsTty};
+use colored::Colorize;
 use std::io::{stdout, Write};
 
 use crate::color::{hex, html, json, space, Color, ColorSpace};
 
-pub fn show(color: Color, out: ColorSpace, size: u32, text: Option<String>) -> Result<()> {
+pub fn show(color: Color, out: ColorSpace, size: u32) -> Result<()> {
     let rgb = color.to_rgb();
     let input = color.to_string();
     let converted = color.to_color_space(out);
@@ -19,32 +19,21 @@ pub fn show(color: Color, out: ColorSpace, size: u32, text: Option<String>) -> R
         hex::from_rgb(rgb)
     };
 
-    show_impl(rgb, input + " ~ " + &second_str, json, size, text)
+    show_impl(rgb, input + " ~ " + &second_str, json, size)
 }
 
-pub fn show_hex_or_html(
-    color: &str,
-    out: ColorSpace,
-    size: u32,
-    text: Option<String>,
-) -> Result<()> {
+pub fn show_hex_or_html(color: &str, out: ColorSpace, size: u32) -> Result<()> {
     let rgb = html::get(color).map_or_else(|| hex::parse(color), Ok)?;
     let input = hex::from_rgb(rgb);
     let converted = Color::Rgb(rgb).to_color_space(out);
     let json = json::from_color(converted);
     let converted = converted.to_string();
 
-    show_impl(rgb, input + " ~ " + &converted, json, size, text)
+    show_impl(rgb, input + " ~ " + &converted, json, size)
 }
 
-fn show_impl(
-    rgb: space::Rgb,
-    msg: String,
-    json: String,
-    size: u32,
-    text: Option<String>,
-) -> Result<()> {
-    let crossterm_color = style::Color::Rgb {
+fn show_impl(rgb: space::Rgb, msg: String, json: String, size: u32) -> Result<()> {
+    let color = colored::Color::TrueColor {
         r: rgb.r.round() as u8,
         g: rgb.g.round() as u8,
         b: rgb.b.round() as u8,
@@ -52,27 +41,51 @@ fn show_impl(
 
     let mut stdout = stdout();
 
-    if !stdout.is_tty() {
-        queue!(stdout, Print(json))?;
-    } else if let Some(text) = text {
-        queue!(
-            stdout,
-            SetForegroundColor(crossterm_color),
-            Print(text),
-            Print("\n"),
-            ResetColor
-        )?;
+    if !atty::is(Stream::Stdout) {
+        write!(stdout, "{}", json)?;
     } else {
-        queue!(stdout, Print(msg), Print("\n"))?;
         let square = make_square(size);
-        queue!(
-            stdout,
-            SetForegroundColor(crossterm_color),
-            Print(&square),
-            ResetColor,
-        )?;
+        writeln!(stdout, "{}\n{}", msg, square.color(color))?;
     }
 
+    Ok(())
+}
+
+pub fn show_text(
+    rgb: space::Rgb,
+    bg: Option<space::Rgb>,
+    text: String,
+    italic: bool,
+    bold: bool,
+    underline: bool,
+) -> Result<()> {
+    let fg = colored::Color::TrueColor {
+        r: rgb.r.round() as u8,
+        g: rgb.g.round() as u8,
+        b: rgb.b.round() as u8,
+    };
+    let bg = bg.map(|c| colored::Color::TrueColor {
+        r: c.r.round() as u8,
+        g: c.g.round() as u8,
+        b: c.b.round() as u8,
+    });
+    let mut text = text.color(fg);
+
+    if italic {
+        text = text.italic();
+    }
+    if bold {
+        text = text.bold();
+    }
+    if underline {
+        text = text.underline();
+    }
+    if let Some(bg) = bg {
+        text = text.on_color(bg);
+    }
+
+    let mut stdout = stdout();
+    write!(stdout, "{}", text)?;
     Ok(())
 }
 
@@ -101,6 +114,5 @@ fn make_square(size: u32) -> String {
         s.push('▀');
         s.push('▀');
     }
-    s.push('\n');
     s
 }

@@ -1,87 +1,90 @@
-use crossterm::style::{
-    self, Colorize, Print, PrintStyledContent, ResetColor, SetBackgroundColor, SetForegroundColor,
-};
-use crossterm::{cursor, queue, Result};
+use crate::color::ansi::{AnsiColor, Bg, Fg, ResetBg, ResetFg};
+use anyhow::Result;
 use std::io::{stdout, Stdout, Write};
 
 pub fn show_term_colors() -> Result<()> {
     let mut stdout = stdout();
 
     let colors = &[
-        style::Color::White,
-        style::Color::DarkGrey,
-        style::Color::Grey,
-        style::Color::Black,
-        style::Color::Red,
-        style::Color::DarkRed,
-        style::Color::Yellow,
-        style::Color::DarkYellow,
-        style::Color::Green,
-        style::Color::DarkGreen,
-        style::Color::Cyan,
-        style::Color::DarkCyan,
-        style::Color::Blue,
-        style::Color::DarkBlue,
-        style::Color::Magenta,
-        style::Color::DarkMagenta,
+        AnsiColor::White,
+        AnsiColor::DarkGrey,
+        AnsiColor::Grey,
+        AnsiColor::Black,
+        AnsiColor::Red,
+        AnsiColor::DarkRed,
+        AnsiColor::Yellow,
+        AnsiColor::DarkYellow,
+        AnsiColor::Green,
+        AnsiColor::DarkGreen,
+        AnsiColor::Cyan,
+        AnsiColor::DarkCyan,
+        AnsiColor::Blue,
+        AnsiColor::DarkBlue,
+        AnsiColor::Magenta,
+        AnsiColor::DarkMagenta,
     ];
 
-    queue!(
+    writeln!(
         stdout,
-        Print("The appearance of these colors depends on your terminal.\n\n"),
+        "The appearance of these colors depends on your terminal.\n"
     )?;
 
     for (_i, line) in colors.chunks(2).enumerate() {
-        queue!(stdout, cursor::MoveRight(3))?;
+        write!(stdout, "   ")?;
         if let [c1, c2] = *line {
-            print_color_block(&mut stdout, c1, 11, false)?;
-            print_color_block(&mut stdout, c2, 15, true)?;
+            print_color_block(&mut stdout, c1, 11, AnsiColor::Black)?;
+            print_color_block(&mut stdout, c2, 15, AnsiColor::White)?;
 
-            queue!(stdout, Print("    "))?;
+            write!(stdout, "    ")?;
 
             print_color_text(&mut stdout, c1, 10)?;
             print_color_text(&mut stdout, c2, 14)?;
 
-            queue!(stdout, Print("\n"))?;
+            writeln!(stdout)?;
         }
     }
 
-    queue!(stdout, Print("\n"))?;
-    stdout.flush().unwrap();
+    writeln!(stdout)?;
 
     Ok(())
 }
 
 fn print_color_block(
     stdout: &mut Stdout,
-    color: style::Color,
+    color: AnsiColor,
     max_len: usize,
-    white: bool,
+    text_color: AnsiColor,
 ) -> Result<()> {
     let text = format!("  {:?}", color);
     let len = max_len - text.len();
-    let text = if white { text.white() } else { text.black() };
-    let space = &"               "[0..len];
+    let spaces = &"               "[0..len];
 
-    queue!(
+    write!(
         stdout,
-        SetBackgroundColor(color),
-        PrintStyledContent(text),
-        Print(space),
-        ResetColor,
-    )
+        "{}{}{}{}{}{}",
+        Bg(color),
+        Fg(text_color),
+        text,
+        spaces,
+        ResetFg,
+        ResetBg,
+    )?;
+    Ok(())
 }
 
-fn print_color_text(stdout: &mut Stdout, color: style::Color, max_len: usize) -> Result<()> {
+fn print_color_text(stdout: &mut Stdout, color: AnsiColor, max_len: usize) -> Result<()> {
     let text = format!("  {:?}", color);
     let len = max_len - text.len();
     let space = &"               "[0..len];
 
-    queue!(
+    write!(
         stdout,
-        SetForegroundColor(color),
-        Print(text),
-        Print(space),
-        ResetColor,
-    )
+        "{}{}{}{}{}",
+        Fg(color),
+        text,
+        space,
+        ResetFg,
+        ResetBg,
+    )?;
+    Ok(())
 }

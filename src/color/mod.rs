@@ -1,5 +1,6 @@
 mod convert;
 
+pub mod ansi;
 pub mod hex;
 pub mod html;
 pub mod json;
@@ -61,7 +62,7 @@ impl Color {
         match color_space {
             ColorSpace::Rgb => Color::Rgb(rgb),
             ColorSpace::Cmy => Color::Cmy(Cmy::from_rgb(&rgb)),
-            ColorSpace::Cmyk => Color::Cmyk(Cmyk::from_rgb(&rgb)),
+            ColorSpace::Cmyk => Color::Cmyk(cmyk_from_rgb(&rgb)),
             ColorSpace::Hsv => Color::Hsv(Hsv::from_rgb(&rgb)),
             ColorSpace::Hsl => Color::Hsl(Hsl::from_rgb(&rgb)),
             ColorSpace::Lch => Color::Lch(Lch::from_rgb(&rgb)),
@@ -71,6 +72,20 @@ impl Color {
             ColorSpace::Xyz => Color::Xyz(Xyz::from_rgb(&rgb)),
             ColorSpace::Yxy => Color::Yxy(Yxy::from_rgb(&rgb)),
         }
+    }
+}
+
+fn cmyk_from_rgb(rgb: &Rgb) -> Cmyk {
+    let cmy = Cmy::from_rgb(rgb);
+    let k = cmy.c.min(cmy.m.min(cmy.y.min(1.0)));
+    match (k - 1.0).abs() < 1e-3 {
+        true => Cmyk::new(0.0, 0.0, 0.0, k),
+        false => Cmyk::new(
+            (cmy.c - k) / (1.0 - k),
+            (cmy.m - k) / (1.0 - k),
+            (cmy.y - k) / (1.0 - k),
+            k,
+        ),
     }
 }
 
