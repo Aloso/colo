@@ -10,7 +10,7 @@
 │   ├── unicode-width v0.1.8
 │   └── vec_map v0.8.2
 ├── color_space v0.5.3
-└── crossterm v0.18.1
+└── crossterm v0.18.2
     ├── bitflags v1.2.1
     ├── lazy_static v1.4.0
     ├── libc v0.2.80
