@@ -4,7 +4,8 @@ use anyhow::{bail, Context, Result};
 /// Parses a hex color (e.g. `#FF7700`).
 ///
 /// Supported are colors with 1 to 8 digits per channel (e.g. `#F70`,
-/// `#FFFFFFFF_77777777_00000000`). Underscores and leading `#` signs are removed.
+/// `#FFFFFFFF_77777777_00000000`). Underscores and leading `#` signs are
+/// removed.
 pub fn parse(color: &str) -> Result<space::Rgb> {
     let color: String = color
         .trim_start_matches('#')
@@ -43,8 +44,8 @@ fn hex_to_f64(src: &str) -> Result<f64> {
         as f64)
 }
 
-/// Scales the number down to 2 hexadecimal places and converts it to a `Rgb` color.
-/// The original length is specified as `len`.
+/// Scales the number down to 2 hexadecimal places and converts it to a `Rgb`
+/// color. The original length is specified as `len`.
 fn scale_down(r: f64, g: f64, b: f64, len: usize) -> Result<space::Rgb> {
     let up = match len {
         1 => 0xF,

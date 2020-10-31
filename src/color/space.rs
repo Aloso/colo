@@ -1,6 +1,6 @@
+use anyhow::bail;
 use std::{fmt, str::FromStr};
 
-use anyhow::bail;
 pub use color_space::{Cmy, Cmyk, Hsl, Hsv, HunterLab, Lab, Lch, Luv, Rgb, Xyz, Yxy};
 
 /// A C-like enum listing all supported color spaces
@@ -21,23 +21,19 @@ pub enum ColorSpace {
 
 impl fmt::Display for ColorSpace {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(
-            f,
-            "{}",
-            match self {
-                ColorSpace::Rgb => "rgb",
-                ColorSpace::Cmy => "cmy",
-                ColorSpace::Cmyk => "cmyk",
-                ColorSpace::Hsv => "hsv",
-                ColorSpace::Hsl => "hsl",
-                ColorSpace::Lch => "lch",
-                ColorSpace::Luv => "luv",
-                ColorSpace::Lab => "lab",
-                ColorSpace::HunterLab => "hunterlab",
-                ColorSpace::Xyz => "xyz",
-                ColorSpace::Yxy => "yxy",
-            }
-        )
+        f.write_str(match self {
+            ColorSpace::Rgb => "rgb",
+            ColorSpace::Cmy => "cmy",
+            ColorSpace::Cmyk => "cmyk",
+            ColorSpace::Hsv => "hsv",
+            ColorSpace::Hsl => "hsl",
+            ColorSpace::Lch => "lch",
+            ColorSpace::Luv => "luv",
+            ColorSpace::Lab => "lab",
+            ColorSpace::HunterLab => "hunterlab",
+            ColorSpace::Xyz => "xyz",
+            ColorSpace::Yxy => "yxy",
+        })
     }
 }
 

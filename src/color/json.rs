@@ -33,6 +33,7 @@ macro_rules! build_string {
     };
 }
 
+/// Create a JSON string from the color.
 pub fn from_color(color: Color) -> String {
     match color {
         Color::Rgb(color) => build_string!(color, r, g, b),
@@ -46,5 +47,24 @@ pub fn from_color(color: Color) -> String {
         Color::HunterLab(color) => build_string!(color, l, a, b),
         Color::Xyz(color) => build_string!(color, x, y, z),
         Color::Yxy(color) => build_string!(color, y1, x, y2),
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use space::ColorSpace;
+
+    use crate::color::{space, Color};
+
+    #[test]
+    fn test_json_generation() {
+        let rgb = Color::Rgb(space::Rgb::new(255.0, 0.0, 127.5));
+        let hsv = rgb.to_color_space(ColorSpace::Hsv);
+
+        assert_eq!(
+            super::from_color(rgb).as_str(),
+            r#"{"r":255,"g":0,"b":127.5}"#,
+        );
+        assert_eq!(super::from_color(hsv).as_str(), r#"{"h":330,"s":1,"v":1}"#);
     }
 }

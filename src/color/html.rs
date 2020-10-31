@@ -146,8 +146,9 @@ const HTML_COLOR_NAMES: &[(&str, u32)] = &[
     ("black", 0x000000),
 ];
 
-/// Gets an HTML color. The name (e.g. `Rebeccapurple`) is converted to lowercase first.
-/// If this function is called many times, it's more efficient to build a HashMap.
+/// Gets an HTML color. The name (e.g. `Rebeccapurple`) is converted to
+/// lowercase first. If this function is called many times, it's more efficient
+/// to build a HashMap.
 pub fn get(name: &str) -> Option<Rgb> {
     let name = name.to_lowercase();
     HTML_COLOR_NAMES
