@@ -1,5 +1,5 @@
 use anyhow::{bail, Context, Result};
-use clap::{App, Arg, ArgGroup};
+use clap::{App, AppSettings, Arg, ArgGroup};
 
 use crate::color::{Color, ColorSpace};
 
@@ -68,6 +68,8 @@ The input color. Supported formats:
 /// clap terminates the application, so this function never returns.
 fn clap_args() -> clap::ArgMatches<'static> {
     App::new(APP_NAME)
+        .global_setting(AppSettings::ColorAuto)
+        .global_setting(AppSettings::ColoredHelp)
         .version(APP_VERSION)
         .version_short("v")
         .author("Ludwig Stecher <ludwig.stecher@gmx.de>")
@@ -112,8 +114,12 @@ fn clap_args() -> clap::ArgMatches<'static> {
                 .long("out")
                 .short("o")
                 .takes_value(true)
-                .help("Output color space")
+                .help(
+                    "Output color space [possible values: rgb, cmy, \
+                    cmyk, hsv, hsl, lch, luv, lab, hunterlab, xyz, yxy]",
+                )
                 .possible_values(COLOR_SPACES)
+                .hide_possible_values(true)
                 .case_insensitive(true)
                 .requires("COLOR"),
         )
