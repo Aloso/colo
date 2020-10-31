@@ -53,7 +53,6 @@ The input color. Supported formats:
 - Color components (e.g. '127/0/255')
   use `--in` to specify the used color space";
 
-
 /// Returns the command line arguments parsed by clap.
 ///
 /// Note that, if the `--version` or `--help` flag was provided,
