@@ -77,19 +77,13 @@ fn clap_args() -> clap::ArgMatches<'static> {
                 .long("terminal")
                 .short("t")
                 .help("Show default terminal colors")
-                .conflicts_with_all(&["COLOR", "INPUT_ALIASES", "OUTPUT_COLOR_SPACE", "SIZE"]),
+                .conflicts_with_all(&["LIBRARIES", "COLOR"]),
         )
         .arg(
             Arg::with_name("LIBRARIES")
                 .long("libraries")
                 .help("Show dependency tree")
-                .conflicts_with_all(&[
-                    "TERMINAL",
-                    "COLOR",
-                    "INPUT_ALIASES",
-                    "OUTPUT_COLOR_SPACE",
-                    "SIZE",
-                ]),
+                .conflicts_with_all(&["TERMINAL", "COLOR"]),
         )
         .arg(
             Arg::with_name("COLOR")
@@ -110,7 +104,8 @@ fn clap_args() -> clap::ArgMatches<'static> {
                     "Input color space [possible values: rgb, cmy, \
                     cmyk, hsv, hsl, lch, luv, lab, hunterlab, xyz, yxy]",
                 )
-                .long_help(COLOR_SPACE_HELP),
+                .long_help(COLOR_SPACE_HELP)
+                .requires("COLOR"),
         )
         .arg(
             Arg::with_name("OUTPUT_COLOR_SPACE")
@@ -119,7 +114,8 @@ fn clap_args() -> clap::ArgMatches<'static> {
                 .takes_value(true)
                 .help("Output color space")
                 .possible_values(COLOR_SPACES)
-                .case_insensitive(true),
+                .case_insensitive(true)
+                .requires("COLOR"),
         )
         .arg(alias("RGB", "R", "Alias for `--in rgb`"))
         .arg(alias("CMY", "C", "Alias for `--in cmy`"))
@@ -134,7 +130,17 @@ fn clap_args() -> clap::ArgMatches<'static> {
                 .help(
                     "Size of the color square in terminal rows (default: 4). Set to 0 to hide it.",
                 )
-                .requires("COLOR"),
+                .requires("COLOR")
+                .conflicts_with("TEXT"),
+        )
+        .arg(
+            Arg::with_name("TEXT")
+                .long("text")
+                .short("x")
+                .takes_value(true)
+                .help("Text to print in the specified color")
+                .requires("COLOR")
+                .conflicts_with("SIZE"),
         )
         .group(
             ArgGroup::with_name("INPUT_ALIASES")
@@ -157,6 +163,7 @@ pub enum Input {
     ColorInput {
         input: ColorInput,
         output: ColorSpace,
+        text: Option<String>,
         size: u32,
     },
 }
@@ -205,6 +212,8 @@ pub fn parse_args() -> Result<Input> {
         })
         .unwrap_or(Ok(4))?;
 
+    let text = matches.value_of("TEXT").map(ToString::to_string);
+
     Ok(if matches.is_present("TERMINAL") {
         Input::Terminal
     } else if matches.is_present("LIBRARIES") {
@@ -220,6 +229,7 @@ pub fn parse_args() -> Result<Input> {
                 Input::ColorInput {
                     input: ColorInput::Color(color),
                     output,
+                    text,
                     size,
                 }
             }
@@ -231,6 +241,7 @@ pub fn parse_args() -> Result<Input> {
                     Input::ColorInput {
                         input: ColorInput::HexOrHtml(color_arg.to_string()),
                         output,
+                        text,
                         size,
                     }
                 } else {
