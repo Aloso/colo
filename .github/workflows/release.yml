@@ -1,0 +1,65 @@
+name: Build and upload binaries to release
+
+# https://eugene-babichenko.github.io/blog/2020/05/09/github-actions-cross-platform-auto-releases/
+# https://mateuscosta.me/rust-releases-with-github-actions
+
+on:
+  push:
+    tags:
+      - 'v[0-9]+.*'
+
+jobs:
+  create_release:
+    name: Create release
+    runs-on: ubuntu-latest
+    # Note this. We are going to use that in further jobs.
+    outputs:
+      upload_url: ${{ steps.create_release.outputs.upload_url }}
+    steps:
+      - name: Create release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+
+  release_assets:
+    name: Build and release assets
+    needs: create_release
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            asset_name: colo-linux
+          - os: macos-latest
+            asset_name: colo-macos
+          - os: windows-latest
+            asset_name: colo-windows.exe
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Print information
+        run: |
+          rustup show active-toolchain
+          rustc --version
+          cargo tree
+
+      - name: Build project
+        run: cargo build --release --locked
+
+      - name: Upload release assets
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create_release.outputs.upload_url }}
+          asset_name: ${{ matrix.asset_name }}
+          asset_path: target/release/colo
+          asset_content_type: application/octet-stream
