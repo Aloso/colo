@@ -32,9 +32,12 @@ jobs:
           toolchain: stable
           override: true
           components: clippy
-      - uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v2
       - name: Run `cargo clippy`
         uses: actions-rs/clippy-check@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
   build:
     needs: clippy
