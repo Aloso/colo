@@ -16,6 +16,10 @@ jobs:
     outputs:
       upload_url: ${{ steps.create_release.outputs.upload_url }}
     steps:
+      - name: Set variables
+        id: vars
+        run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
+
       - name: Create release
         id: create_release
         uses: actions/create-release@v1
@@ -26,6 +30,22 @@ jobs:
           release_name: Release ${{ github.ref }}
           draft: false
           prerelease: false
+          body: |
+            This is a new release of `colo`. [Read the changelog here](https://github.com/Aloso/colo/blob/${{ steps.vars.outputs.tag }}/CHANGELOG.md).
+
+            ### Installation
+
+            If you're running on Linux, macOS or Windows, you can use the binaries below.
+
+            Alternatively, you can build `colo` with Cargo, Rusts package manager. To install the Rust toolchain, see the ([installation manual](https://www.rust-lang.org/tools/install)). Then run
+
+            ```shell
+            $ cargo install colo
+            ```
+
+            You might have to add the `.cargo/bin` folder to your `PATH` afterwards.
+
+            Please file issues if you run into any problems or have suggestions.
 
   release_assets:
     name: Build and release assets
@@ -35,14 +55,14 @@ jobs:
       matrix:
         include:
           - os: ubuntu-latest
-            asset_name: colo-linux
+            file_ending: ''
           - os: macos-latest
-            asset_name: colo-macos
+            file_ending: ''
           - os: windows-latest
-            asset_name: colo-windows.exe
+            file_ending: '.exe'
 
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v2
 
       - name: Print information
@@ -50,6 +70,10 @@ jobs:
           rustup show active-toolchain
           rustc --version
           cargo tree
+
+      - name: Set variables
+        id: vars
+        run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
 
       - name: Build project
         run: cargo build --release --locked
@@ -60,6 +84,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ needs.create_release.outputs.upload_url }}
-          asset_name: ${{ matrix.asset_name }}
-          asset_path: target/release/colo
+          asset_name: colo_${{ matrix.os }}_${{ steps.vars.outputs.tag }}${{ matrix.file_ending }}
+          asset_path: target/release/colo${{ matrix.file_ending }}
           asset_content_type: application/octet-stream

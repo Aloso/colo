@@ -6,13 +6,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-#### Additional
+## [0.2.2] - 2020-10-31
 
-- Flag `--libraries` to print dependency tree
+#### Additions
+
+- [`#10`](https://github.com/Aloso/colo/pull/10): Flag `--libraries` to print dependency tree
 
 #### Internal
 
-Improved documentation and tests
+- Workflow added to publish binaries for Linux, Windows and macOS every time a new version is released
+- Improved documentation and tests
 
 ## [0.2.1] - 2020-10-29
 
