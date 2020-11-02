@@ -1,64 +1,9 @@
 //! Module for converting a color space and color components to a `Color`.
 
-use std::{convert::TryFrom, error::Error, fmt};
+use std::convert::TryFrom;
 
 use super::space::*;
-use super::{Color, ColorSpace};
-
-/// Error caused by parsing a number in a certain color space.
-///
-/// This error can occur if the wrong number of color components
-/// was supplied (e.g. `rgb` with only 2 components), or if a
-/// color component is out of range (for example, `rgb` requires
-/// that all components are in 0..=255).
-#[derive(Debug, Copy, Clone, PartialEq)]
-pub enum ParseError {
-    NumberOfComponents {
-        expected: usize,
-        got: usize,
-    },
-    Negative {
-        component: &'static str,
-        got: f64,
-    },
-    OutOfRange {
-        component: &'static str,
-        min: f64,
-        max: f64,
-        got: f64,
-    },
-}
-
-impl Error for ParseError {}
-
-// Note that this could be simplified with `thiserror`, but I'm currently
-// reluctant to add more dependencies
-impl fmt::Display for ParseError {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        match *self {
-            ParseError::NumberOfComponents { expected, got } => write!(
-                f,
-                "Wrong number of color components (expected {}, got {})",
-                expected, got
-            ),
-            ParseError::Negative { component, got } => write!(
-                f,
-                "Color component {:?} can't be negative (got {})",
-                component, got
-            ),
-            ParseError::OutOfRange {
-                component,
-                min,
-                max,
-                got,
-            } => write!(
-                f,
-                "Color component {:?} out of range (expected {} to {}, got {})",
-                component, min, max, got
-            ),
-        }
-    }
-}
+use super::{Color, ColorSpace, ParseError};
 
 impl TryFrom<(ColorSpace, &[f64])> for Color {
     type Error = ParseError;

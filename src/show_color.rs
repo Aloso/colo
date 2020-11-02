@@ -4,7 +4,7 @@ use color_space::ToRgb;
 use colored::Colorize;
 use std::io::{stdout, Write};
 
-use crate::color::{hex, html, json, space, Color, ColorSpace};
+use crate::color::{hex, json, space, Color, ColorSpace};
 
 pub fn show(color: Color, out: ColorSpace, size: u32) -> Result<()> {
     let rgb = color.to_rgb();
@@ -22,10 +22,10 @@ pub fn show(color: Color, out: ColorSpace, size: u32) -> Result<()> {
     show_impl(rgb, input + " ~ " + &second_str, json, size)
 }
 
-pub fn show_hex_or_html(color: &str, out: ColorSpace, size: u32) -> Result<()> {
-    let rgb = html::get(color).map_or_else(|| hex::parse(color), Ok)?;
+pub fn show_hex_or_html(color: Color, out: ColorSpace, size: u32) -> Result<()> {
+    let rgb = color.to_rgb();
     let input = hex::from_rgb(rgb);
-    let converted = Color::Rgb(rgb).to_color_space(out);
+    let converted = color.to_color_space(out);
     let json = json::from_color(converted);
     let converted = converted.to_string();
 

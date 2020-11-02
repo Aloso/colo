@@ -1,16 +1,19 @@
+use color_space::{FromRgb, ToRgb};
+use std::fmt;
+
+use space::*;
+
+pub use parse::{parse, ColorFormat, ParseError};
+pub use space::ColorSpace;
+
 mod convert;
+mod parse;
 
 pub mod ansi;
 pub mod hex;
 pub mod html;
 pub mod json;
 pub mod space;
-
-use color_space::{FromRgb, ToRgb};
-pub use space::ColorSpace;
-
-use space::*;
-use std::fmt;
 
 /// A color enum that unifies the color types specific to a color space.
 #[derive(Debug, Copy, Clone, PartialEq)]
@@ -30,7 +33,7 @@ pub enum Color {
 
 impl Color {
     /// Constructs a color from the color space and the color components.
-    pub fn new(color_space: ColorSpace, components: &[f64]) -> Result<Self, convert::ParseError> {
+    pub fn new(color_space: ColorSpace, components: &[f64]) -> Result<Self, ParseError> {
         std::convert::TryFrom::try_from((color_space, components))
     }
 
@@ -62,7 +65,25 @@ impl Color {
         match color_space {
             ColorSpace::Rgb => Color::Rgb(rgb),
             ColorSpace::Cmy => Color::Cmy(Cmy::from_rgb(&rgb)),
-            ColorSpace::Cmyk => Color::Cmyk(cmyk_from_rgb(&rgb)),
+            ColorSpace::Cmyk => {
+                /// TODO: Use `Cmyk::from_rgb` from the color_space crate, as
+                /// soon as that function works correctly
+                fn cmyk_from_rgb(rgb: &Rgb) -> Cmyk {
+                    let cmy = Cmy::from_rgb(rgb);
+                    let k = cmy.c.min(cmy.m.min(cmy.y.min(1.0)));
+                    match (k - 1.0).abs() < 1e-3 {
+                        true => Cmyk::new(0.0, 0.0, 0.0, k),
+                        false => Cmyk::new(
+                            (cmy.c - k) / (1.0 - k),
+                            (cmy.m - k) / (1.0 - k),
+                            (cmy.y - k) / (1.0 - k),
+                            k,
+                        ),
+                    }
+                }
+
+                Color::Cmyk(cmyk_from_rgb(&rgb))
+            }
             ColorSpace::Hsv => Color::Hsv(Hsv::from_rgb(&rgb)),
             ColorSpace::Hsl => Color::Hsl(Hsl::from_rgb(&rgb)),
             ColorSpace::Lch => Color::Lch(Lch::from_rgb(&rgb)),
@@ -72,20 +93,6 @@ impl Color {
             ColorSpace::Xyz => Color::Xyz(Xyz::from_rgb(&rgb)),
             ColorSpace::Yxy => Color::Yxy(Yxy::from_rgb(&rgb)),
         }
-    }
-}
-
-fn cmyk_from_rgb(rgb: &Rgb) -> Cmyk {
-    let cmy = Cmy::from_rgb(rgb);
-    let k = cmy.c.min(cmy.m.min(cmy.y.min(1.0)));
-    match (k - 1.0).abs() < 1e-3 {
-        true => Cmyk::new(0.0, 0.0, 0.0, k),
-        false => Cmyk::new(
-            (cmy.c - k) / (1.0 - k),
-            (cmy.m - k) / (1.0 - k),
-            (cmy.y - k) / (1.0 - k),
-            k,
-        ),
     }
 }
 

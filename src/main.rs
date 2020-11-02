@@ -1,12 +1,11 @@
 #![deny(unsafe_code)]
 
-use anyhow::Result;
-use color::{hex, html};
+use anyhow::{bail, Result};
+use color::ColorFormat;
 use color_space::ToRgb;
-use command_line::{ColorInput, Input};
 
+mod cli;
 mod color;
-mod command_line;
 mod show_color;
 mod show_term_colors;
 
@@ -16,49 +15,52 @@ mod show_term_colors;
 /// recoverable and simply need to be reported. Rusts runtime handles this
 /// automatically, when an error is returned from `main()`.
 fn main() -> Result<()> {
-    match command_line::parse_args()? {
-        Input::Terminal => {
-            show_term_colors::show_term_colors()?;
-        }
-        Input::Libraries => {
-            use command_line::{APP_NAME, APP_VERSION, DEPENDENCIES};
-            println!("{} v{}\n{}", APP_NAME, APP_VERSION, DEPENDENCIES);
-        }
-        // TODO: Refactor the following two match arms into a single one
-        Input::ColorOutput {
-            input,
-            output,
-            size,
-        } => match input {
-            ColorInput::HexOrHtml(color) => {
-                show_color::show_hex_or_html(&color, output, size)?;
-            }
-            ColorInput::Color(color) => {
-                show_color::show(color, output, size)?;
-            }
-        },
+    let matches = cli::clap_args();
 
-        Input::TextOutput {
-            input,
-            mut text,
-            bold,
+    if let Some(cli::Libs) = cli::get_libs(&matches) {
+        use cli::{APP_NAME, APP_VERSION, DEPENDENCIES};
+        println!("{} v{}\n{}", APP_NAME, APP_VERSION, DEPENDENCIES);
+    } else if let Some(cli::Print {
+        color: (color, _),
+        bg_color,
+        mut text,
+        bold,
+        italic,
+        underline,
+        no_newline,
+    }) = cli::get_print(&matches)?
+    {
+        if !no_newline {
+            text.push('\n');
+        }
+        show_color::show_text(
+            color.to_rgb(),
+            bg_color.map(|(c, _)| c.to_rgb()),
+            text,
             italic,
-            underlined,
-            no_newline,
-        } => {
-            if !no_newline {
-                text.push('\n');
-            }
-            match input {
-                ColorInput::HexOrHtml(color) => {
-                    let color = html::get(&color).map_or_else(|| hex::parse(&color), Ok)?;
-                    show_color::show_text(color.to_rgb(), None, text, italic, bold, underlined)?;
+            bold,
+            underline,
+        )?;
+    } else if let Some(cli::Term) = cli::get_term(&matches) {
+        show_term_colors::show_term_colors()?;
+    } else if let Some(cli::Show {
+        colors,
+        output,
+        size,
+    }) = cli::get_show(&matches)?
+    {
+        for (color, color_format) in colors {
+            match color_format {
+                ColorFormat::Hex { .. } | ColorFormat::Html => {
+                    show_color::show_hex_or_html(color, output, size)?;
                 }
-                ColorInput::Color(color) => {
-                    show_color::show_text(color.to_rgb(), None, text, italic, bold, underlined)?;
+                ColorFormat::Components { .. } => {
+                    show_color::show(color, output, size)?;
                 }
             }
         }
+    } else {
+        bail!("No input provided");
     }
 
     Ok(())

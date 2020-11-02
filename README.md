@@ -119,4 +119,8 @@ Also, to pass continuous integration, the code must
   * compile on the latest stable Rust version
   * all tests must succeed
 
+Note: I'm currently refactoring the code base, so this is a bad time for large pull requests. I should be finished with this in a week at the latest.
+
+You can also look in the issue tracker for issues with the label [help wanted](https://github.com/Aloso/colo/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22).
+
 That's it! If you have any questions, feel free to create an issue.

@@ -1,52 +1,96 @@
+use std::{error::Error, fmt};
+
 use crate::color::space;
-use anyhow::{bail, Context, Result};
+
+#[derive(Debug, Clone, PartialEq)]
+pub enum ParseHexError {
+    NotHexadecimal { string: String, c: char },
+    NoDigits,
+    TooManyDigits { string: String, got: u32, max: u32 },
+    DigitsNotDivisibleBy3 { string: String, got: u32 },
+}
+
+impl Error for ParseHexError {}
+
+impl fmt::Display for ParseHexError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            ParseHexError::NotHexadecimal { string, c } => {
+                write!(f, "{:?} in the string {:?}", c, string)
+            }
+            ParseHexError::NoDigits => write!(f, "No digits found"),
+            ParseHexError::TooManyDigits { string, got, max } => write!(
+                f,
+                "Too many digits found in {:?} (max: {}, got: {})",
+                string, max, got
+            ),
+            ParseHexError::DigitsNotDivisibleBy3 { string, got } => write!(
+                f,
+                "Number of digits ({}) in {:?} not divisible by 3",
+                got, string
+            ),
+        }
+    }
+}
 
 /// Parses a hex color (e.g. `#FF7700`).
 ///
 /// Supported are colors with 1 to 8 digits per channel (e.g. `#F70`,
 /// `#FFFFFFFF_77777777_00000000`). Underscores and leading `#` signs are
 /// removed.
-pub fn parse(color: &str) -> Result<space::Rgb> {
-    let color: String = color
+pub fn parse(input: &str) -> Result<space::Rgb, ParseHexError> {
+    let color: String = input
         .trim_start_matches('#')
         .chars()
         .filter(|&c| c != '_')
-        .collect();
+        .map(|c| {
+            if c.is_ascii_hexdigit() {
+                Ok(c)
+            } else {
+                Err(ParseHexError::NotHexadecimal {
+                    string: input.into(),
+                    c,
+                })
+            }
+        })
+        .collect::<Result<_, ParseHexError>>()?;
 
     if color.is_empty() {
-        bail!("color is empty");
+        return Err(ParseHexError::NoDigits);
     }
     if color.len() % 3 != 0 {
-        bail!("{:?} doesn't have a length divisible by 3", color);
+        return Err(ParseHexError::DigitsNotDivisibleBy3 {
+            string: input.into(),
+            got: color.len() as u32,
+        });
     }
     if color.len() > 24 {
-        bail!(
-            "{:?} is too long, only hexadecimal numbers of up to 24 digits are supported",
-            color,
-        );
+        return Err(ParseHexError::TooManyDigits {
+            string: input.into(),
+            got: color.len() as u32,
+            max: 24,
+        });
     }
 
     let len = color.len() / 3;
     let (r, gb) = color.split_at(len);
     let (g, b) = gb.split_at(len);
 
-    let r = hex_to_f64(r)?;
-    let g = hex_to_f64(g)?;
-    let b = hex_to_f64(b)?;
+    let r = hex_to_f64(r);
+    let g = hex_to_f64(g);
+    let b = hex_to_f64(b);
 
-    scale_down(r, g, b, len)
+    Ok(scale_down(r, g, b, len))
 }
 
 /// Converts a hexadecimal string to a float
-fn hex_to_f64(src: &str) -> Result<f64> {
-    Ok(u32::from_str_radix(src, 16)
-        .with_context(|| format!("{:?} could not be parsed as a hexadecimal number", src))?
-        as f64)
+fn hex_to_f64(src: &str) -> f64 {
+    u32::from_str_radix(src, 16).expect("Invalid hexadecimal number") as f64
 }
 
 /// Scales the number down to 2 hexadecimal places and converts it to a `Rgb`
 /// color. The original length is specified as `len`.
-fn scale_down(r: f64, g: f64, b: f64, len: usize) -> Result<space::Rgb> {
+fn scale_down(r: f64, g: f64, b: f64, len: usize) -> space::Rgb {
     let up = match len {
         1 => 0xF,
         2 => 0xFF,
@@ -56,10 +100,10 @@ fn scale_down(r: f64, g: f64, b: f64, len: usize) -> Result<space::Rgb> {
         6 => 0xFFFFFF,
         7 => 0xFFFFFFF,
         8 => 0xFFFFFFFFu32,
-        _ => bail!("length {} is greater than 8", len),
+        _ => unreachable!("The number has more than 8 hex digits"),
     } as f64;
     let factor = up / 255.0;
-    Ok(space::Rgb::new(r / factor, g / factor, b / factor))
+    space::Rgb::new(r / factor, g / factor, b / factor)
 }
 
 /// Converts an RGB color to hexadecimal notation
