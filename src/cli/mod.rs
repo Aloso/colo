@@ -1,4 +1,3 @@
-use crate::color::ColorFormat;
 use clap::{App, AppSettings};
 
 mod libs;
@@ -22,7 +21,7 @@ pub const APP_VERSION: &str = env!("CARGO_PKG_VERSION");
 pub const DEPENDENCIES: &str = include_str!("../../dependencies.txt");
 
 /// Color spaces, as they can be provided in the command line
-const COLOR_SPACES: &[&str] = &[
+const COLOR_FORMATS: &[&str] = &[
     "rgb",
     "cmy",
     "cmyk",
@@ -34,6 +33,8 @@ const COLOR_SPACES: &[&str] = &[
     "hunterlab",
     "xyz",
     "yxy",
+    "html",
+    "hex",
 ];
 
 macro_rules! color_help_message {
@@ -78,19 +79,16 @@ const COLOR_HELP_MESSAGE: &str = color_help_message!();
 ///
 /// Note that, if the `--version` or `--help` flag was provided,
 /// clap terminates the application, so this function never returns.
-pub fn clap_args() -> clap::ArgMatches<'static> {
+pub fn app<'a, 'b>() -> App<'a, 'b> {
     App::new(APP_NAME)
         .global_setting(AppSettings::ColorAuto)
         .global_setting(AppSettings::ColoredHelp)
         .version(APP_VERSION)
-        .version_short("v")
         .author("Ludwig Stecher <ludwig.stecher@gmx.de>")
         .about("Displays colors in various color spaces.")
-        .usage("colo [OPTIONS] [COLOR]...\n    colo [SUBCOMMAND]")
         .subcommand(term::command())
         .subcommand(libs::command())
         .subcommand(print::command())
-        .args(&show::args())
+        .subcommand(show::command())
         .set_term_width(80)
-        .get_matches()
 }

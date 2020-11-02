@@ -3,16 +3,17 @@ use std::fmt;
 
 use space::*;
 
-pub use parse::{parse, ColorFormat, ParseError};
+pub use format::ColorFormat;
+pub use parse::{parse, ParseError};
 pub use space::ColorSpace;
 
 mod convert;
 mod parse;
 
 pub mod ansi;
+pub mod format;
 pub mod hex;
 pub mod html;
-pub mod json;
 pub mod space;
 
 /// A color enum that unifies the color types specific to a color space.
@@ -37,6 +38,23 @@ impl Color {
         std::convert::TryFrom::try_from((color_space, components))
     }
 
+    /// Return the color space, without the color components
+    pub fn get_color_space(&self) -> ColorSpace {
+        match self {
+            Color::Rgb(_) => ColorSpace::Rgb,
+            Color::Cmy(_) => ColorSpace::Cmy,
+            Color::Cmyk(_) => ColorSpace::Cmyk,
+            Color::Hsv(_) => ColorSpace::Hsv,
+            Color::Hsl(_) => ColorSpace::Hsl,
+            Color::Lch(_) => ColorSpace::Lch,
+            Color::Luv(_) => ColorSpace::Luv,
+            Color::Lab(_) => ColorSpace::Lab,
+            Color::HunterLab(_) => ColorSpace::HunterLab,
+            Color::Xyz(_) => ColorSpace::Xyz,
+            Color::Yxy(_) => ColorSpace::Yxy,
+        }
+    }
+
     /// Return the color space and the color components separately.
     pub fn divide(&self) -> (ColorSpace, Vec<f64>) {
         match *self {
@@ -57,7 +75,7 @@ impl Color {
     /// Converts the color to a different color space. It is in the same color
     /// space, this is a no-op.
     pub fn to_color_space(&self, color_space: ColorSpace) -> Self {
-        let (current_space, _) = self.divide();
+        let current_space = self.get_color_space();
         if current_space == color_space {
             return *self;
         }
@@ -102,7 +120,7 @@ impl fmt::Display for Color {
         write!(f, "{}(", color_space)?;
         let last = parts.len() - 1;
         for (i, part) in parts.into_iter().enumerate() {
-            write!(f, "{}", (part * 100.0).round() / 100.0)?;
+            write!(f, "{}", (part * 1000.0).round() / 1000.0)?;
             if i != last {
                 write!(f, ", ")?;
             }
@@ -136,9 +154,9 @@ mod tests {
     #[test]
     fn test_color_display() {
         let rgb = Color::Rgb(space::Rgb::new(255.0, 0.0, 127.5));
-        let hsv = Color::Hsv(space::Hsv::new(350.125, 0.9, 0.502));
+        let hsv = Color::Hsv(space::Hsv::new(350.0125, 0.9, 0.5002));
 
         assert_eq!(rgb.to_string().as_str(), "rgb(255, 0, 127.5)");
-        assert_eq!(hsv.to_string().as_str(), "hsv(350.13, 0.9, 0.5)");
+        assert_eq!(hsv.to_string().as_str(), "hsv(350.013, 0.9, 0.5)");
     }
 }

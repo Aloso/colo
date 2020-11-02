@@ -1,4 +1,4 @@
-use super::space::Rgb;
+use super::{hex, space::Rgb};
 
 /// List of HTML color, taken from
 /// https://www.w3schools.com/colors/colors_groups.asp
@@ -155,5 +155,17 @@ pub fn get(name: &str) -> Option<Rgb> {
         .iter()
         .filter(|&&(k, _)| k == name)
         .map(|&(_, hex)| Rgb::from_hex(hex))
+        .next()
+}
+
+/// Gets the name of a HTML color. The name (e.g. `Rebeccapurple`) is converted
+/// to lowercase first. If this function is called many times, it's more
+/// efficient to build a HashMap.
+pub fn get_name(color: Rgb) -> Option<&'static str> {
+    let hex = hex::rgb_to_u32(color);
+    HTML_COLOR_NAMES
+        .iter()
+        .filter(|&&(_, v)| v == hex)
+        .map(|&(name, _)| name)
         .next()
 }

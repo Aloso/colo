@@ -16,7 +16,7 @@ impl fmt::Display for ParseHexError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             ParseHexError::NotHexadecimal { string, c } => {
-                write!(f, "{:?} in the string {:?}", c, string)
+                write!(f, "{:?} in the string {:?} is not hexadecimal", c, string)
             }
             ParseHexError::NoDigits => write!(f, "No digits found"),
             ParseHexError::TooManyDigits { string, got, max } => write!(
@@ -107,18 +107,17 @@ fn scale_down(r: f64, g: f64, b: f64, len: usize) -> space::Rgb {
 }
 
 /// Converts an RGB color to hexadecimal notation
-pub fn from_rgb(rgb: space::Rgb) -> String {
-    format!(
-        "#{:02X}{:02X}{:02X}",
-        rgb.r.round() as u8,
-        rgb.g.round() as u8,
-        rgb.b.round() as u8
-    )
+pub fn rgb_to_u32(rgb: space::Rgb) -> u32 {
+    ((rgb.r.round() as u32) << 16) + ((rgb.g.round() as u32) << 8) + rgb.b.round() as u32
 }
 
 #[cfg(test)]
 mod tests {
-    use super::{from_rgb, parse, space::Rgb};
+    use super::{parse, rgb_to_u32, space::Rgb};
+
+    fn rgb_to_string(rgb: Rgb) -> String {
+        format!("#{:06x}", rgb_to_u32(rgb))
+    }
 
     #[test]
     fn test_from_rgb() {
@@ -127,7 +126,7 @@ mod tests {
             g: 0.0,
             b: 255.0,
         };
-        assert_eq!(from_rgb(rgb), String::from("#0F00FF"));
+        assert_eq!(rgb_to_string(rgb), String::from("#0f00FF"));
     }
 
     #[test]
@@ -146,13 +145,16 @@ mod tests {
 
     #[test]
     fn test_parse_and_to_hex() {
-        assert_eq!(from_rgb(parse("224466").unwrap()), "#224466");
-        assert_eq!(from_rgb(parse("246").unwrap()), "#224466");
-        assert_eq!(from_rgb(parse("222_444_666").unwrap()), "#224466");
-        assert_eq!(from_rgb(parse("2222_4444_6666").unwrap()), "#224466");
-        assert_eq!(from_rgb(parse("222222_444444_666666").unwrap()), "#224466");
+        assert_eq!(rgb_to_string(parse("224466").unwrap()), "#224466");
+        assert_eq!(rgb_to_string(parse("246").unwrap()), "#224466");
+        assert_eq!(rgb_to_string(parse("222_444_666").unwrap()), "#224466");
+        assert_eq!(rgb_to_string(parse("2222_4444_6666").unwrap()), "#224466");
         assert_eq!(
-            from_rgb(parse("12345678_3456789A_56789ABC").unwrap()),
+            rgb_to_string(parse("222222_444444_666666").unwrap()),
+            "#224466"
+        );
+        assert_eq!(
+            rgb_to_string(parse("12345678_3456789A_56789ABC").unwrap()),
             "#123456"
         );
     }

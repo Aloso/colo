@@ -1,39 +1,18 @@
-use anyhow::Result;
+use anyhow::{Context, Result};
 use atty::Stream;
 use color_space::ToRgb;
-use colored::Colorize;
-use std::io::{stdout, Write};
+use colored::{ColoredString, Colorize};
+use std::{
+    io::{stdout, Stdout, Write},
+    iter,
+};
 
-use crate::color::{hex, json, space, Color, ColorSpace};
+use crate::color::{format, space, Color, ColorFormat};
 
-pub fn show(color: Color, out: ColorSpace, size: u32) -> Result<()> {
+/// Print a colored square
+pub fn show(color: Color, _input: ColorFormat, output: ColorFormat, size: u32) -> Result<()> {
     let rgb = color.to_rgb();
-    let input = color.to_string();
-    let converted = color.to_color_space(out);
-    let json = json::from_color(converted);
-    let converted = converted.to_string();
-
-    let second_str = if input != converted {
-        converted
-    } else {
-        hex::from_rgb(rgb)
-    };
-
-    show_impl(rgb, input + " ~ " + &second_str, json, size)
-}
-
-pub fn show_hex_or_html(color: Color, out: ColorSpace, size: u32) -> Result<()> {
-    let rgb = color.to_rgb();
-    let input = hex::from_rgb(rgb);
-    let converted = color.to_color_space(out);
-    let json = json::from_color(converted);
-    let converted = converted.to_string();
-
-    show_impl(rgb, input + " ~ " + &converted, json, size)
-}
-
-fn show_impl(rgb: space::Rgb, msg: String, json: String, size: u32) -> Result<()> {
-    let color = colored::Color::TrueColor {
+    let term_color = colored::Color::TrueColor {
         r: rgb.r.round() as u8,
         g: rgb.g.round() as u8,
         b: rgb.b.round() as u8,
@@ -42,12 +21,100 @@ fn show_impl(rgb: space::Rgb, msg: String, json: String, size: u32) -> Result<()
     let mut stdout = stdout();
 
     if !atty::is(Stream::Stdout) {
-        write!(stdout, "{}", json)?;
+        let color = output
+            .format(color)
+            .or_else(|| ColorFormat::Hex.format(color))
+            .with_context(|| format!("Color could not be formatted as {:?}", output))?;
+
+        writeln!(stdout, "{}", color)?;
+    } else if size >= 1 {
+        let formats = format::PREFERRED_FORMATS
+            .iter()
+            .take(size as usize)
+            .map(|&c| {
+                c.iter().copied().flat_map(|c| {
+                    Some((
+                        c,
+                        if c != output {
+                            c.format(color).map(|s| s.dimmed())?
+                        } else {
+                            c.format(color).map(|s| s.bold())?
+                        },
+                    ))
+                })
+            })
+            .map(Some)
+            .chain(iter::once(None).cycle());
+
+        print_color(stdout, term_color, &make_square(size), formats, true)?;
     } else {
-        let square = make_square(size);
-        writeln!(stdout, "{}\n{}", msg, square.color(color))?;
+        let formats = iter::once(output)
+            .chain(
+                format::PREFERRED_FORMATS_SHORT
+                    .iter()
+                    .copied()
+                    .filter(|&f| f != output),
+            )
+            .filter_map(|c| {
+                Some((
+                    c,
+                    if c != output {
+                        c.format(color).map(|s| s.dimmed())?
+                    } else {
+                        c.format(color).map(|s| s.bold())?
+                    },
+                ))
+            })
+            .take(3);
+
+        print_color(
+            stdout,
+            term_color,
+            make_tiny_square(),
+            iter::once(Some(formats)),
+            false,
+        )?;
     }
 
+    Ok(())
+}
+
+fn print_color<I, J>(
+    mut stdout: Stdout,
+    term_color: colored::Color,
+    square: &str,
+    formats: I,
+    add_padding: bool,
+) -> Result<()>
+where
+    I: Iterator<Item = Option<J>>,
+    J: Iterator<Item = (ColorFormat, ColoredString)>,
+{
+    for (line, colors) in square.lines().zip(formats) {
+        write!(stdout, "{}", line.color(term_color))?;
+        if let Some(colors) = colors {
+            let mut step = 0;
+            for (c, col) in colors {
+                match c {
+                    ColorFormat::Hex => {
+                        write!(stdout, "  {}", col)?;
+                        step += 1;
+                    }
+                    ColorFormat::Html => {
+                        write!(stdout, "  {:16}", col)?;
+                        step += 1;
+                    }
+                    _ => {
+                        if add_padding && step == 1 {
+                            write!(stdout, "                  ")?;
+                        }
+                        write!(stdout, "  {:25}", col)?;
+                    }
+                }
+            }
+        }
+        writeln!(stdout)?;
+    }
     Ok(())
 }
 
@@ -115,4 +182,9 @@ fn make_square(size: u32) -> String {
         s.push('▀');
     }
     s
+}
+
+/// Generates a tiny ASCII rectangle that fits in one line
+fn make_tiny_square() -> &'static str {
+    "██"
 }

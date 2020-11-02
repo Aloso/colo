@@ -1,8 +1,9 @@
-use std::{error::Error, fmt, num::ParseFloatError};
+use std::num::ParseFloatError;
+use thiserror::Error;
 
 use super::{
     hex::{self, ParseHexError},
-    html, Color, ColorSpace,
+    html, Color, ColorFormat, ColorSpace,
 };
 use ParseError::*;
 
@@ -12,104 +13,37 @@ use ParseError::*;
 /// was supplied (e.g. `rgb` with only 2 components), or if a
 /// color component is out of range (for example, `rgb` requires
 /// that all components are in 0..=255).
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Error)]
 #[non_exhaustive]
 pub enum ParseError {
-    NumberOfComponents {
-        expected: usize,
-        got: usize,
-    },
-    Negative {
-        component: &'static str,
-        got: f64,
-    },
+    #[error("Wrong number of color components (expected {expected}, got {got})")]
+    NumberOfComponents { expected: usize, got: usize },
+    #[error("Color component {component:?} can't be negative (got {got})")]
+    Negative { component: &'static str, got: f64 },
+    #[error("Color component {component:?} out of range (expected {min} to {max}, got {got})")]
     OutOfRange {
         component: &'static str,
         min: f64,
         max: f64,
         got: f64,
     },
-
+    #[error("{string:?} could not be parsed as a number. Reason: {cause}")]
     InvalidFloat {
         string: String,
         cause: ParseFloatError,
     },
-    MissingFloat {
-        got: String,
-    },
+    #[error("Expected a number, got {got:?}")]
+    MissingFloat { got: String },
+    #[error("Unclosed {open:?} paren, expected {expected:?} at {string:?}")]
     UnclosedParen {
         open: char,
         expected: char,
         string: String,
     },
-    ExpectedWord {
-        string: String,
-    },
-
-    ParseHexError(ParseHexError),
-}
-
-impl From<ParseHexError> for ParseError {
-    fn from(err: ParseHexError) -> Self {
-        ParseError::ParseHexError(err)
-    }
-}
-
-impl Error for ParseError {}
-
-// Note that this could be simplified with `thiserror`, but I'm currently
-// reluctant to add more dependencies
-impl fmt::Display for ParseError {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        match self {
-            &NumberOfComponents { expected, got } => write!(
-                f,
-                "Wrong number of color components (expected {}, got {})",
-                expected, got
-            ),
-            &Negative { component, got } => write!(
-                f,
-                "Color component {:?} can't be negative (got {})",
-                component, got
-            ),
-            &OutOfRange {
-                component,
-                min,
-                max,
-                got,
-            } => write!(
-                f,
-                "Color component {:?} out of range (expected {} to {}, got {})",
-                component, min, max, got
-            ),
-            InvalidFloat { string, cause } => write!(
-                f,
-                "{:?} could not be parsed as a number. Reason: {}",
-                string, cause
-            ),
-            MissingFloat { got } => write!(f, "Expected a number, got {:?}", got),
-            UnclosedParen {
-                open,
-                expected,
-                string,
-            } => write!(
-                f,
-                "Unclosed {:?} paren, expected {:?} at {:?}",
-                open, expected, string
-            ),
-            ExpectedWord { string } => {
-                write!(f, "Expected hex color or HTML color, got {:?}", string)
-            }
-            ParseError::ParseHexError(e) => fmt::Display::fmt(e, f),
-        }
-    }
-}
-
-#[derive(Debug, Copy, Clone, Eq, PartialEq)]
-pub enum ColorFormat {
-    Html,
-    Hex { digits_per_component: u8 },
-    Components { color_space_set: bool },
+    #[error("Expected hex color or HTML color, got {string:?}")]
+    ExpectedWord { string: String },
+    #[error(transparent)]
+    ParseHexError(#[from] ParseHexError),
 }
 
 /// Parses a string that can contain an arbitrary number of colors in different
@@ -148,12 +82,7 @@ pub fn parse(mut input: &str) -> Result<Vec<(Color, ColorFormat)>, ParseError> {
             let nums = &nums[0..expected];
             let color: Color =
                 Color::new(cs.unwrap_or(ColorSpace::Rgb), nums).map_err(|err| err)?;
-            output.push((
-                color,
-                ColorFormat::Components {
-                    color_space_set: cs.is_some(),
-                },
-            ));
+            output.push((color, ColorFormat::Normal(cs.unwrap_or(ColorSpace::Rgb))));
             input_ii = input_ii.trim_start();
             input_i = input_ii;
         } else {
@@ -163,13 +92,7 @@ pub fn parse(mut input: &str) -> Result<Vec<(Color, ColorFormat)>, ParseError> {
             let color = if let Some(color) = html::get(word) {
                 (Color::Rgb(color), ColorFormat::Html)
             } else {
-                let digits_per_component = (word.chars().filter(|&c| c != '_').count() / 3) as u8;
-                (
-                    Color::Rgb(hex::parse(word)?),
-                    ColorFormat::Hex {
-                        digits_per_component,
-                    },
-                )
+                (Color::Rgb(hex::parse(word)?), ColorFormat::Hex)
             };
             output.push(color);
 

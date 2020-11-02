@@ -1,6 +1,6 @@
 [package]
 name = "colo"
-version = "0.2.3"
+version = "0.3.0"
 authors = ["Ludwig Stecher <ludwig.stecher@gmx.de>"]
 description = "CLI tool to show and convert colors between various color spaces"
 categories = ["command-line-interface"]
@@ -23,3 +23,4 @@ clap = "2"
 atty = "0.2"
 color_space = "^0.5.3"
 anyhow = "1"
+thiserror = "1"
