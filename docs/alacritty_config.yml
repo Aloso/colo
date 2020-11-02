@@ -10,8 +10,8 @@
 window:
   # Window dimensions (changes require restart)
   dimensions:
-    columns: 60
-    lines: 16
+    columns: 71
+    lines: 13
 
   # Window position (changes require restart)
   #

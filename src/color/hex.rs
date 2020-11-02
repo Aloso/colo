@@ -126,7 +126,7 @@ mod tests {
             g: 0.0,
             b: 255.0,
         };
-        assert_eq!(rgb_to_string(rgb), String::from("#0f00FF"));
+        assert_eq!(rgb_to_string(rgb), String::from("#0f00ff"));
     }
 
     #[test]

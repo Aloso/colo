@@ -61,30 +61,28 @@ pub fn parse(mut input: &str) -> Result<Vec<(Color, ColorFormat)>, ParseError> {
         let (open_paren, input_i) = open_paren(input_i);
         let mut input_i = input_i.trim_start();
 
-        if let Some((n1, mut input_ii)) = parse_number(input_i)? {
+        if let Some(cs) = cs {
             let expected = match cs {
-                Some(ColorSpace::Cmyk) => 4,
+                ColorSpace::Cmyk => 4,
                 _ => 3,
             };
-            let mut nums = [n1, 0.0, 0.0, 0.0];
+            let mut nums = [0.0, 0.0, 0.0, 0.0];
 
-            for num in nums.iter_mut().take(expected).skip(1) {
-                input_ii = input_ii.trim_start();
-                input_ii = skip(input_ii, ',');
-                input_ii = input_ii.trim_start();
-                let (n, input_iii) = parse_number(input_ii)?.ok_or_else(|| MissingFloat {
-                    got: input_ii.into(),
+            for num in nums.iter_mut().take(expected) {
+                input_i = input_i.trim_start();
+                input_i = skip(input_i, ',');
+                input_i = input_i.trim_start();
+                let (n, input_ii) = parse_number(input_i)?.ok_or_else(|| MissingFloat {
+                    got: input_i.into(),
                 })?;
                 *num = n;
-                input_ii = input_iii;
+                input_i = input_ii;
             }
 
             let nums = &nums[0..expected];
-            let color: Color =
-                Color::new(cs.unwrap_or(ColorSpace::Rgb), nums).map_err(|err| err)?;
-            output.push((color, ColorFormat::Normal(cs.unwrap_or(ColorSpace::Rgb))));
-            input_ii = input_ii.trim_start();
-            input_i = input_ii;
+            let color: Color = Color::new(cs, nums).map_err(|err| err)?;
+            output.push((color, ColorFormat::Normal(cs)));
+            input_i = input_i.trim_start();
         } else {
             let (word, input_ii) = take_word(input_i).ok_or_else(|| ParseError::ExpectedWord {
                 string: input_i.into(),
