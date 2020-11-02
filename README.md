@@ -46,41 +46,37 @@ This builds the code from the main branch. You can specify a different branch wi
 
 ## Usage
 
-`colo` recognizes hexadecimal RGB colors as well as HTML color names:
+`colo`'s most important subcommand of `show`, or `s` for short. It recognizes hexadecimal RGB colors as well as HTML color names:
 
 ![usage](docs/html_colors.png)
 
-Color spaces other than RGB are supported as well:
+Color spaces other than RGB can be entered as well:
 
 ![usage with other color spaces](docs/color_spaces.png)
 
-If `colo` is used outside of a terminal, it outputs JSON, because it is the most ubiquitous data exchange format:
+If `colo` is used outside of a terminal, it outputs the color as text. The format can be specified with the `-o`/`--out` flag:
 
-![json usage](docs/json_output.png)
+![pipe usage](docs/pipe_output.png)
 
 ### Supported color spaces
 
-| Name    | Flag  | Description                        | Range of values |
-|---------|-------|------------------------------------|-----------------|
-| `rgb`   | `R`   | red, green, blue                   | 0 to 255        |
-| `cmy`   | `C`   | cyan, magenta, yellow              | 0 to 1          |
-| `cmyk`  | `K`   | cyan, magenta, yellow, key         | 0 to 1          |
-| `hsv`   | `V`   | hue, saturation, value             | hue: 0 to 360, saturation: 0 to 1, value: 0 to 1     |
-| `hsl`   | `L`   | hue, saturation, light             | hue: 0 to 360, saturation: 0 to 1, light: 0 to 1     |
-| `lch`   |       | luminance, chroma, hue             | luminance: 0 to 100, chroma: 0 to 100, hue: 0 to 360 |
-| `luv`   |       | CIELUV color (luminance, u, v)     | luminance: 0 to 100, u: -134 to 220, v: -140 to 122  |
-| `lab`   |       | CIELAB color (lightness, a, b)     | lightness: 0 to 100, a: ??, b: ??                    |
-| `hunterlab` |   | Hunter Lab color (lightness, a, b) | lightness: 0 to 100, a: ??, b: ??                    |
-| `xyz`   |       | CIE 1931 XYZ color                 | ??              |
-| `yxy`   |       | CIE YXY color                      | ??              |
-
-The input color space can be specified with `--in` or `-i`. The output color space can be specified with `--out` or `-o`. If no input color space is entered, `colo` expects a hexadecimal or HTML color.
-
-There are also flags for the most common input color spaces, e.g. `colo -i rgb 15/0/255` can be abbreviated as `colo -R 15/0/255`.
+| Name        | Description                        | Range of values |
+|-------------|------------------------------------|-----------------|
+| `rgb`       | red, green, blue                   | 0 to 255        |
+| `cmy`       | cyan, magenta, yellow              | 0 to 1          |
+| `cmyk`      | cyan, magenta, yellow, key         | 0 to 1          |
+| `hsv`       | hue, saturation, value             | hue: 0 to 360, saturation: 0 to 1, value: 0 to 1     |
+| `hsl`       | hue, saturation, light             | hue: 0 to 360, saturation: 0 to 1, light: 0 to 1     |
+| `lch`       | luminance, chroma, hue             | luminance: 0 to 100, chroma: 0 to 100, hue: 0 to 360 |
+| `luv`       | CIELUV color (luminance, u, v)     | luminance: 0 to 100, u: -134 to 220, v: -140 to 122  |
+| `lab`       | CIELAB color (lightness, a, b)     | lightness: 0 to 100, a: ??, b: ??                    |
+| `hunterlab` | Hunter Lab color (lightness, a, b) | lightness: 0 to 100, a: ??, b: ??                    |
+| `xyz`       | CIE 1931 XYZ color                 | ??              |
+| `yxy`       | CIE YXY color                      | ??              |
 
 ### Specifying hexadecimal colors
 
-Hexadecimal colors are a different notation for RGB colors. They can optionally be prefixed with a `#`, e.g. `colo "#F00"`.
+Hexadecimal colors are a different notation for RGB colors. They can optionally be prefixed with a `#`, e.g. `colo s "#F00"`.
 
 Hexadecimal colors can be specified with varying precision: Each color channel can be between 1 and 8 digits long, for example
 
@@ -118,5 +114,9 @@ Also, to pass continuous integration, the code must
   * pass `cargo clippy`
   * compile on the latest stable Rust version
   * all tests must succeed
+
+Note: I'm currently refactoring the code base, so this is a bad time for large pull requests. I should be finished with this in a week at the latest.
+
+You can also look in the issue tracker for issues with the label [help wanted](https://github.com/Aloso/colo/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22).
 
 That's it! If you have any questions, feel free to create an issue.

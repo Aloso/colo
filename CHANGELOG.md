@@ -6,9 +6,46 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-#### Additions
+This release completely revamped the command line options, now using subcommands:
 
-- Add `--text`/`-x` option to print colored text
+- `colo show` (or short `colo s`) shows one or more colors, which are entered consecutively. You'll notice that the output is now more space efficient and informative. I hope you like the new layout!
+
+    The flag to specify the color space was removed, now it can be entered as `'rgb(0, 50, 150)'`. Note that the parentheses and commas are optional for your convenience. For example, you could type:
+
+    ```fish
+    colo s rgb 0 50 150, cmy .5 .2 0
+    ```
+
+    The `--out` flag accepts two additional formats, `hex` and `html`. If converting the color to an HTML color name fails, it defaults to `hex`. Note that this flag is only really useful when piping to another command, e.g.
+
+    ```fish
+    colo s orange red fuchsia -o cmy > somefile.txt
+    ```
+
+    The output format is no longer JSON, but the human-readable format, which is also used by HTML and can be parsed by `colo`. If you needed JSON output, please file an issue so we can add this functionality again.
+
+    When displaying certain color values, percentage values are now used, for example for saturation and light.
+- `colo print` displays some text in a certain color. A second color can be specified for the background. There are also the following flags to alter the text style:
+    - `-b` for bold text
+    - `-i` for italic text
+    - `-u` for underlined text
+    - `-n` to _not_ print a new line afterwards – this is useful to change the style in the middle of a line:
+
+    ```fish
+    colo print -n "Hello " orange && colo print "world!" red
+    ```
+- `colo term` replaces `colo --term`. It is used to print the default terminal colors.
+- `colo libs` replaces `colo --libs`. It prints the dependency tree `colo` was compiled with.
+- `colo help` prints help information. Use `colo help <subcommand>` to show help for a subcommand. Use `colo --help` or `colo <subcommand> --help` for a more detailed help message.
+- The version flag `-v` was renamed to `-V` again.
+
+#### Bug fixes
+
+- Converting a color to CMYK used to output `cmyk(0, 0, 0, 0)` for any input
+
+#### Internal
+
+- The `crossterm` dependency was replaced with `colored`, which improved compile times.
 
 ## [0.2.2] - 2020-10-31
 

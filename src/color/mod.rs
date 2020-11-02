@@ -1,15 +1,20 @@
-mod convert;
-
-pub mod hex;
-pub mod html;
-pub mod json;
-pub mod space;
-
 use color_space::{FromRgb, ToRgb};
-pub use space::ColorSpace;
+use std::fmt;
 
 use space::*;
-use std::fmt;
+
+pub use format::ColorFormat;
+pub use parse::{parse, ParseError};
+pub use space::ColorSpace;
+
+mod convert;
+mod parse;
+
+pub mod ansi;
+pub mod format;
+pub mod hex;
+pub mod html;
+pub mod space;
 
 /// A color enum that unifies the color types specific to a color space.
 #[derive(Debug, Copy, Clone, PartialEq)]
@@ -29,8 +34,25 @@ pub enum Color {
 
 impl Color {
     /// Constructs a color from the color space and the color components.
-    pub fn new(color_space: ColorSpace, components: &[f64]) -> Result<Self, convert::ParseError> {
+    pub fn new(color_space: ColorSpace, components: &[f64]) -> Result<Self, ParseError> {
         std::convert::TryFrom::try_from((color_space, components))
+    }
+
+    /// Return the color space, without the color components
+    pub fn get_color_space(&self) -> ColorSpace {
+        match self {
+            Color::Rgb(_) => ColorSpace::Rgb,
+            Color::Cmy(_) => ColorSpace::Cmy,
+            Color::Cmyk(_) => ColorSpace::Cmyk,
+            Color::Hsv(_) => ColorSpace::Hsv,
+            Color::Hsl(_) => ColorSpace::Hsl,
+            Color::Lch(_) => ColorSpace::Lch,
+            Color::Luv(_) => ColorSpace::Luv,
+            Color::Lab(_) => ColorSpace::Lab,
+            Color::HunterLab(_) => ColorSpace::HunterLab,
+            Color::Xyz(_) => ColorSpace::Xyz,
+            Color::Yxy(_) => ColorSpace::Yxy,
+        }
     }
 
     /// Return the color space and the color components separately.
@@ -53,7 +75,7 @@ impl Color {
     /// Converts the color to a different color space. It is in the same color
     /// space, this is a no-op.
     pub fn to_color_space(&self, color_space: ColorSpace) -> Self {
-        let (current_space, _) = self.divide();
+        let current_space = self.get_color_space();
         if current_space == color_space {
             return *self;
         }
@@ -61,7 +83,25 @@ impl Color {
         match color_space {
             ColorSpace::Rgb => Color::Rgb(rgb),
             ColorSpace::Cmy => Color::Cmy(Cmy::from_rgb(&rgb)),
-            ColorSpace::Cmyk => Color::Cmyk(cmyk_from_rgb(&rgb)),
+            ColorSpace::Cmyk => {
+                /// TODO: Use `Cmyk::from_rgb` from the color_space crate, as
+                /// soon as that function works correctly
+                fn cmyk_from_rgb(rgb: &Rgb) -> Cmyk {
+                    let cmy = Cmy::from_rgb(rgb);
+                    let k = cmy.c.min(cmy.m.min(cmy.y.min(1.0)));
+                    match (k - 1.0).abs() < 1e-3 {
+                        true => Cmyk::new(0.0, 0.0, 0.0, k),
+                        false => Cmyk::new(
+                            (cmy.c - k) / (1.0 - k),
+                            (cmy.m - k) / (1.0 - k),
+                            (cmy.y - k) / (1.0 - k),
+                            k,
+                        ),
+                    }
+                }
+
+                Color::Cmyk(cmyk_from_rgb(&rgb))
+            }
             ColorSpace::Hsv => Color::Hsv(Hsv::from_rgb(&rgb)),
             ColorSpace::Hsl => Color::Hsl(Hsl::from_rgb(&rgb)),
             ColorSpace::Lch => Color::Lch(Lch::from_rgb(&rgb)),
@@ -74,27 +114,13 @@ impl Color {
     }
 }
 
-fn cmyk_from_rgb(rgb: &Rgb) -> Cmyk {
-    let cmy = Cmy::from_rgb(rgb);
-    let k = cmy.c.min(cmy.m.min(cmy.y.min(1.0)));
-    match (k - 1.0).abs() < 1e-3 {
-        true => Cmyk::new(0.0, 0.0, 0.0, k),
-        false => Cmyk::new(
-            (cmy.c - k) / (1.0 - k),
-            (cmy.m - k) / (1.0 - k),
-            (cmy.y - k) / (1.0 - k),
-            k,
-        ),
-    }
-}
-
 impl fmt::Display for Color {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         let (color_space, parts) = self.divide();
         write!(f, "{}(", color_space)?;
         let last = parts.len() - 1;
         for (i, part) in parts.into_iter().enumerate() {
-            write!(f, "{}", (part * 100.0).round() / 100.0)?;
+            write!(f, "{}", (part * 1000.0).round() / 1000.0)?;
             if i != last {
                 write!(f, ", ")?;
             }
@@ -128,9 +154,9 @@ mod tests {
     #[test]
     fn test_color_display() {
         let rgb = Color::Rgb(space::Rgb::new(255.0, 0.0, 127.5));
-        let hsv = Color::Hsv(space::Hsv::new(350.125, 0.9, 0.502));
+        let hsv = Color::Hsv(space::Hsv::new(350.0125, 0.9, 0.5002));
 
         assert_eq!(rgb.to_string().as_str(), "rgb(255, 0, 127.5)");
-        assert_eq!(hsv.to_string().as_str(), "hsv(350.13, 0.9, 0.5)");
+        assert_eq!(hsv.to_string().as_str(), "hsv(350.013, 0.9, 0.5)");
     }
 }

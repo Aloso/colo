@@ -1,10 +1,10 @@
 #![deny(unsafe_code)]
 
 use anyhow::Result;
-use command_line::{ColorInput, Input};
+use color_space::ToRgb;
 
+mod cli;
 mod color;
-mod command_line;
 mod show_color;
 mod show_term_colors;
 
@@ -14,32 +14,54 @@ mod show_term_colors;
 /// recoverable and simply need to be reported. Rusts runtime handles this
 /// automatically, when an error is returned from `main()`.
 fn main() -> Result<()> {
-    match command_line::parse_args()? {
-        Input::Terminal => {
-            show_term_colors::show_term_colors()?;
-        }
-        Input::Libraries => {
-            use command_line::{APP_NAME, APP_VERSION, DEPENDENCIES};
+    let app = cli::app();
+    match app.get_matches().subcommand() {
+        ("libs", Some(matches)) => {
+            use cli::{APP_NAME, APP_VERSION, DEPENDENCIES};
+            let cli::Libs = cli::get_libs(&matches)?;
             println!("{} v{}\n{}", APP_NAME, APP_VERSION, DEPENDENCIES);
         }
-        // TODO: Refactor the following two match arms into a single one
-        Input::ColorInput {
-            input: ColorInput::HexOrHtml(color),
-            output,
-            text,
-            size,
-        } => {
-            show_color::show_hex_or_html(&color, output, size, text)?;
+        ("term", Some(matches)) => {
+            let cli::Term = cli::get_term(matches)?;
+            show_term_colors::show_term_colors()?;
         }
-        Input::ColorInput {
-            input: ColorInput::Color(color),
-            output,
-            text,
-            size,
-        } => {
-            show_color::show(color, output, size, text)?;
+        ("print", Some(matches)) => {
+            let cli::Print {
+                color: (color, _),
+                bg_color,
+                mut text,
+                bold,
+                italic,
+                underline,
+                no_newline,
+            } = cli::get_print(matches)?;
+
+            if !no_newline {
+                text.push('\n');
+            }
+            show_color::show_text(
+                color.to_rgb(),
+                bg_color.map(|(c, _)| c.to_rgb()),
+                text,
+                italic,
+                bold,
+                underline,
+            )?;
+        }
+        ("show", Some(matches)) => {
+            let cli::Show {
+                colors,
+                output,
+                size,
+            } = cli::get_show(&matches)?;
+
+            for (color, input) in colors {
+                show_color::show(color, input, output, size)?;
+            }
+        }
+        _ => {
+            cli::app().print_help().unwrap();
         }
     }
-
     Ok(())
 }
