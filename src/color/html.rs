@@ -143,6 +143,13 @@ const HTML_COLOR_NAMES: &[(&str, u32)] = &[
     ("lightslategray", 0x778899),
     ("slategray", 0x708090),
     ("darkslategray", 0x2f4f4f),
+    ("lightgrey", 0xd3d3d3),
+    ("darkgrey", 0xa9a9a9),
+    ("dimgrey", 0x696969),
+    ("grey", 0x808080),
+    ("lightslategrey", 0x778899),
+    ("slategrey", 0x708090),
+    ("darkslategrey", 0x2f4f4f),
     ("black", 0x000000),
 ];
 
