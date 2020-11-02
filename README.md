@@ -13,6 +13,7 @@ Command-line tool for displaying colors, written in Rust
     * [Supported color spaces](#supported-color-spaces)
     * [Specifying hexadecimal colors](#specifying-hexadecimal-colors)
     * [Color square size](#color-square-size)
+    * [Printing text](#printing-text)
     * [Default terminal colors](#default-terminal-colors)
 * [Code of Conduct](#code-of-conduct)
 * [Contributing](#contributing)
@@ -88,9 +89,22 @@ The color square size can be adjusted with `--size` or `-s`:
 
 ![color square size](docs/square_sizes.png)
 
+### Printing text
+
+With the `print` subcommand, text can be printed with color and style. The subcommand accepts text to print, and then 1 or 2 colors, for the text and the background. To use different styles in the same line, the `-n` flag can be used, which prevents adding a line break:
+
+![printing text](docs/text.png)
+
+The following flags are available:
+
+- `-b` for bold text
+- `-i` for italic text
+- `-u` for underlined text
+- `-n` to _not_ print a new line afterwards
+
 ### Default terminal colors
 
-With `--terminal` or `-t`, the default terminal colors are printed:
+With the `term` subcommand, the default terminal colors are printed:
 
 ![terminal usage](docs/terminal_colors.png)
 
