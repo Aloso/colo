@@ -11,16 +11,16 @@ Colors in the sRGB color space are represented as three values between 0 and 255
 
 ### Examples
 
-|           |                         |                      |
-| --------- | ----------------------- |--------------------- |
-| Black     | `rgb(0, 0, 0)`          | <i style="background:black">&nbsp; &nbsp; &nbsp;</i>
-| Red       | `rgb(255, 0, 0)`        | <i style="background:red">&nbsp; &nbsp; &nbsp;</i>
-| Green     | `rgb(0, 255, 0)`        | <i style="background:lime">&nbsp; &nbsp; &nbsp;</i>
-| Blue      | `rgb(0, 0, 255)`        | <i style="background:blue">&nbsp; &nbsp; &nbsp;</i>
-| Yellow    | `rgb(255, 255, 0)`      | <i style="background:yellow">&nbsp; &nbsp; &nbsp;</i>
-| Cyan      | `rgb(0, 255, 255)`      | <i style="background:cyan">&nbsp; &nbsp; &nbsp;</i>
-| Magenta   | `rgb(255, 0, 255)`      | <i style="background:magenta">&nbsp; &nbsp; &nbsp;</i>
-| White     | `rgb(255, 255, 255)`    | <i style="background:white">&nbsp; &nbsp; &nbsp;</i>
+|                         |                      |
+| ----------------------- |--------------------- |
+| `rgb(0, 0, 0)`          | ![color](docs/colors/black.png)
+| `rgb(255, 0, 0)`        | ![color](docs/colors/red.png)
+| `rgb(0, 255, 0)`        | ![color](docs/colors/green.png)
+| `rgb(0, 0, 255)`        | ![color](docs/colors/blue.png)
+| `rgb(255, 255, 0)`      | ![color](docs/colors/yellow.png)
+| `rgb(0, 255, 255)`      | ![color](docs/colors/cyan.png)
+| `rgb(255, 0, 255)`      | ![color](docs/colors/magenta.png)
+| `rgb(255, 255, 255)`    | ![color](docs/colors/white.png)
 
 ## CMY
 
@@ -30,16 +30,16 @@ CMY colors are represented as three values between 0 and 1, or 100%.
 
 ### Examples
 
-|           |                |                      |
-| --------- | ---------------|--------------------- |
-| White     | `cmy(0, 0, 0)` | <i style="background:white">&nbsp; &nbsp; &nbsp;</i>
-| Cyan      | `cmy(1, 0, 0)` | <i style="background:cyan">&nbsp; &nbsp; &nbsp;</i>
-| Magenta   | `cmy(0, 1, 0)` | <i style="background:magenta">&nbsp; &nbsp; &nbsp;</i>
-| Yellow    | `cmy(0, 0, 1)` | <i style="background:yellow">&nbsp; &nbsp; &nbsp;</i>
-| Red       | `cmy(0, 1, 1)` | <i style="background:red">&nbsp; &nbsp; &nbsp;</i>
-| Green     | `cmy(1, 0, 1)` | <i style="background:lime">&nbsp; &nbsp; &nbsp;</i>
-| Blue      | `cmy(1, 1, 0)` | <i style="background:blue">&nbsp; &nbsp; &nbsp;</i>
-| Black     | `cmy(1, 1, 1)` | <i style="background:black">&nbsp; &nbsp; &nbsp;</i>
+|                |                      |
+| ---------------|--------------------- |
+| `cmy(0, 0, 0)` | ![color](docs/colors/white.png)
+| `cmy(1, 0, 0)` | ![color](docs/colors/cyan.png)
+| `cmy(0, 1, 0)` | ![color](docs/colors/magenta.png)
+| `cmy(0, 0, 1)` | ![color](docs/colors/yellow.png)
+| `cmy(0, 1, 1)` | ![color](docs/colors/red.png)
+| `cmy(1, 0, 1)` | ![color](docs/colors/green.png)
+| `cmy(1, 1, 0)` | ![color](docs/colors/blue.png)
+| `cmy(1, 1, 1)` | ![color](docs/colors/black.png)
 
 ## CMYK
 
@@ -47,16 +47,16 @@ CMYK is a variation of CMY that adds a fourth component, the **key**. This is us
 
 ### Examples
 
-|           |                   |                      |
-| --------- | ------------------|--------------------- |
-| White     | `cmy(0, 0, 0, 0)` | <i style="background:white">&nbsp; &nbsp; &nbsp;</i>
-| Cyan      | `cmy(1, 0, 0, 0)` | <i style="background:cyan">&nbsp; &nbsp; &nbsp;</i>
-| Magenta   | `cmy(0, 1, 0, 0)` | <i style="background:magenta">&nbsp; &nbsp; &nbsp;</i>
-| Yellow    | `cmy(0, 0, 1, 0)` | <i style="background:yellow">&nbsp; &nbsp; &nbsp;</i>
-| Red       | `cmy(0, 1, 1, 0)` | <i style="background:red">&nbsp; &nbsp; &nbsp;</i>
-| Green     | `cmy(1, 0, 1, 0)` | <i style="background:lime">&nbsp; &nbsp; &nbsp;</i>
-| Blue      | `cmy(1, 1, 0, 0)` | <i style="background:blue">&nbsp; &nbsp; &nbsp;</i>
-| Black     | `cmy(0, 0, 0, 1)` | <i style="background:black">&nbsp; &nbsp; &nbsp;</i>
+|                   |                      |
+| ------------------|--------------------- |
+| `cmy(0, 0, 0, 0)` | ![color](docs/colors/white.png)
+| `cmy(1, 0, 0, 0)` | ![color](docs/colors/cyan.png)
+| `cmy(0, 1, 0, 0)` | ![color](docs/colors/magenta.png)
+| `cmy(0, 0, 1, 0)` | ![color](docs/colors/yellow.png)
+| `cmy(0, 1, 1, 0)` | ![color](docs/colors/red.png)
+| `cmy(1, 0, 1, 0)` | ![color](docs/colors/green.png)
+| `cmy(1, 1, 0, 0)` | ![color](docs/colors/blue.png)
+| `cmy(0, 0, 0, 1)` | ![color](docs/colors/black.png)
 
 ## HSL
 
@@ -68,16 +68,16 @@ Saturation and lightness are values between 0 and 1 (or 100%). When the lightnes
 
 ### Examples
 
-|           |                   |                      |
-| --------- | ------------------|--------------------- |
-| Black     | `hsl(  ?, ?,  0)` | <i style="background:black">&nbsp; &nbsp; &nbsp;</i>
-| White     | `hsl(  ?, ?,  1)` | <i style="background:white">&nbsp; &nbsp; &nbsp;</i>
-| Red       | `hsl(  0, 1, .5)` | <i style="background:red">&nbsp; &nbsp; &nbsp;</i>
-| Yellow    | `hsl( 60, 1, .5)` | <i style="background:yellow">&nbsp; &nbsp; &nbsp;</i>
-| Green     | `hsl(120, 1, .5)` | <i style="background:lime">&nbsp; &nbsp; &nbsp;</i>
-| Cyan      | `hsl(180, 1, .5)` | <i style="background:cyan">&nbsp; &nbsp; &nbsp;</i>
-| Blue      | `hsl(240, 1, .5)` | <i style="background:blue">&nbsp; &nbsp; &nbsp;</i>
-| Magenta   | `hsl(300, 1, .5)` | <i style="background:magenta">&nbsp; &nbsp; &nbsp;</i>
+|                   |                      |
+| ------------------|--------------------- |
+| <code>hsl(&nbsp; ?, ?,  0)</code> | ![color](docs/colors/black.png)
+| <code>hsl(&nbsp; ?, ?,  1)</code> | ![color](docs/colors/white.png)
+| <code>hsl(&nbsp; 0, 1, .5)</code> | ![color](docs/colors/red.png)
+| `hsl( 60, 1, .5)` | ![color](docs/colors/yellow.png)
+| `hsl(120, 1, .5)` | ![color](docs/colors/green.png)
+| `hsl(180, 1, .5)` | ![color](docs/colors/cyan.png)
+| `hsl(240, 1, .5)` | ![color](docs/colors/blue.png)
+| `hsl(300, 1, .5)` | ![color](docs/colors/magenta.png)
 
 ## HSV
 
@@ -85,16 +85,16 @@ Saturation and lightness are values between 0 and 1 (or 100%). When the lightnes
 
 Saturation and value are again values between 0 and 1. When the value is 0, the color is full black. When the value is 1, the color depends on the hue and saturation.
 
-|           |                  |                      |
-| --------- | -----------------|--------------------- |
-| Black     | `hsv(  ?, ?, 0)` | <i style="background:black">&nbsp; &nbsp; &nbsp;</i>
-| White     | `hsv(  ?, 0, 1)` | <i style="background:white">&nbsp; &nbsp; &nbsp;</i>
-| Red       | `hsv(  0, 1, 1)` | <i style="background:red">&nbsp; &nbsp; &nbsp;</i>
-| Yellow    | `hsv( 60, 1, 1)` | <i style="background:yellow">&nbsp; &nbsp; &nbsp;</i>
-| Green     | `hsv(120, 1, 1)` | <i style="background:lime">&nbsp; &nbsp; &nbsp;</i>
-| Cyan      | `hsv(180, 1, 1)` | <i style="background:cyan">&nbsp; &nbsp; &nbsp;</i>
-| Blue      | `hsv(240, 1, 1)` | <i style="background:blue">&nbsp; &nbsp; &nbsp;</i>
-| Magenta   | `hsv(300, 1, 1)` | <i style="background:magenta">&nbsp; &nbsp; &nbsp;</i>
+|                  |                      |
+| -----------------|--------------------- |
+| <code>hsv(&nbsp; ?, ?, 0)</code> | ![color](docs/colors/black.png)
+| <code>hsv(&nbsp; ?, 0, 1)</code> | ![color](docs/colors/white.png)
+| <code>hsv(&nbsp; 0, 1, 1)</code> | ![color](docs/colors/red.png)
+| `hsv( 60, 1, 1)` | ![color](docs/colors/yellow.png)
+| `hsv(120, 1, 1)` | ![color](docs/colors/green.png)
+| `hsv(180, 1, 1)` | ![color](docs/colors/cyan.png)
+| `hsv(240, 1, 1)` | ![color](docs/colors/blue.png)
+| `hsv(300, 1, 1)` | ![color](docs/colors/magenta.png)
 
 ## LCH
 
