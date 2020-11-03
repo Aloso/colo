@@ -1,6 +1,7 @@
 #![deny(unsafe_code)]
 
 use anyhow::Result;
+use color::html;
 use color_space::ToRgb;
 
 mod cli;
@@ -58,6 +59,11 @@ fn main() -> Result<()> {
             for (color, input) in colors {
                 show_color::show(color, input, output, size)?;
             }
+        }
+        ("list", Some(matches)) => {
+            let cli::List = cli::get_list(&matches)?;
+
+            html::show_all()?;
         }
         _ => {
             cli::app().print_help().unwrap();

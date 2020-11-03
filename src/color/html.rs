@@ -1,4 +1,11 @@
-use super::{hex, space::Rgb};
+use std::io::{stdout, Write};
+
+use super::{
+    hex,
+    space::{self, Rgb},
+};
+use anyhow::Result;
+use colored::{Color::TrueColor, Colorize};
 
 /// List of HTML color, taken from
 /// https://www.w3schools.com/colors/colors_groups.asp
@@ -190,4 +197,41 @@ pub fn get_name(color: Rgb) -> Option<&'static str> {
         .filter(|&&(_, v)| v == hex)
         .map(|&(name, _)| name)
         .next()
+}
+
+pub fn show_all() -> Result<()> {
+    let mut stdout = stdout();
+
+    let mut even = false;
+
+    for &(name, color) in HTML_COLOR_NAMES {
+        if name == "magenta" || name == "aqua" || name.ends_with("grey") {
+            continue;
+        }
+        let color = Rgb::from_hex(color);
+        let hsl: space::Hsl = color.into();
+        let color = TrueColor {
+            r: color.r as u8,
+            g: color.g as u8,
+            b: color.b as u8,
+        };
+        let text_color = if hsl.l < 0.5 {
+            TrueColor {
+                r: 255,
+                g: 255,
+                b: 255,
+            }
+        } else {
+            TrueColor { r: 0, g: 0, b: 0 }
+        };
+        let name = format!("   {}{}", name, &"                     "[name.len()..]);
+        write!(stdout, "{}", name.color(text_color).on_color(color))?;
+        if even {
+            writeln!(stdout)?;
+        }
+        even = !even;
+    }
+    writeln!(stdout)?;
+
+    Ok(())
 }

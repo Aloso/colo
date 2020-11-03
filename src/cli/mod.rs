@@ -1,12 +1,14 @@
 use clap::{App, AppSettings};
 
 mod libs;
+mod list;
 mod print;
 mod show;
 mod term;
 mod util;
 
 pub use libs::{get as get_libs, Libs};
+pub use list::{get as get_list, List};
 pub use print::{get as get_print, Print};
 pub use show::{get as get_show, Show};
 pub use term::{get as get_term, Term};
@@ -89,6 +91,7 @@ pub fn app<'a, 'b>() -> App<'a, 'b> {
         .subcommand(term::command())
         .subcommand(libs::command())
         .subcommand(print::command())
+        .subcommand(list::command())
         .subcommand(show::command())
         .set_term_width(80)
 }
