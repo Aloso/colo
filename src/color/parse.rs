@@ -1,4 +1,4 @@
-use std::num::ParseFloatError;
+use std::{cmp::Ordering, num::ParseFloatError};
 use thiserror::Error;
 
 use super::{
@@ -44,6 +44,9 @@ pub enum ParseError {
     ExpectedWord { string: String },
     #[error(transparent)]
     ParseHexError(#[from] ParseHexError),
+
+    #[error("Unknown color {got:?}, did you mean {suggestion:?}?")]
+    Misspelled { got: String, suggestion: String },
 }
 
 /// Parses a string that can contain an arbitrary number of colors in different
@@ -90,7 +93,31 @@ pub fn parse(mut input: &str) -> Result<Vec<(Color, ColorFormat)>, ParseError> {
             let color = if let Some(color) = html::get(word) {
                 (Color::Rgb(color), ColorFormat::Html)
             } else {
-                (Color::Rgb(hex::parse(word)?), ColorFormat::Hex)
+                match hex::parse(word) {
+                    Ok(hex) => (Color::Rgb(hex), ColorFormat::Hex),
+                    Err(err) => {
+                        if word.chars().all(|c| c.is_ascii_alphabetic()) && word.len() > 3 {
+                            let mut similar = html::get_similar(word);
+                            if !similar.is_empty() {
+                                similar.sort_by(|&(_, l), &(_, r)| {
+                                    if l < r {
+                                        Ordering::Less
+                                    } else if l > r {
+                                        Ordering::Greater
+                                    } else {
+                                        Ordering::Equal
+                                    }
+                                });
+                                let (suggestion, _) = similar[similar.len() - 1];
+                                return Err(ParseError::Misspelled {
+                                    got: word.to_string(),
+                                    suggestion: suggestion.to_string(),
+                                });
+                            }
+                        }
+                        return Err(err.into());
+                    }
+                }
             };
             output.push(color);
 

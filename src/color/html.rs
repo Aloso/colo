@@ -165,6 +165,21 @@ pub fn get(name: &str) -> Option<Rgb> {
         .next()
 }
 
+pub fn get_similar(name: &str) -> Vec<(&'static str, f64)> {
+    let name = name.to_lowercase();
+    HTML_COLOR_NAMES
+        .iter()
+        .filter_map(|&(k, _)| {
+            let score = strsim::jaro_winkler(k, &name);
+            if score > 0.85 {
+                Some((k, score))
+            } else {
+                None
+            }
+        })
+        .collect()
+}
+
 /// Gets the name of a HTML color. The name (e.g. `Rebeccapurple`) is converted
 /// to lowercase first. If this function is called many times, it's more
 /// efficient to build a HashMap.
