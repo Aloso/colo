@@ -1,9 +1,7 @@
+use std::env;
 use std::process::Command;
 
 fn main() {
-    // Tell Cargo that if the given file changes, to rerun this build script.
-    println!("cargo:rerun-if-changed=Cargo.lock");
-
     let output = Command::new("cargo")
         .args(&["tree", "--quiet", "--color", "never"])
         .output()
@@ -18,5 +16,7 @@ fn main() {
         .collect();
     let deps = deps.trim_end();
 
-    std::fs::write("./dependencies.txt", deps).expect("could not write to file `dependencies.txt`");
+    let mut path = env::var("OUT_DIR").unwrap();
+    path.push_str("/dependencies.txt");
+    std::fs::write(&path, deps).expect("could not write to file `dependencies.txt`");
 }
