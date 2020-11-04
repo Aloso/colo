@@ -2,7 +2,7 @@ use crate::color::ansi::{AnsiColor, Bg, Fg, ResetBg, ResetFg};
 use anyhow::Result;
 use std::io::{stdout, Stdout, Write};
 
-pub fn show_term_colors() -> Result<()> {
+pub fn term() -> Result<()> {
     let mut stdout = stdout();
 
     let colors = &[

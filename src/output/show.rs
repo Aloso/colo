@@ -7,7 +7,7 @@ use std::{
     iter,
 };
 
-use crate::color::{format, space, Color, ColorFormat};
+use crate::color::{format, Color, ColorFormat};
 
 /// Print a colored square
 pub fn show(color: Color, _input: ColorFormat, output: ColorFormat, size: u32) -> Result<()> {
@@ -115,44 +115,6 @@ where
         }
         writeln!(stdout)?;
     }
-    Ok(())
-}
-
-pub fn show_text(
-    rgb: space::Rgb,
-    bg: Option<space::Rgb>,
-    text: String,
-    italic: bool,
-    bold: bool,
-    underline: bool,
-) -> Result<()> {
-    let fg = colored::Color::TrueColor {
-        r: rgb.r.round() as u8,
-        g: rgb.g.round() as u8,
-        b: rgb.b.round() as u8,
-    };
-    let bg = bg.map(|c| colored::Color::TrueColor {
-        r: c.r.round() as u8,
-        g: c.g.round() as u8,
-        b: c.b.round() as u8,
-    });
-    let mut text = text.color(fg);
-
-    if italic {
-        text = text.italic();
-    }
-    if bold {
-        text = text.bold();
-    }
-    if underline {
-        text = text.underline();
-    }
-    if let Some(bg) = bg {
-        text = text.on_color(bg);
-    }
-
-    let mut stdout = stdout();
-    write!(stdout, "{}", text)?;
     Ok(())
 }
 

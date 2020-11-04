@@ -6,8 +6,7 @@ use color_space::ToRgb;
 
 mod cli;
 mod color;
-mod show_color;
-mod show_term_colors;
+mod output;
 
 /// Entry point for the application.
 ///
@@ -24,7 +23,7 @@ fn main() -> Result<()> {
         }
         ("term", Some(matches)) => {
             let cli::Term = cli::get_term(matches)?;
-            show_term_colors::show_term_colors()?;
+            output::term::term()?;
         }
         ("print", Some(matches)) => {
             let cli::Print {
@@ -40,7 +39,7 @@ fn main() -> Result<()> {
             if !no_newline {
                 text.push('\n');
             }
-            show_color::show_text(
+            output::print::print(
                 color.to_rgb(),
                 bg_color.map(|(c, _)| c.to_rgb()),
                 text,
@@ -57,7 +56,7 @@ fn main() -> Result<()> {
             } = cli::get_show(&matches)?;
 
             for (color, input) in colors {
-                show_color::show(color, input, output, size)?;
+                output::show::show(color, input, output, size)?;
             }
         }
         ("list", Some(matches)) => {
