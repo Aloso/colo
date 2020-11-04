@@ -4,9 +4,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.3.0] - 2020-11-04
 
-This release completely revamped the command line options, now using subcommands:
+This release completely revamped the command line options, now using subcommands (see [`#21`](https://github.com/Aloso/colo/pull/21)):
 
 - `colo show` (or short `colo s`) shows one or more colors, which are entered consecutively. You'll notice that the output is now more space efficient and informative. I hope you like the new layout!
 
@@ -36,16 +36,23 @@ This release completely revamped the command line options, now using subcommands
     ```
 - `colo term` replaces `colo --term`. It is used to print the default terminal colors.
 - `colo libs` replaces `colo --libs`. It prints the dependency tree `colo` was compiled with.
-- `colo help` prints help information. Use `colo help <subcommand>` to show help for a subcommand. Use `colo --help` or `colo <subcommand> --help` for a more detailed help message.
+- `colo help` prints help information. Use `colo help <subcommand>` to show help for a subcommand.
 - The version flag `-v` was renamed to `-V` again.
+- [`#22`](https://github.com/Aloso/colo/pull/22): HTML colors containing the word "gray" can now also be spelled "grey".
+- [`#23`](https://github.com/Aloso/colo/pull/23): Colo now suggests the correct HTML color name if you misspell it.
+- [`#24`](https://github.com/Aloso/colo/pull/24), [`#29`](https://github.com/Aloso/colo/pull/29): Most color spaces now have a nice description [here](https://aloso.github.io/colo/color_spaces).
+- [`#27`](https://github.com/Aloso/colo/pull/27): Added the `colo list` subcommand, which shows all HTML colors.
+- [`#29`](https://github.com/Aloso/colo/pull/29): Colo now supports percent values, e.g. `cmy 0 100% 25%`.
 
 #### Bug fixes
 
-- Converting a color to CMYK used to output `cmyk(0, 0, 0, 0)` for any input
+- [`#17`](https://github.com/Aloso/colo/pull/17): Converting a color to CMYK used to output `cmyk(0, 0, 0, 0)` for any input
+- [`#28`](https://github.com/Aloso/colo/pull/28): Displaying hexadecimal colors was broken for colors where the R, G or B value was bigger than 255.
 
 #### Internal
 
-- The `crossterm` dependency was replaced with `colored`, which improved compile times.
+- The `crossterm` dependency was replaced with the more lightweight `colored`.
+- Added `thiserror` for better enum error handling.
 
 ## [0.2.2] - 2020-10-31
 
