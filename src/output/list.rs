@@ -1,4 +1,5 @@
 use anyhow::Result;
+use atty::Stream;
 use color_space::Rgb;
 use colored::{Color::TrueColor, Colorize};
 use std::io::{stdout, Write};
@@ -18,10 +19,18 @@ pub fn list(_: List) -> Result<()> {
 
     let mut even = false;
 
+    let is_atty = atty::is(Stream::Stdout);
+
     for &(name, color) in HTML_COLOR_NAMES {
         if name == "magenta" || name == "aqua" || name.ends_with("grey") {
             continue;
         }
+
+        if !is_atty {
+            writeln!(stdout, "{}", name)?;
+            continue;
+        }
+
         let rgb = Rgb::from_hex(color);
         let lab: space::Lab = rgb.into();
 

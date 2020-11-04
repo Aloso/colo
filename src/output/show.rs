@@ -39,7 +39,7 @@ fn show_color(
         b: rgb.b.round() as u8,
     };
 
-    if !atty::is(Stream::Stdout) {
+    if atty::isnt(Stream::Stdout) {
         let color = output
             .format(color)
             .or_else(|| ColorFormat::Hex.format(color))
