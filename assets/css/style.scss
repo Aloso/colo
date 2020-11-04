@@ -34,6 +34,7 @@ body {
         max-width: 64rem;
         margin: 0 auto;
         padding: 0 6rem;
+        font-size: 105%;
 
         .github-link {
             float: right;
@@ -43,7 +44,7 @@ body {
             display: inline-block;
             color: white;
             text-decoration: none;
-            padding: 0.6rem;
+            padding: 0.8rem 0.6rem;
 
             &:hover {
                 background: rgba(255, 255, 255, 0.2);
