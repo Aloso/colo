@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="{{ site.lang | default: "en-US" }}">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    {% seo %}
+    <meta name="theme-color" content="#157878">
+    <link rel="stylesheet" href="{{ "/assets/css/style.css?v=" | append: site.github.build_revision | relative_url }}">
+</head>
+
+<body>
+    <section class="page-header">
+        <h1 class="project-name">{{ site.title | default: site.github.repository_name }}</h1>
+
+        {% if site.logo %}
+        <img src="{{site.logo | relative_url}}" alt="Logo" />
+        {% endif %}
+
+        <p>{{ site.description | default: site.github.project_tagline }}</p>
+
+        <p class="view">
+            <a href="{{ site.github.repository_url }}">
+                View on GitHub
+                <!--<small>{{ site.github.repository_nwo }}</small>-->
+            </a>
+        </p>
+    </section>
+
+    <section class="main-content">
+        {{ content }}
+    </section>
+
+    <footer class="site-footer">
+        <p>This project is maintained by <a href="{{ site.github.owner_url }}">{{ site.github.owner_name }}</a></p>.
+    </footer>
+</body>
+
+</html>
