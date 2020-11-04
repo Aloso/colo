@@ -3,7 +3,7 @@
 Color spaces are reproducible representations of color. Most color spaces have three dimensions that describe properties of the color (such as color hue, saturation, luminance), or their composition of primary colors, using a certain [color model](https://en.wikipedia.org/wiki/Color_model).
 
 
-## sRGB
+## RGB (sRGB)
 
 [sRGB](https://en.wikipedia.org/wiki/SRGB) (often simply called _RGB_) is a color space of the three primary colors **red**, **green** and **blue**. It uses additive color mixing, which is how colored light works. The sRGB color space is therefore used by computer screens, for example.
 
@@ -81,7 +81,7 @@ Saturation and lightness are values between 0 and 1 (or 100%). When the lightnes
 
 ## HSV
 
-[HSV](https://en.wikipedia.org/wiki/HSL_and_HSV) is also a color space designed to be intuitive to understand. It consists of **hue**, **saturation** and **value**. The hue is the same as in the HSL model.
+[HSV](https://en.wikipedia.org/wiki/HSL_and_HSV) is also a color space designed to be intuitive to understand. It consists of **hue**, **saturation** and **value**. The hue is the same as in the HSL model. Hue and saturation together describe the [chromaticity](https://en.wikipedia.org/wiki/Chromaticity).
 
 Saturation and value are again values between 0 and 1. When the value is 0, the color is full black. When the value is 1, the color depends on the hue and saturation.
 
@@ -96,11 +96,20 @@ Saturation and value are again values between 0 and 1. When the value is 0, the 
 | `hsv(240, 1, 1)` | ![color](docs/colors/blue.png)
 | `hsv(300, 1, 1)` | ![color](docs/colors/magenta.png)
 
-## LCH
 
-## LUV
+## LAB (CIELAB)
 
-## LAB
+[CIELAB](https://en.wikipedia.org/wiki/CIELAB_color_space) is a color space consisting of three values: __L\*__ for the lightness from black (0) to white (100), __a\*__ from green (−) to red (+), and __b\*__ from blue (−) to yellow (+). It was designed so that the same amount of numerical change in these values corresponds to roughly the same amount of visually perceived change. __a\*__ and __b\*__ together describe the [chromaticity](https://en.wikipedia.org/wiki/Chromaticity) (hue and colorfulness).
+
+CIELAB is designed to approximate human vision. It's __L\*__ component closely matches human perception of lightness.
+
+## LCH (CIELCh)
+
+[CIELCh](https://en.wikipedia.org/wiki/CIELAB_color_space#Cylindrical_representation:_CIELCh_or_CIEHLC)
+
+## LUV (CIELUV)
+
+[CIELUV](https://en.wikipedia.org/wiki/CIELUV)
 
 ## Hunter Lab
 
