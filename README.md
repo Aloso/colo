@@ -61,7 +61,7 @@ If `colo` is used outside of a terminal, it outputs the color as text. The forma
 
 ### Supported color spaces
 
-Read in more detail about these color spaces [here](color_spaces.md).
+Read in more detail about these color spaces [here](https://aloso.github.io/colo/color_spaces#srgb-rgb).
 
 | Name        | Description                     | Range of values     |
 |-------------|---------------------------------|---------------------|
