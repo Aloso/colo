@@ -1,4 +1,4 @@
-# colo
+# colo <img src="https://aloso.github.io/colo/assets/logo.svg" alt="Logo">
 
 Command-line tool for displaying colors, written in Rust
 
