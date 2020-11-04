@@ -78,8 +78,14 @@ pub fn parse(mut input: &str) -> Result<Vec<(Color, ColorFormat)>, ParseError> {
                 let (n, input_ii) = parse_number(input_i)?.ok_or_else(|| MissingFloat {
                     got: input_i.into(),
                 })?;
-                *num = n;
-                input_i = input_ii;
+                input_i = input_ii.trim_start();
+
+                if input_i.starts_with('%') {
+                    input_i = &input_i[1..];
+                    *num = n / 100.0;
+                } else {
+                    *num = n;
+                }
             }
 
             let nums = &nums[0..expected];

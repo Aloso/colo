@@ -16,7 +16,6 @@ pub fn command<'a, 'b>() -> App<'a, 'b> {
                 .takes_value(true)
                 .required(false)
                 .help(super::COLOR_HELP_MESSAGE)
-                .long_help(super::COLOR_HELP_LONG_MESSAGE)
                 .multiple(true)
                 .use_delimiter(false),
             Arg::with_name("OUTPUT_FORMAT")

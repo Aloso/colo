@@ -39,43 +39,14 @@ const COLOR_FORMATS: &[&str] = &[
     "hex",
 ];
 
-macro_rules! color_help_message {
-    () => {
-        "\
+const COLOR_HELP_MESSAGE: &str = "\
 The input colors. Multiple colors can be specified. Supported formats:
 
-* HTML color name (e.g. 'rebeccapurple')
-* Hexadecimal RGB color (e.g. '07F', '0077FF')
-* Color components (e.g. '127, 0, 255', 'hsl(30, 1, .5)').
-  If no color space is specified, it defaults to 'rgb'.
-  Commas and parentheses are optional."
-    };
-}
-
-macro_rules! color_space_help {
-    () => {
-        "\
-Supported color spaces
-======================
-name      arguments                   values
--------------------------------------------------------------------
-rgb       red, green, blue            0-255    0-255    0-255
-cmy       cyan, magenta, yellow       0-1      0-1      0-1
-cmyk      cyan, magenta, yellow, key  0-1      0-1      0-1     0-1
-hsv       hue, saturation, value      0-360    0-1      0-1
-hsl       hue, saturation, light      0-360    0-1      0-1
-lch       luminance, chroma, hue      0-100    0-100    0-360
-luv       luminance, u, v (CIELUV)    0-100 –134-220 –140-122
-lab       lightness, a, b (CIELAB)    0-100     ?        ?
-hunterlab lightness, a, b (CIELAB)    0-100     ?        ?
-xyz       x,y,z (CIE 1931 XYZ color)   ?        ?        ?
-yxy       y1,x,y2 (CIE YXY color)      ?        ?        ?"
-    };
-}
-
-const COLOR_HELP_LONG_MESSAGE: &str = concat!(color_help_message!(), "\n\n", color_space_help!());
-
-const COLOR_HELP_MESSAGE: &str = color_help_message!();
+* HTML color name, e.g. 'rebeccapurple'
+* Hexadecimal RGB color, e.g. '07F', '0077FF'
+* Color components, e.g. 'hsl(30, 100%, 50%)'
+  Commas and parentheses are optional.
+  For supported color spaces, see <https://aloso.github.io/colo/color_spaces>";
 
 /// Returns the command line arguments parsed by clap.
 ///
