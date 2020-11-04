@@ -6,6 +6,6 @@ layout: startpage
 
 Run `colo s <COLOR>` to view a color. Colo supports HTML color names, hex colors and 11 different color spaces.
 
-![example][/assets/main_example.png]
+![example](/assets/main_example.png)
 
 [Here](./color_spaces) is an overview of the supported color spaces.
