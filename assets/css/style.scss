@@ -3,6 +3,10 @@
 
 @import "{{ site.theme }}";
 
+body {
+    color: 30363a;
+}
+
 .page-header {
     padding: 2.5rem;
     background-image: linear-gradient(120deg, #155799, #26bd2e, #b69b00);
@@ -67,4 +71,19 @@
     .page-header-small .inner {
         padding: 0 1rem;
     }
+}
+
+.main-content {
+    code {
+        font-family: 'Noto Mono', 'Roboto Mono', Consolas, Hack, Menlo, 'Liberation Mono', monospace;
+    }
+
+    blockquote {
+        color: #5b6468;
+    }
+
+h1 code, h2 code, h3 code, h4 code, h5 code, h6 code {
+    font-size: 85% !important;
+}
+
 }
