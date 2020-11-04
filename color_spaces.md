@@ -30,14 +30,14 @@ Colors in the sRGB color space are represented as three values between 0 and 255
 
 |                         |                      |
 | ----------------------- |--------------------- |
-| `rgb(0, 0, 0)`          | ![color](docs/colors/black.png)
-| `rgb(255, 0, 0)`        | ![color](docs/colors/red.png)
-| `rgb(0, 255, 0)`        | ![color](docs/colors/green.png)
-| `rgb(0, 0, 255)`        | ![color](docs/colors/blue.png)
-| `rgb(255, 255, 0)`      | ![color](docs/colors/yellow.png)
-| `rgb(0, 255, 255)`      | ![color](docs/colors/cyan.png)
-| `rgb(255, 0, 255)`      | ![color](docs/colors/magenta.png)
-| `rgb(255, 255, 255)`    | ![color](docs/colors/white.png)
+| `rgb(0, 0, 0)`          | ![color](assets/colors/black.png)
+| `rgb(255, 0, 0)`        | ![color](assets/colors/red.png)
+| `rgb(0, 255, 0)`        | ![color](assets/colors/green.png)
+| `rgb(0, 0, 255)`        | ![color](assets/colors/blue.png)
+| `rgb(255, 255, 0)`      | ![color](assets/colors/yellow.png)
+| `rgb(0, 255, 255)`      | ![color](assets/colors/cyan.png)
+| `rgb(255, 0, 255)`      | ![color](assets/colors/magenta.png)
+| `rgb(255, 255, 255)`    | ![color](assets/colors/white.png)
 
 ## CMY (`cmy`)
 
@@ -49,14 +49,14 @@ CMY colors are represented as three values between 0 and 1, or 100%.
 
 |                |                      |
 | ---------------|--------------------- |
-| `cmy(0, 0, 0)` | ![color](docs/colors/white.png)
-| `cmy(1, 0, 0)` | ![color](docs/colors/cyan.png)
-| `cmy(0, 1, 0)` | ![color](docs/colors/magenta.png)
-| `cmy(0, 0, 1)` | ![color](docs/colors/yellow.png)
-| `cmy(0, 1, 1)` | ![color](docs/colors/red.png)
-| `cmy(1, 0, 1)` | ![color](docs/colors/green.png)
-| `cmy(1, 1, 0)` | ![color](docs/colors/blue.png)
-| `cmy(1, 1, 1)` | ![color](docs/colors/black.png)
+| `cmy(0, 0, 0)` | ![color](assets/colors/white.png)
+| `cmy(1, 0, 0)` | ![color](assets/colors/cyan.png)
+| `cmy(0, 1, 0)` | ![color](assets/colors/magenta.png)
+| `cmy(0, 0, 1)` | ![color](assets/colors/yellow.png)
+| `cmy(0, 1, 1)` | ![color](assets/colors/red.png)
+| `cmy(1, 0, 1)` | ![color](assets/colors/green.png)
+| `cmy(1, 1, 0)` | ![color](assets/colors/blue.png)
+| `cmy(1, 1, 1)` | ![color](assets/colors/black.png)
 
 ## CMYK (`cmyk`)
 
@@ -66,14 +66,14 @@ CMYK is a variation of CMY that adds a fourth component, the **key**. This is us
 
 |                   |                      |
 | ------------------|--------------------- |
-| `cmy(0, 0, 0, 0)` | ![color](docs/colors/white.png)
-| `cmy(1, 0, 0, 0)` | ![color](docs/colors/cyan.png)
-| `cmy(0, 1, 0, 0)` | ![color](docs/colors/magenta.png)
-| `cmy(0, 0, 1, 0)` | ![color](docs/colors/yellow.png)
-| `cmy(0, 1, 1, 0)` | ![color](docs/colors/red.png)
-| `cmy(1, 0, 1, 0)` | ![color](docs/colors/green.png)
-| `cmy(1, 1, 0, 0)` | ![color](docs/colors/blue.png)
-| `cmy(0, 0, 0, 1)` | ![color](docs/colors/black.png)
+| `cmy(0, 0, 0, 0)` | ![color](assets/colors/white.png)
+| `cmy(1, 0, 0, 0)` | ![color](assets/colors/cyan.png)
+| `cmy(0, 1, 0, 0)` | ![color](assets/colors/magenta.png)
+| `cmy(0, 0, 1, 0)` | ![color](assets/colors/yellow.png)
+| `cmy(0, 1, 1, 0)` | ![color](assets/colors/red.png)
+| `cmy(1, 0, 1, 0)` | ![color](assets/colors/green.png)
+| `cmy(1, 1, 0, 0)` | ![color](assets/colors/blue.png)
+| `cmy(0, 0, 0, 1)` | ![color](assets/colors/black.png)
 
 ## HSL (`hsl`)
 
@@ -87,14 +87,14 @@ Saturation and lightness are values between 0 and 1 (or 100%). When the lightnes
 
 |                   |                      |
 | ------------------|--------------------- |
-| <code>hsl(&nbsp; ?, ?,  0)</code> | ![color](docs/colors/black.png)
-| <code>hsl(&nbsp; ?, ?,  1)</code> | ![color](docs/colors/white.png)
-| <code>hsl(&nbsp; 0, 1, .5)</code> | ![color](docs/colors/red.png)
-| `hsl( 60, 1, .5)` | ![color](docs/colors/yellow.png)
-| `hsl(120, 1, .5)` | ![color](docs/colors/green.png)
-| `hsl(180, 1, .5)` | ![color](docs/colors/cyan.png)
-| `hsl(240, 1, .5)` | ![color](docs/colors/blue.png)
-| `hsl(300, 1, .5)` | ![color](docs/colors/magenta.png)
+| <code>hsl(&nbsp; ?, ?,  0)</code> | ![color](assets/colors/black.png)
+| <code>hsl(&nbsp; ?, ?,  1)</code> | ![color](assets/colors/white.png)
+| <code>hsl(&nbsp; 0, 1, .5)</code> | ![color](assets/colors/red.png)
+| `hsl( 60, 1, .5)` | ![color](assets/colors/yellow.png)
+| `hsl(120, 1, .5)` | ![color](assets/colors/green.png)
+| `hsl(180, 1, .5)` | ![color](assets/colors/cyan.png)
+| `hsl(240, 1, .5)` | ![color](assets/colors/blue.png)
+| `hsl(300, 1, .5)` | ![color](assets/colors/magenta.png)
 
 ## HSV (`hsv`)
 
@@ -104,14 +104,14 @@ Saturation and value are again values between 0 and 1. When the value is 0, the 
 
 |                  |                      |
 | -----------------|--------------------- |
-| <code>hsv(&nbsp; ?, ?, 0)</code> | ![color](docs/colors/black.png)
-| <code>hsv(&nbsp; ?, 0, 1)</code> | ![color](docs/colors/white.png)
-| <code>hsv(&nbsp; 0, 1, 1)</code> | ![color](docs/colors/red.png)
-| `hsv( 60, 1, 1)` | ![color](docs/colors/yellow.png)
-| `hsv(120, 1, 1)` | ![color](docs/colors/green.png)
-| `hsv(180, 1, 1)` | ![color](docs/colors/cyan.png)
-| `hsv(240, 1, 1)` | ![color](docs/colors/blue.png)
-| `hsv(300, 1, 1)` | ![color](docs/colors/magenta.png)
+| <code>hsv(&nbsp; ?, ?, 0)</code> | ![color](assets/colors/black.png)
+| <code>hsv(&nbsp; ?, 0, 1)</code> | ![color](assets/colors/white.png)
+| <code>hsv(&nbsp; 0, 1, 1)</code> | ![color](assets/colors/red.png)
+| `hsv( 60, 1, 1)` | ![color](assets/colors/yellow.png)
+| `hsv(120, 1, 1)` | ![color](assets/colors/green.png)
+| `hsv(180, 1, 1)` | ![color](assets/colors/cyan.png)
+| `hsv(240, 1, 1)` | ![color](assets/colors/blue.png)
+| `hsv(300, 1, 1)` | ![color](assets/colors/magenta.png)
 
 
 ## CIELAB (`lab`)
