@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Align square vertically with text
+
+## [0.3.0] - 2020-11-04
+
 This release completely revamped the command line options, now using subcommands:
 
 - `colo show` (or short `colo s`) shows one or more colors, which are entered consecutively. You'll notice that the output is now more space efficient and informative. I hope you like the new layout!

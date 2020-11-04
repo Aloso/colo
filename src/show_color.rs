@@ -115,6 +115,7 @@ where
         }
         writeln!(stdout)?;
     }
+    writeln!(stdout)?;
     Ok(())
 }
 
@@ -158,28 +159,14 @@ pub fn show_text(
 
 /// Generates an ASCII square with the given size
 fn make_square(size: u32) -> String {
-    if size == 0 {
-        return String::new();
-    }
-
-    let mut s = String::from(" ");
+    let mut s = String::new();
     for _ in 0..size {
-        s.push('▄');
-        s.push('▄');
-    }
-    s.push('\n');
-    s.push(' ');
-    for _ in 0..size - 1 {
+        s.push(' ');
         for _ in 0..size {
             s.push('█');
             s.push('█');
         }
         s.push('\n');
-        s.push(' ');
-    }
-    for _ in 0..size {
-        s.push('▀');
-        s.push('▀');
     }
     s
 }
