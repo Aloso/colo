@@ -8,4 +8,6 @@ Run `colo s <COLOR>` to view a color. Colo supports HTML color names, hex colors
 
 ![example](/assets/main_example.png)
 
-[Here](./color_spaces) is an overview of the supported color spaces.
+> [Here](./color_spaces) is an overview of the supported color spaces.
+
+> [Here](https://github.com/Aloso/colo/blob/main/README.md) is a detailed user manual.
