@@ -55,6 +55,7 @@ fn main() -> Result<()> {
                 size,
             } = cli::get_show(&matches)?;
 
+            println!();
             for (color, input) in colors {
                 output::show::show(color, input, output, size)?;
             }
