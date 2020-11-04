@@ -108,7 +108,10 @@ fn scale_down(r: f64, g: f64, b: f64, len: usize) -> space::Rgb {
 
 /// Converts an RGB color to hexadecimal notation
 pub fn rgb_to_u32(rgb: space::Rgb) -> u32 {
-    ((rgb.r.round() as u32) << 16) + ((rgb.g.round() as u32) << 8) + rgb.b.round() as u32
+    let r = rgb.r.min(255.0).max(0.0).round() as u32;
+    let g = rgb.g.min(255.0).max(0.0).round() as u32;
+    let b = rgb.b.min(255.0).max(0.0).round() as u32;
+    (r << 16) + (g << 8) + b
 }
 
 #[cfg(test)]

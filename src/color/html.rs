@@ -209,13 +209,17 @@ pub fn show_all() -> Result<()> {
             continue;
         }
         let color = Rgb::from_hex(color);
-        let hsl: space::Hsl = color.into();
+        let lab: space::Lab = color.into();
+
         let color = TrueColor {
             r: color.r as u8,
             g: color.g as u8,
             b: color.b as u8,
         };
-        let text_color = if hsl.l < 0.5 {
+
+        let lab_distance = (lab.a.abs().powi(2) + lab.b.abs().powi(2)).sqrt();
+        let colorfulness = lab_distance.min(100.0) / 12.0; // empirically determined values
+        let text_color = if lab.l < (60.0 - colorfulness) {
             TrueColor {
                 r: 255,
                 g: 255,
@@ -224,7 +228,7 @@ pub fn show_all() -> Result<()> {
         } else {
             TrueColor { r: 0, g: 0, b: 0 }
         };
-        let name = format!("   {}{}", name, &"                     "[name.len()..]);
+        let name = format!(" {}{}", name, &"                      "[name.len()..]);
         write!(stdout, "{}", name.color(text_color).on_color(color))?;
         if even {
             writeln!(stdout)?;
