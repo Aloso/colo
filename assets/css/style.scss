@@ -1,6 +1,65 @@
+---
+---
+
 @import "{{ site.theme }}";
 
 .page-header {
-    padding: 3rem 6rem;
-    background-image: linear-gradient(120deg, #155799, #10ad18, #8d7800);
+    padding: 2.5rem;
+    background-image: linear-gradient(120deg, #155799, #26bd2e, #b69b00);
+
+    .project-tagline {
+        opacity: 0.9;
+        text-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn, .btn:hover {
+        color: white;
+    }
+}
+
+.page-header-small {
+    background-image: linear-gradient(120deg, #155799, #26bd2e, #b69b00);
+    color: white;
+
+    .inner {
+        max-width: 64rem;
+        margin: 0 auto;
+        padding: 0 6rem;
+
+        .github-link {
+            float: right;
+        }
+
+        a {
+            display: inline-block;
+            color: white;
+            text-decoration: none;
+            padding: 0.6rem;
+
+            &:hover {
+                background: rgba(255, 255, 255, 0.2);
+            }
+        }
+    }
+}
+
+@media screen and (min-width: 42em) and (max-width: 64em) {
+    .page-header {
+        padding: 2rem;
+        background-image: linear-gradient(120deg, #155799, #26bd2e, #b69b00);
+    }
+
+    .page-header-small .inner {
+        padding: 0 4rem;
+    }
+}
+
+@media screen and (max-width: 42em) {
+    .page-header {
+        padding: 1.5rem 1rem;
+    }
+
+    .page-header-small .inner {
+        padding: 0 1rem;
+    }
 }
