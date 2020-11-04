@@ -33,18 +33,24 @@ body {
     .inner {
         max-width: 64rem;
         margin: 0 auto;
-        padding: 0 6rem;
-        font-size: 105%;
+        padding: 0 5rem;
 
         .github-link {
             float: right;
+        }
+
+        .home-link {
+            font-size: 1.2em;
+            letter-spacing: 0.02rem;
+            font-weight: bold;
         }
 
         a {
             display: inline-block;
             color: white;
             text-decoration: none;
-            padding: 0.8rem 0.6rem;
+            padding: 1.35rem 1rem;
+            line-height: 1rem;
 
             &:hover {
                 background: rgba(255, 255, 255, 0.2);
@@ -60,7 +66,7 @@ body {
     }
 
     .page-header-small .inner {
-        padding: 0 4rem;
+        padding: 0 3rem;
     }
 }
 
@@ -70,7 +76,7 @@ body {
     }
 
     .page-header-small .inner {
-        padding: 0 1rem;
+        padding: 0;
     }
 }
 

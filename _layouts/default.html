@@ -1,47 +1,44 @@
 <!DOCTYPE html>
 <html lang="{{ site.lang | default: "en-US" }}">
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <head>
+        <meta charset="UTF-8">
+        <meta content="IE=edge" http-equiv="X-UA-Compatible">
+        <meta content="width=device-width, initial-scale=1" name="viewport">
 
-    {% seo %}
-    <link rel="stylesheet" href="{{ "/assets/css/style.css?v=" | append: site.github.build_revision | relative_url }}">
+        {% seo %}
+        <link rel="stylesheet" href="{{ "/assets/css/style.css?v=" | append: site.github.build_revision | relative_url }}">
 
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ "/assets/logo/apple-touch-icon.png" | relative_url }}">
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ "/assets/logo/favicon-32x32.png" | relative_url }}">
-    <link rel="icon" type="image/png" sizes="16x16" href="{{ "/assets/logo/favicon-16x16.png" | relative_url }}">
-    <link rel="manifest" href="{{ "/site.webmanifest" | relative_url }}">
-    <link rel="mask-icon" href="{{ "/assets/logo/safari-pinned-tab.svg" | relative_url }}" color="#5bbad5">
-    <meta name="msapplication-config" content="{{ "/browserconfig.xml" | relative_url }}">
-    <meta name="msapplication-TileColor" content="#603cba">
-    <meta name="theme-color" content="#ffffff">
-</head>
+        <link rel="apple-touch-icon" sizes="180x180" href="{{ "/assets/logo/apple-touch-icon.png" | relative_url }}">
+        <link rel="icon" type="image/png" sizes="32x32" href="{{ "/assets/logo/favicon-32x32.png" | relative_url }}">
+        <link rel="icon" type="image/png" sizes="16x16" href="{{ "/assets/logo/favicon-16x16.png" | relative_url }}">
+        <link rel="manifest" href="{{ "/site.webmanifest" | relative_url }}">
+        <link rel="mask-icon" href="{{ "/assets/logo/safari-pinned-tab.svg" | relative_url }}" color="#5bbad5">
+        <meta name="msapplication-config" content="{{ "/browserconfig.xml" | relative_url }}">
+        <meta content="#603cba" name="msapplication-TileColor">
+        <meta content="#ffffff" name="theme-color">
+    </head>
 
-<body>
-    <section class="page-header-small">
-        <div class="inner">
-            <a href="{{ site.url }}/colo"><b>{{ site.title | default: site.github.repository_name }}</b></a>
+    <body>
+        <section class="page-header-small">
+            <div class="inner">
+                <a class="home-link" href="{{ site.url }}/colo">{{ site.title | default: site.github.repository_name }}</a>
 
-            <a class="github-link" href="{{ site.github.repository_url }}">
-                View on GitHub
-                <!--<small>{{ site.github.repository_nwo }}</small>-->
-            </a>
-        </div>
-    </section>
+                <a class="github-link" href="{{ site.github.repository_url }}">View on GitHub</a>
+            </div>
+        </section>
 
-    <section class="main-content">
-        {{ content }}
+        <section class="main-content">
+            {{ content }}
 
-        <footer class="site-footer">
-            <span class="site-footer-owner">
-                <a href="{{ site.github.repository_url }}">{{ site.github.repository_name }}</a>
-                is maintained by
-                <a href="{{ site.github.owner_url }}">{{ site.github.owner_name }}</a>.
-            </span>
-        </footer>
-    </section>
-</body>
+            <footer class="site-footer">
+                <span class="site-footer-owner">
+                    <a href="{{ site.github.repository_url }}">{{ site.github.repository_name }}</a>
+                    is maintained by
+                    <a href="{{ site.github.owner_url }}">{{ site.github.owner_name }}</a>.
+                </span>
+            </footer>
+        </section>
+    </body>
 
 </html>
