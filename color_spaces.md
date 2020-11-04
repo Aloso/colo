@@ -1,3 +1,7 @@
+---
+layout: default
+---
+
 # Color spaces
 
 Color spaces are reproducible representations of color. Most color spaces have three dimensions that describe properties of the color (such as color hue, saturation, luminance), or their composition of primary colors, using a certain [color model](https://en.wikipedia.org/wiki/Color_model).
