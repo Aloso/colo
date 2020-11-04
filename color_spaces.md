@@ -30,14 +30,14 @@ Colors in the sRGB color space are represented as three values between 0 and 255
 
 |                         |                      |
 | ----------------------- |--------------------- |
-| `rgb(0, 0, 0)`          | ![color](assets/colors/black.png)
-| `rgb(255, 0, 0)`        | ![color](assets/colors/red.png)
-| `rgb(0, 255, 0)`        | ![color](assets/colors/green.png)
-| `rgb(0, 0, 255)`        | ![color](assets/colors/blue.png)
-| `rgb(255, 255, 0)`      | ![color](assets/colors/yellow.png)
-| `rgb(0, 255, 255)`      | ![color](assets/colors/cyan.png)
-| `rgb(255, 0, 255)`      | ![color](assets/colors/magenta.png)
-| `rgb(255, 255, 255)`    | ![color](assets/colors/white.png)
+| `rgb(0, 0, 0)`          | ![color](./assets/colors/black.png)
+| `rgb(255, 0, 0)`        | ![color](./assets/colors/red.png)
+| `rgb(0, 255, 0)`        | ![color](./assets/colors/green.png)
+| `rgb(0, 0, 255)`        | ![color](./assets/colors/blue.png)
+| `rgb(255, 255, 0)`      | ![color](./assets/colors/yellow.png)
+| `rgb(0, 255, 255)`      | ![color](./assets/colors/cyan.png)
+| `rgb(255, 0, 255)`      | ![color](./assets/colors/magenta.png)
+| `rgb(255, 255, 255)`    | ![color](./assets/colors/white.png)
 
 ## CMY (`cmy`)
 
