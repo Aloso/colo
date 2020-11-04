@@ -61,19 +61,21 @@ If `colo` is used outside of a terminal, it outputs the color as text. The forma
 
 ### Supported color spaces
 
-| Name        | Description                        | Range of values |
-|-------------|------------------------------------|-----------------|
-| `rgb`       | red, green, blue                   | 0 to 255        |
-| `cmy`       | cyan, magenta, yellow              | 0 to 1          |
-| `cmyk`      | cyan, magenta, yellow, key         | 0 to 1          |
-| `hsv`       | hue, saturation, value             | hue: 0 to 360, saturation: 0 to 1, value: 0 to 1     |
-| `hsl`       | hue, saturation, light             | hue: 0 to 360, saturation: 0 to 1, light: 0 to 1     |
-| `lch`       | luminance, chroma, hue             | luminance: 0 to 100, chroma: 0 to 100, hue: 0 to 360 |
-| `luv`       | CIELUV color (luminance, u, v)     | luminance: 0 to 100, u: -134 to 220, v: -140 to 122  |
-| `lab`       | CIELAB color (lightness, a, b)     | lightness: 0 to 100, a: ??, b: ??                    |
-| `hunterlab` | Hunter Lab color (lightness, a, b) | lightness: 0 to 100, a: ??, b: ??                    |
-| `xyz`       | CIE 1931 XYZ color                 | ??              |
-| `yxy`       | CIE YXY color                      | ??              |
+Read in more detail about these color spaces [here](color_spaces.md).
+
+| Name        | Description                     | Range of values     |
+|-------------|---------------------------------|---------------------|
+| `rgb`       | red, green, blue                | 0 to 255            |
+| `cmy`       | cyan, magenta, yellow           | 0 to 1              |
+| `cmyk`      | cyan, magenta, yellow, key      | 0 to 1              |
+| `hsl`       | hue, saturation, light          | hue: 0 to 360, saturation: 0 to 1, light: 0 to 1     |
+| `hsv`       | hue, saturation, value          | hue: 0 to 360, saturation: 0 to 1, value: 0 to 1     |
+| `lab`       | CIELAB (lightness, a, b)        | lightness: 0 to 100 |
+| `lch`       | CIELCh (luminance, chroma, hue) | luminance: 0 to 100, chroma: 0 to 100, hue: 0 to 360 |
+| `luv`       | CIELUV (luminance, u, v)        | luminance: 0 to 100, u: -134 to 220, v: -140 to 122  |
+| `hunterlab` | Hunter Lab (lightness, a, b)    | lightness: 0 to 100 |
+| `xyz`       | CIE XYZ (x, lightness, z)       | lightness: 0 to 100 |
+| `yxy`       | CIE Yxy (lightness, x, y)       | lightness: 0 to 100 |
 
 ### Specifying hexadecimal colors
 
