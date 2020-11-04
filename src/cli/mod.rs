@@ -1,17 +1,11 @@
 use clap::{App, AppSettings};
 
-mod libs;
-mod list;
-mod print;
-mod show;
-mod term;
+pub mod libs;
+pub mod list;
+pub mod print;
+pub mod show;
+pub mod term;
 mod util;
-
-pub use libs::{get as get_libs, Libs};
-pub use list::{get as get_list, List};
-pub use print::{get as get_print, Print};
-pub use show::{get as get_show, Show};
-pub use term::{get as get_term, Term};
 
 /// Name of the program
 pub const APP_NAME: &str = env!("CARGO_PKG_NAME");

@@ -1,8 +1,10 @@
-use crate::color::ansi::{AnsiColor, Bg, Fg, ResetBg, ResetFg};
 use anyhow::Result;
 use std::io::{stdout, Stdout, Write};
 
-pub fn term() -> Result<()> {
+use crate::cli::term::Term;
+use crate::color::ansi::{AnsiColor, Bg, Fg, ResetBg, ResetFg};
+
+pub fn term(_: Term) -> Result<()> {
     let mut stdout = stdout();
 
     let colors = &[

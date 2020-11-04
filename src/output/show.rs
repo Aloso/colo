@@ -2,23 +2,42 @@ use anyhow::{Context, Result};
 use atty::Stream;
 use color_space::ToRgb;
 use colored::{ColoredString, Colorize};
-use std::{
-    io::{stdout, Stdout, Write},
-    iter,
-};
+use std::io::{stdout, Stdout, Write};
+use std::iter;
 
+use crate::cli::show::Show;
 use crate::color::{format, Color, ColorFormat};
 
+pub fn show(
+    Show {
+        colors,
+        output,
+        size,
+    }: Show,
+) -> Result<()> {
+    let mut stdout = stdout();
+    writeln!(stdout)?;
+
+    for (color, input) in colors {
+        show_color(&mut stdout, color, input, output, size)?;
+    }
+    Ok(())
+}
+
 /// Print a colored square
-pub fn show(color: Color, _input: ColorFormat, output: ColorFormat, size: u32) -> Result<()> {
+fn show_color(
+    stdout: &mut Stdout,
+    color: Color,
+    _input: ColorFormat,
+    output: ColorFormat,
+    size: u32,
+) -> Result<()> {
     let rgb = color.to_rgb();
     let term_color = colored::Color::TrueColor {
         r: rgb.r.round() as u8,
         g: rgb.g.round() as u8,
         b: rgb.b.round() as u8,
     };
-
-    let mut stdout = stdout();
 
     if !atty::is(Stream::Stdout) {
         let color = output
@@ -79,8 +98,9 @@ pub fn show(color: Color, _input: ColorFormat, output: ColorFormat, size: u32) -
     Ok(())
 }
 
+/// Prints the color square and the color formats on its right
 fn print_color<I, J>(
-    mut stdout: Stdout,
+    stdout: &mut Stdout,
     term_color: colored::Color,
     square: &str,
     formats: I,
@@ -91,7 +111,10 @@ where
     J: Iterator<Item = (ColorFormat, ColoredString)>,
 {
     for (line, colors) in square.lines().zip(formats) {
+        // Print one line of the square
         write!(stdout, "{}", line.color(term_color))?;
+
+        // Print one line of the color formats
         if let Some(colors) = colors {
             let mut step = 0;
             for (c, col) in colors {

@@ -2,26 +2,25 @@ use anyhow::Result;
 use colored::Colorize;
 use std::io::{stdout, Write};
 
-use crate::color::space;
+use crate::cli::print::Print;
 
 pub fn print(
-    rgb: space::Rgb,
-    bg: Option<space::Rgb>,
-    text: String,
-    italic: bool,
-    bold: bool,
-    underline: bool,
+    Print {
+        color: (color, _),
+        bg_color,
+        mut text,
+        bold,
+        italic,
+        underline,
+        no_newline,
+    }: Print,
 ) -> Result<()> {
-    let fg = colored::Color::TrueColor {
-        r: rgb.r.round() as u8,
-        g: rgb.g.round() as u8,
-        b: rgb.b.round() as u8,
-    };
-    let bg = bg.map(|c| colored::Color::TrueColor {
-        r: c.r.round() as u8,
-        g: c.g.round() as u8,
-        b: c.b.round() as u8,
-    });
+    if !no_newline {
+        text.push('\n');
+    }
+
+    let fg = color.to_term_color();
+    let bg = bg_color.map(|(c, _)| c.to_term_color());
     let mut text = text.color(fg);
 
     if italic {

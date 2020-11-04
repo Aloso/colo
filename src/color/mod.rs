@@ -112,6 +112,23 @@ impl Color {
             ColorSpace::Yxy => Color::Yxy(Yxy::from_rgb(&rgb)),
         }
     }
+
+    pub fn to_term_color(&self) -> colored::Color {
+        let Rgb { r, g, b } = Self::clamp_rgb(self.to_rgb());
+        colored::Color::TrueColor {
+            r: r.round() as u8,
+            g: g.round() as u8,
+            b: b.round() as u8,
+        }
+    }
+
+    fn clamp_rgb(rgb: Rgb) -> Rgb {
+        Rgb {
+            r: rgb.r.min(255.0).max(0.0),
+            g: rgb.g.min(255.0).max(0.0),
+            b: rgb.b.min(255.0).max(0.0),
+        }
+    }
 }
 
 impl fmt::Display for Color {
