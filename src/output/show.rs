@@ -18,7 +18,7 @@ pub fn show(
     let interactive = atty::is(Stream::Stdout);
     let mut stdout = stdout();
 
-    if interactive {
+    if interactive && size > 0 {
         writeln!(stdout)?;
     }
     for (color, input) in colors {
@@ -70,6 +70,9 @@ fn show_color(
             .chain(iter::once(None).cycle());
 
         print_color(stdout, term_color, &make_square(size), formats, true)?;
+        if size > 0 {
+            writeln!(stdout)?;
+        }
     } else {
         let formats = iter::once(output)
             .chain(
@@ -97,6 +100,9 @@ fn show_color(
             iter::once(Some(formats)),
             false,
         )?;
+        if size > 0 {
+            writeln!(stdout)?;
+        }
     }
 
     Ok(())
@@ -142,7 +148,6 @@ where
         }
         writeln!(stdout)?;
     }
-    writeln!(stdout)?;
     Ok(())
 }
 
