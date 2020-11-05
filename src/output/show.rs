@@ -15,17 +15,21 @@ pub fn show(
         size,
     }: Show,
 ) -> Result<()> {
+    let interactive = atty::is(Stream::Stdout);
     let mut stdout = stdout();
-    writeln!(stdout)?;
 
+    if interactive {
+        writeln!(stdout)?;
+    }
     for (color, input) in colors {
-        show_color(&mut stdout, color, input, output, size)?;
+        show_color(interactive, &mut stdout, color, input, output, size)?;
     }
     Ok(())
 }
 
 /// Print a colored square
 fn show_color(
+    interactive: bool,
     stdout: &mut Stdout,
     color: Color,
     _input: ColorFormat,
@@ -39,7 +43,7 @@ fn show_color(
         b: rgb.b.round() as u8,
     };
 
-    if atty::isnt(Stream::Stdout) {
+    if !interactive {
         let color = output
             .format(color)
             .or_else(|| ColorFormat::Hex.format(color))
