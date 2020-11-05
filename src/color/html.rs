@@ -1,15 +1,8 @@
-use std::io::{stdout, Write};
-
-use super::{
-    hex,
-    space::{self, Rgb},
-};
-use anyhow::Result;
-use colored::{Color::TrueColor, Colorize};
+use super::{hex, space::Rgb};
 
 /// List of HTML color, taken from
 /// https://www.w3schools.com/colors/colors_groups.asp
-const HTML_COLOR_NAMES: &[(&str, u32)] = &[
+pub const HTML_COLOR_NAMES: &[(&str, u32)] = &[
     ("pink", 0xffc0cb),
     ("lightpink", 0xffb6c1),
     ("hotpink", 0xff69b4),
@@ -197,45 +190,4 @@ pub fn get_name(color: Rgb) -> Option<&'static str> {
         .filter(|&&(_, v)| v == hex)
         .map(|&(name, _)| name)
         .next()
-}
-
-pub fn show_all() -> Result<()> {
-    let mut stdout = stdout();
-
-    let mut even = false;
-
-    for &(name, color) in HTML_COLOR_NAMES {
-        if name == "magenta" || name == "aqua" || name.ends_with("grey") {
-            continue;
-        }
-        let color = Rgb::from_hex(color);
-        let lab: space::Lab = color.into();
-
-        let color = TrueColor {
-            r: color.r as u8,
-            g: color.g as u8,
-            b: color.b as u8,
-        };
-
-        let lab_distance = (lab.a.abs().powi(2) + lab.b.abs().powi(2)).sqrt();
-        let colorfulness = lab_distance.min(100.0) / 12.0; // empirically determined values
-        let text_color = if lab.l < (60.0 - colorfulness) {
-            TrueColor {
-                r: 255,
-                g: 255,
-                b: 255,
-            }
-        } else {
-            TrueColor { r: 0, g: 0, b: 0 }
-        };
-        let name = format!(" {}{}", name, &"                      "[name.len()..]);
-        write!(stdout, "{}", name.color(text_color).on_color(color))?;
-        if even {
-            writeln!(stdout)?;
-        }
-        even = !even;
-    }
-    writeln!(stdout)?;
-
-    Ok(())
 }

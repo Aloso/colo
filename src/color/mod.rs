@@ -112,6 +112,45 @@ impl Color {
             ColorSpace::Yxy => Color::Yxy(Yxy::from_rgb(&rgb)),
         }
     }
+
+    pub fn to_term_color(&self) -> colored::Color {
+        let Rgb { r, g, b } = Self::clamp_rgb(self.to_rgb());
+        colored::Color::TrueColor {
+            r: r.round() as u8,
+            g: g.round() as u8,
+            b: b.round() as u8,
+        }
+    }
+
+    pub fn text_color(&self) -> TextColor {
+        let lab = match self.to_color_space(ColorSpace::Lab) {
+            Color::Lab(lab) => lab,
+            _ => unreachable!("Conversion to Lab unsuccessful"),
+        };
+
+        let lab_distance = (lab.a.abs().powi(2) + lab.b.abs().powi(2)).sqrt();
+        let colorfulness = lab_distance.min(100.0) / 12.0; // empirically determined values
+
+        if lab.l < (60.0 - colorfulness) {
+            TextColor::White
+        } else {
+            TextColor::Black
+        }
+    }
+
+    fn clamp_rgb(rgb: Rgb) -> Rgb {
+        Rgb {
+            r: rgb.r.min(255.0).max(0.0),
+            g: rgb.g.min(255.0).max(0.0),
+            b: rgb.b.min(255.0).max(0.0),
+        }
+    }
+}
+
+#[derive(Debug, Copy, Clone, Eq, PartialEq)]
+pub enum TextColor {
+    Black,
+    White,
 }
 
 impl fmt::Display for Color {

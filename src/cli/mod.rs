@@ -1,17 +1,11 @@
 use clap::{App, AppSettings};
 
-mod libs;
-mod list;
-mod print;
-mod show;
-mod term;
+pub mod libs;
+pub mod list;
+pub mod print;
+pub mod show;
+pub mod term;
 mod util;
-
-pub use libs::{get as get_libs, Libs};
-pub use list::{get as get_list, List};
-pub use print::{get as get_print, Print};
-pub use show::{get as get_show, Show};
-pub use term::{get as get_term, Term};
 
 /// Name of the program
 pub const APP_NAME: &str = env!("CARGO_PKG_NAME");
@@ -39,20 +33,11 @@ const COLOR_FORMATS: &[&str] = &[
     "hex",
 ];
 
-const COLOR_HELP_MESSAGE: &str = "\
-The input colors. Multiple colors can be specified. Supported formats:
-
-* HTML color name, e.g. 'rebeccapurple'
-* Hexadecimal RGB color, e.g. '07F', '0077FF'
-* Color components, e.g. 'hsl(30, 100%, 50%)'
-  Commas and parentheses are optional.
-  For supported color spaces, see <https://aloso.github.io/colo/color_spaces>";
-
 /// Returns the command line arguments parsed by clap.
 ///
 /// Note that, if the `--version` or `--help` flag was provided,
 /// clap terminates the application, so this function never returns.
-pub fn app<'a, 'b>() -> App<'a, 'b> {
+pub fn app<'a, 'b>(interactive: bool) -> App<'a, 'b> {
     App::new(APP_NAME)
         .global_setting(AppSettings::ColorAuto)
         .global_setting(AppSettings::ColoredHelp)
@@ -61,8 +46,8 @@ pub fn app<'a, 'b>() -> App<'a, 'b> {
         .about("Displays colors in various color spaces.")
         .subcommand(term::command())
         .subcommand(libs::command())
-        .subcommand(print::command())
+        .subcommand(print::command(interactive))
         .subcommand(list::command())
-        .subcommand(show::command())
+        .subcommand(show::command(interactive))
         .set_term_width(80)
 }

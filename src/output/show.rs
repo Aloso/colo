@@ -2,15 +2,40 @@ use anyhow::{Context, Result};
 use atty::Stream;
 use color_space::ToRgb;
 use colored::{ColoredString, Colorize};
-use std::{
-    io::{stdout, Stdout, Write},
-    iter,
-};
+use std::io::{stdout, Stdout, Write};
+use std::iter;
 
-use crate::color::{format, space, Color, ColorFormat};
+use crate::cli::show::Show;
+use crate::color::{format, Color, ColorFormat};
+
+pub fn show(
+    Show {
+        colors,
+        output,
+        size,
+    }: Show,
+) -> Result<()> {
+    let interactive = atty::is(Stream::Stdout);
+    let mut stdout = stdout();
+
+    if interactive {
+        writeln!(stdout)?;
+    }
+    for (color, input) in colors {
+        show_color(interactive, &mut stdout, color, input, output, size)?;
+    }
+    Ok(())
+}
 
 /// Print a colored square
-pub fn show(color: Color, _input: ColorFormat, output: ColorFormat, size: u32) -> Result<()> {
+fn show_color(
+    interactive: bool,
+    stdout: &mut Stdout,
+    color: Color,
+    _input: ColorFormat,
+    output: ColorFormat,
+    size: u32,
+) -> Result<()> {
     let rgb = color.to_rgb();
     let term_color = colored::Color::TrueColor {
         r: rgb.r.round() as u8,
@@ -18,9 +43,7 @@ pub fn show(color: Color, _input: ColorFormat, output: ColorFormat, size: u32) -
         b: rgb.b.round() as u8,
     };
 
-    let mut stdout = stdout();
-
-    if !atty::is(Stream::Stdout) {
+    if !interactive {
         let color = output
             .format(color)
             .or_else(|| ColorFormat::Hex.format(color))
@@ -79,8 +102,9 @@ pub fn show(color: Color, _input: ColorFormat, output: ColorFormat, size: u32) -
     Ok(())
 }
 
+/// Prints the color square and the color formats on its right
 fn print_color<I, J>(
-    mut stdout: Stdout,
+    stdout: &mut Stdout,
     term_color: colored::Color,
     square: &str,
     formats: I,
@@ -91,7 +115,10 @@ where
     J: Iterator<Item = (ColorFormat, ColoredString)>,
 {
     for (line, colors) in square.lines().zip(formats) {
+        // Print one line of the square
         write!(stdout, "{}", line.color(term_color))?;
+
+        // Print one line of the color formats
         if let Some(colors) = colors {
             let mut step = 0;
             for (c, col) in colors {
@@ -116,44 +143,6 @@ where
         writeln!(stdout)?;
     }
     writeln!(stdout)?;
-    Ok(())
-}
-
-pub fn show_text(
-    rgb: space::Rgb,
-    bg: Option<space::Rgb>,
-    text: String,
-    italic: bool,
-    bold: bool,
-    underline: bool,
-) -> Result<()> {
-    let fg = colored::Color::TrueColor {
-        r: rgb.r.round() as u8,
-        g: rgb.g.round() as u8,
-        b: rgb.b.round() as u8,
-    };
-    let bg = bg.map(|c| colored::Color::TrueColor {
-        r: c.r.round() as u8,
-        g: c.g.round() as u8,
-        b: c.b.round() as u8,
-    });
-    let mut text = text.color(fg);
-
-    if italic {
-        text = text.italic();
-    }
-    if bold {
-        text = text.bold();
-    }
-    if underline {
-        text = text.underline();
-    }
-    if let Some(bg) = bg {
-        text = text.on_color(bg);
-    }
-
-    let mut stdout = stdout();
-    write!(stdout, "{}", text)?;
     Ok(())
 }
 

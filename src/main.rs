@@ -1,13 +1,11 @@
 #![deny(unsafe_code)]
 
 use anyhow::Result;
-use color::html;
-use color_space::ToRgb;
+use atty::Stream;
 
 mod cli;
 mod color;
-mod show_color;
-mod show_term_colors;
+mod output;
 
 /// Entry point for the application.
 ///
@@ -15,59 +13,26 @@ mod show_term_colors;
 /// recoverable and simply need to be reported. Rusts runtime handles this
 /// automatically, when an error is returned from `main()`.
 fn main() -> Result<()> {
-    let app = cli::app();
-    match app.get_matches().subcommand() {
+    let interactive = atty::is(Stream::Stdin);
+
+    match cli::app(interactive).get_matches().subcommand() {
         ("libs", Some(matches)) => {
-            use cli::{APP_NAME, APP_VERSION, DEPENDENCIES};
-            let cli::Libs = cli::get_libs(&matches)?;
-            println!("{} v{}\n{}", APP_NAME, APP_VERSION, DEPENDENCIES);
+            output::libs::libs(cli::libs::get(&matches)?);
         }
         ("term", Some(matches)) => {
-            let cli::Term = cli::get_term(matches)?;
-            show_term_colors::show_term_colors()?;
+            output::term::term(cli::term::get(matches)?)?;
         }
         ("print", Some(matches)) => {
-            let cli::Print {
-                color: (color, _),
-                bg_color,
-                mut text,
-                bold,
-                italic,
-                underline,
-                no_newline,
-            } = cli::get_print(matches)?;
-
-            if !no_newline {
-                text.push('\n');
-            }
-            show_color::show_text(
-                color.to_rgb(),
-                bg_color.map(|(c, _)| c.to_rgb()),
-                text,
-                italic,
-                bold,
-                underline,
-            )?;
+            output::print::print(cli::print::get(matches, interactive)?)?;
         }
         ("show", Some(matches)) => {
-            let cli::Show {
-                colors,
-                output,
-                size,
-            } = cli::get_show(&matches)?;
-
-            println!();
-            for (color, input) in colors {
-                show_color::show(color, input, output, size)?;
-            }
+            output::show::show(cli::show::get(&matches, interactive)?)?;
         }
         ("list", Some(matches)) => {
-            let cli::List = cli::get_list(&matches)?;
-
-            html::show_all()?;
+            output::list::list(cli::list::get(&matches)?)?;
         }
         _ => {
-            cli::app().print_help().unwrap();
+            cli::app(interactive).print_help().unwrap();
         }
     }
     Ok(())
