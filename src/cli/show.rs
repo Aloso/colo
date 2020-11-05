@@ -83,7 +83,7 @@ pub fn get(matches: &ArgMatches, interactive: bool) -> Result<Show> {
     let output = util::get_color_format(&matches, "OUTPUT_FORMAT")?
         .or_else(|| {
             if colors.len() == 1 {
-                Some(colors[0].1)
+                Some(colors[0].1).filter(|&c| c != ColorFormat::Html)
             } else {
                 None
             }
