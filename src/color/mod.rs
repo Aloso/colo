@@ -122,6 +122,22 @@ impl Color {
         }
     }
 
+    pub fn text_color(&self) -> TextColor {
+        let lab = match self.to_color_space(ColorSpace::Lab) {
+            Color::Lab(lab) => lab,
+            _ => unreachable!("Conversion to Lab unsuccessful"),
+        };
+
+        let lab_distance = (lab.a.abs().powi(2) + lab.b.abs().powi(2)).sqrt();
+        let colorfulness = lab_distance.min(100.0) / 12.0; // empirically determined values
+
+        if lab.l < (60.0 - colorfulness) {
+            TextColor::White
+        } else {
+            TextColor::Black
+        }
+    }
+
     fn clamp_rgb(rgb: Rgb) -> Rgb {
         Rgb {
             r: rgb.r.min(255.0).max(0.0),
@@ -129,6 +145,12 @@ impl Color {
             b: rgb.b.min(255.0).max(0.0),
         }
     }
+}
+
+#[derive(Debug, Copy, Clone, Eq, PartialEq)]
+pub enum TextColor {
+    Black,
+    White,
 }
 
 impl fmt::Display for Color {

@@ -1,6 +1,7 @@
 #![deny(unsafe_code)]
 
 use anyhow::Result;
+use atty::Stream;
 
 mod cli;
 mod color;
@@ -12,7 +13,9 @@ mod output;
 /// recoverable and simply need to be reported. Rusts runtime handles this
 /// automatically, when an error is returned from `main()`.
 fn main() -> Result<()> {
-    match cli::app().get_matches().subcommand() {
+    let interactive = atty::is(Stream::Stdin);
+
+    match cli::app(interactive).get_matches().subcommand() {
         ("libs", Some(matches)) => {
             output::libs::libs(cli::libs::get(&matches)?);
         }
@@ -20,16 +23,16 @@ fn main() -> Result<()> {
             output::term::term(cli::term::get(matches)?)?;
         }
         ("print", Some(matches)) => {
-            output::print::print(cli::print::get(matches)?)?;
+            output::print::print(cli::print::get(matches, interactive)?)?;
         }
         ("show", Some(matches)) => {
-            output::show::show(cli::show::get(&matches)?)?;
+            output::show::show(cli::show::get(&matches, interactive)?)?;
         }
         ("list", Some(matches)) => {
             output::list::list(cli::list::get(&matches)?)?;
         }
         _ => {
-            cli::app().print_help().unwrap();
+            cli::app(interactive).print_help().unwrap();
         }
     }
     Ok(())

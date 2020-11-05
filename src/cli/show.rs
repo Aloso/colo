@@ -1,3 +1,5 @@
+use std::iter;
+
 use anyhow::{Context, Result};
 use clap::{App, Arg, ArgMatches, SubCommand};
 
@@ -5,8 +7,21 @@ use crate::color::{Color, ColorFormat};
 
 use super::util;
 
+const COLOR_HELP_MESSAGE: &str = "\
+The input colors. Multiple colors can be specified. Supported formats:
+
+* HTML color name, e.g. 'rebeccapurple'
+* Hexadecimal RGB color, e.g. '07F', '0077FF'
+* Color components, e.g. 'hsl(30, 100%, 50%)'
+  Commas and parentheses are optional.
+  For supported color spaces, see <https://aloso.github.io/colo/color_spaces>
+
+If colo is used behind a pipe or outside of a terminal, the colors can be provided via stdin, e.g.
+
+$ echo orange blue FF7700 | colo show";
+
 /// Returns the arguments for displaying a color
-pub fn command<'a, 'b>() -> App<'a, 'b> {
+pub fn command<'a, 'b>(interactive: bool) -> App<'a, 'b> {
     SubCommand::with_name("show")
         .visible_alias("s")
         .about("Output colors")
@@ -14,8 +29,8 @@ pub fn command<'a, 'b>() -> App<'a, 'b> {
         .args(&[
             Arg::with_name("COLOR")
                 .takes_value(true)
-                .required(false)
-                .help(super::COLOR_HELP_MESSAGE)
+                .required(interactive)
+                .help(COLOR_HELP_MESSAGE)
                 .multiple(true)
                 .use_delimiter(false),
             Arg::with_name("OUTPUT_FORMAT")
@@ -52,13 +67,18 @@ fn parse_size(s: &str) -> Result<u32> {
 }
 
 /// Returns all the arguments relevant for displaying colors
-pub fn get(matches: &ArgMatches) -> Result<Show> {
+pub fn get(matches: &ArgMatches, interactive: bool) -> Result<Show> {
     let size = matches.value_of("SIZE").map(parse_size).unwrap_or(Ok(4))?;
 
-    let colors = match matches.values_of("COLOR") {
+    let mut colors = match matches.values_of("COLOR") {
         Some(values) => util::values_to_colors(values)?,
         None => vec![],
     };
+
+    if !interactive && colors.is_empty() {
+        let text = util::read_stdin()?;
+        colors = util::values_to_colors(iter::once(text.as_str()))?;
+    }
 
     let output = util::get_color_format(&matches, "OUTPUT_FORMAT")?
         .or_else(|| {

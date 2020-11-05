@@ -4,8 +4,8 @@ use color_space::Rgb;
 use colored::{Color::TrueColor, Colorize};
 use std::io::{stdout, Write};
 
-use crate::cli::list::List;
-use crate::color::{html::HTML_COLOR_NAMES, space, Color};
+use crate::color::{html::HTML_COLOR_NAMES, Color};
+use crate::{cli::list::List, color::TextColor};
 
 const WHITE: colored::Color = TrueColor {
     r: 255,
@@ -31,20 +31,15 @@ pub fn list(_: List) -> Result<()> {
             continue;
         }
 
-        let rgb = Rgb::from_hex(color);
-        let lab: space::Lab = rgb.into();
-
-        let color = Color::Rgb(rgb).to_term_color();
-
-        let lab_distance = (lab.a.abs().powi(2) + lab.b.abs().powi(2)).sqrt();
-        let colorfulness = lab_distance.min(100.0) / 12.0; // empirically determined values
-        let text_color = if lab.l < (60.0 - colorfulness) {
-            WHITE
-        } else {
-            BLACK
+        let color = Color::Rgb(Rgb::from_hex(color));
+        let term_color = color.to_term_color();
+        let text_color = match color.text_color() {
+            TextColor::Black => BLACK,
+            TextColor::White => WHITE,
         };
+
         let name = format!(" {}{}", name, &"                      "[name.len()..]);
-        write!(stdout, "{}", name.color(text_color).on_color(color))?;
+        write!(stdout, "{}", name.color(text_color).on_color(term_color))?;
         if even {
             writeln!(stdout)?;
         }
