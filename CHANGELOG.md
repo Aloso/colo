@@ -6,9 +6,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.1] - 2020-11-09
+
 - [`#30`](https://github.com/Aloso/colo/pull/30): Align square vertically with text
-- [`#31`](https://github.com/Aloso/colo/pull/31): Support piping
-- `textcolor` and `contrast` commands
+- [`#31`](https://github.com/Aloso/colo/pull/31): Support piping, for example
+    ```fish
+    $ echo Hello world | colo print orange
+    $ echo blue orange | colo s
+    $ echo blue orange | colo textcolor
+    ```
+- [`#37`](https://github.com/Aloso/colo/pull/37): `textcolor` and `contrast` commands
+    * The `textcolor` command shows a color (either black or white) that is readable on a given background color.
+    * The `contrast` command shows the contrast ratio between two colors according [the W3 specification](https://www.w3.org/TR/2008/REC-WCAG20-20081211/#contrast-ratiodef).
 
 ## [0.3.0] - 2020-11-04
 

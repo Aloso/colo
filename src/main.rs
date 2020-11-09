@@ -32,7 +32,7 @@ fn main() -> Result<()> {
             output::list::list(cli::list::get(&matches)?)?;
         }
         ("contrast", Some(matches)) => {
-            output::contrast::contrast(cli::contrast::get(&matches)?)?;
+            output::contrast::contrast(cli::contrast::get(&matches, interactive)?)?;
         }
         ("textcolor", Some(matches)) => {
             output::textcolor::textcolor(cli::textcolor::get(&matches, interactive)?)?;
