@@ -3,9 +3,7 @@ use clap::{App, ArgMatches, SubCommand};
 
 /// Returns the `term` subcommand
 pub fn command<'a, 'b>() -> App<'a, 'b> {
-    SubCommand::with_name("term")
-        .about("Displays the most common terminal colors")
-        .version(super::APP_VERSION)
+    SubCommand::with_name("term").about("Display the most common terminal colors")
 }
 
 /// Represents the input of the `term` subcommand

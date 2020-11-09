@@ -14,8 +14,7 @@ The input colors. Multiple colors can be specified. Supported formats:
 * Hexadecimal RGB color, e.g. '07F', '0077FF'
 * Color components, e.g. 'hsl(30, 100%, 50%)'
   Commas and parentheses are optional.
-  For supported color spaces, see
-  <https://aloso.github.io/colo/color_spaces>
+  For supported color spaces, see <https://aloso.github.io/colo/color_spaces>
 
 If colo is used behind a pipe or outside of a terminal, the colors can be provided via stdin, e.g.
 
@@ -26,15 +25,14 @@ pub fn command<'a, 'b>(interactive: bool) -> App<'a, 'b> {
     SubCommand::with_name("show")
         .visible_alias("s")
         .about("Output colors")
-        .version(super::APP_VERSION)
         .args(&[
-            Arg::with_name("COLOR")
+            Arg::with_name("colors")
                 .takes_value(true)
                 .required(interactive)
                 .help(COLOR_HELP_MESSAGE)
                 .multiple(true)
                 .use_delimiter(false),
-            Arg::with_name("OUTPUT_FORMAT")
+            Arg::with_name("output-format")
                 .long("out")
                 .short("o")
                 .takes_value(true)
@@ -42,10 +40,10 @@ pub fn command<'a, 'b>(interactive: bool) -> App<'a, 'b> {
                 .hide_possible_values(true)
                 .case_insensitive(true)
                 .help(
-                    "Output format (html, hex) or color space [possible values: rgb, cmy, \
+                    "Output format (html, hex, or color space) [possible values: rgb, cmy, \
                     cmyk, hsv, hsl, lch, luv, lab, hunterlab, xyz, yxy, hex, html]",
                 ),
-            Arg::with_name("SIZE")
+            Arg::with_name("size")
                 .long("size")
                 .short("s")
                 .takes_value(true)
@@ -69,9 +67,9 @@ fn parse_size(s: &str) -> Result<u32> {
 
 /// Returns all the arguments relevant for displaying colors
 pub fn get(matches: &ArgMatches, interactive: bool) -> Result<Show> {
-    let size = matches.value_of("SIZE").map(parse_size).unwrap_or(Ok(4))?;
+    let size = matches.value_of("size").map(parse_size).unwrap_or(Ok(4))?;
 
-    let mut colors = match matches.values_of("COLOR") {
+    let mut colors = match matches.values_of("colors") {
         Some(values) => util::values_to_colors(values)?,
         None => vec![],
     };
@@ -81,7 +79,7 @@ pub fn get(matches: &ArgMatches, interactive: bool) -> Result<Show> {
         colors = util::values_to_colors(iter::once(text.as_str()))?;
     }
 
-    let output = util::get_color_format(&matches, "OUTPUT_FORMAT")?
+    let output = util::get_color_format(&matches, "output-formats")?
         .or_else(|| {
             if colors.len() == 1 {
                 Some(colors[0].1).filter(|&c| c != ColorFormat::Html)

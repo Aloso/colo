@@ -1,6 +1,6 @@
 #![deny(unsafe_code)]
 
-use anyhow::Result;
+use anyhow::{bail, Result};
 use atty::Stream;
 
 mod cli;
@@ -37,9 +37,7 @@ fn main() -> Result<()> {
         ("textcolor", Some(matches)) => {
             output::textcolor::textcolor(cli::textcolor::get(&matches, interactive)?)?;
         }
-        _ => {
-            cli::app(interactive).print_help().unwrap();
-        }
+        (c, _) => bail!("Unknown subcommand {:?}", c),
     }
     Ok(())
 }

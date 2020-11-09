@@ -1,6 +1,6 @@
 [package]
 name = "colo"
-version = "0.3.1"
+version = "0.3.2"
 authors = ["Ludwig Stecher <ludwig.stecher@gmx.de>"]
 description = "CLI tool to show and convert colors between various color spaces"
 categories = ["command-line-interface"]
@@ -19,10 +19,13 @@ lto = "thin"
 
 [dependencies]
 colored = "2.0.0"
-clap = "2"
 atty = "0.2"
 color_space = "^0.5.3"
 anyhow = "1"
 thiserror = "1"
 strsim = "0.10"
 fastrand = "1.4"
+
+[dependencies.clap]
+version = "2"
+features = ["suggestions", "color", "wrap_help"]

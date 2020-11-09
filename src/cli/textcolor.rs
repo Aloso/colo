@@ -14,27 +14,28 @@ The input colors. Multiple colors can be specified. Supported formats:
 * Hexadecimal RGB color, e.g. '07F', '0077FF'
 * Color components, e.g. 'hsl(30, 100%, 50%)'
   Commas and parentheses are optional.
-  For supported color spaces, see
-  <https://aloso.github.io/colo/color_spaces>
+  For supported color spaces, see <https://aloso.github.io/colo/color_spaces>
 
 If colo is used behind a pipe or outside of a terminal, the colors can be provided via stdin, e.g.
 
 $ echo orange blue FF7700 | colo textcolor";
 
 /// Returns the `list` subcommand
-pub fn command<'a, 'b>() -> App<'a, 'b> {
+pub fn command<'a, 'b>(interactive: bool) -> App<'a, 'b> {
     SubCommand::with_name("textcolor")
-        .about(
+        .alias("textcolour")
+        .about("Get a readable text color for a given background color")
+        .long_about(
             "Return a readable text color (black or white) for each given background color. \
             This can also be used in the opposite way, i.e. to create a background color \
             for a given text color.",
         )
-        .version(super::APP_VERSION)
         .arg(
-            Arg::with_name("COLORS")
+            Arg::with_name("colors")
                 .help(COLOR_HELP_MESSAGE)
                 .index(1)
-                .multiple(true),
+                .multiple(true)
+                .required(interactive),
         )
 }
 
@@ -45,7 +46,7 @@ pub struct TextColor {
 
 /// Return the input for the `libs` subcommand
 pub fn get(matches: &ArgMatches, interactive: bool) -> Result<TextColor> {
-    let mut colors = match matches.values_of("COLORS") {
+    let mut colors = match matches.values_of("colors") {
         Some(values) => util::values_to_colors(values)?,
         None => vec![],
     };

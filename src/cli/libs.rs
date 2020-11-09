@@ -3,9 +3,7 @@ use clap::{App, ArgMatches, SubCommand};
 
 /// Returns the `libs` subcommand
 pub fn command<'a, 'b>() -> App<'a, 'b> {
-    SubCommand::with_name("libs")
-        .about("Displays the dependency tree")
-        .version(super::APP_VERSION)
+    SubCommand::with_name("libs").about("Displays the dependency tree")
 }
 
 /// The struct representing the `libs` subcommand

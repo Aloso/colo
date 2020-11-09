@@ -20,44 +20,38 @@ The input colors. You can specify up to 2 colors (text and background color). Su
 * Hexadecimal RGB color, e.g. '07F', '0077FF'
 * Color components, e.g. 'hsl(30, 100%, 50%)'
   Commas and parentheses are optional.
-  For supported color spaces, see
-  <https://aloso.github.io/colo/color_spaces>
+  For supported color spaces, see <https://aloso.github.io/colo/color_spaces>
 ";
 
 /// Returns the `print` subcommand
 pub fn command<'a, 'b>(interactive: bool) -> App<'a, 'b> {
     SubCommand::with_name("print")
         .about("Print formatted text")
-        .version(super::APP_VERSION)
-        .usage(
-            "colo print [FLAGS] <TEXT> <COLOR>...\
-            \n    echo <TEXT> | colo print [FLAGS] <COLOR>...",
-        )
         .args(&[
-            Arg::with_name("TEXT")
+            Arg::with_name("text")
                 .index(1)
                 .help(TEXT_HELP)
                 .required(interactive),
-            Arg::with_name("COLOR")
+            Arg::with_name("colors")
                 .index(2)
                 .help(COLOR_HELP)
                 .multiple(true)
                 .use_delimiter(false)
                 .required(interactive),
-            Arg::with_name("BOLD")
+            Arg::with_name("bold")
                 .long("bold")
                 .short("b")
                 .help("Print text in bold"),
-            Arg::with_name("ITALIC")
+            Arg::with_name("italic")
                 .long("italic")
                 .alias("oblique")
                 .short("i")
                 .help("Print text in italic"),
-            Arg::with_name("UNDERLINE")
+            Arg::with_name("underline")
                 .long("underline")
                 .short("u")
                 .help("Print text underlined"),
-            Arg::with_name("NO_NEWLINE")
+            Arg::with_name("no-newline")
                 .long("no-newline")
                 .alias("no_newline")
                 .short("n")
@@ -80,25 +74,25 @@ pub struct Print {
 pub fn get(matches: &ArgMatches, interactive: bool) -> Result<Print> {
     let (colors, text) = if interactive {
         let text = matches
-            .value_of("TEXT")
+            .value_of("text")
             .expect("text not present")
             .to_string();
 
-        let color_matches = matches.values_of("COLOR").expect("color not present");
+        let color_matches = matches.values_of("colors").expect("color not present");
         let colors = util::values_to_colors(color_matches)?;
         (colors, text)
     } else {
         let text = util::read_stdin()?;
 
         // in non-interactive mode, the TEXT argument is actually the first color.
-        let arg1 = matches.value_of("TEXT").context(
+        let arg1 = matches.value_of("text").context(
             "The following required arguments were not provided:\
             \n    <COLOR>...\n\n\
             USAGE:\
             \n    echo <TEXT> | colo print [FLAGS] <COLOR>...\n\n\
             For more information try --help",
         )?;
-        let remaining_args = matches.values_of("COLOR").unwrap_or_default();
+        let remaining_args = matches.values_of("colors").unwrap_or_default();
         let colors = util::values_to_colors(iter::once(arg1).chain(remaining_args))?;
 
         (colors, text)
@@ -113,10 +107,10 @@ pub fn get(matches: &ArgMatches, interactive: bool) -> Result<Print> {
     let color = colors[0];
     let bg_color = colors.get(1).copied();
 
-    let bold = matches.is_present("BOLD");
-    let italic = matches.is_present("ITALIC");
-    let underline = matches.is_present("UNDERLINE");
-    let no_newline = matches.is_present("NO_NEWLINE");
+    let bold = matches.is_present("bold");
+    let italic = matches.is_present("italic");
+    let underline = matches.is_present("underline");
+    let no_newline = matches.is_present("no-newline");
 
     Ok(Print {
         color,
