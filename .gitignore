@@ -1,2 +1,3 @@
 /target
-dependencies.txt
+/_site
+.jekyll-metadata

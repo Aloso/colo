@@ -9,7 +9,7 @@ impl TryFrom<(ColorSpace, &[f64])> for Color {
     type Error = ParseError;
 
     fn try_from((space, vals): (ColorSpace, &[f64])) -> Result<Self, Self::Error> {
-        let required_args = if space == ColorSpace::Cmyk { 4 } else { 3 };
+        let required_args = space.num_components();
 
         if vals.len() != required_args {
             return Err(ParseError::NumberOfComponents {

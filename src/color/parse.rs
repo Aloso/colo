@@ -65,10 +65,7 @@ pub fn parse(mut input: &str) -> Result<Vec<(Color, ColorFormat)>, ParseError> {
         let mut input_i = input_i.trim_start();
 
         if let Some(cs) = cs {
-            let expected = match cs {
-                ColorSpace::Cmyk => 4,
-                _ => 3,
-            };
+            let expected = cs.num_components();
             let mut nums = [0.0, 0.0, 0.0, 0.0];
 
             for num in nums.iter_mut().take(expected) {
@@ -78,14 +75,9 @@ pub fn parse(mut input: &str) -> Result<Vec<(Color, ColorFormat)>, ParseError> {
                 let (n, input_ii) = parse_number(input_i)?.ok_or_else(|| MissingFloat {
                     got: input_i.into(),
                 })?;
-                input_i = input_ii.trim_start();
+                *num = n;
 
-                if input_i.starts_with('%') {
-                    input_i = &input_i[1..];
-                    *num = n / 100.0;
-                } else {
-                    *num = n;
-                }
+                input_i = input_ii.trim_start();
             }
 
             let nums = &nums[0..expected];
@@ -185,10 +177,15 @@ fn parse_number(input: &str) -> Result<Option<(f64, &str)>, ParseError> {
     if num.is_empty() {
         return Ok(None);
     }
-    let num = num.parse().map_err(|cause| InvalidFloat {
+    let mut num = num.parse().map_err(|cause| InvalidFloat {
         string: num.into(),
         cause,
     })?;
+    let mut rest = rest.trim_start();
+    if rest.starts_with('%') {
+        rest = &rest[1..];
+        num /= 100.0;
+    }
     Ok(Some((num, rest)))
 }
 
