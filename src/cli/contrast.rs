@@ -1,3 +1,5 @@
+use std::iter;
+
 use anyhow::{bail, Result};
 use clap::{App, Arg, ArgMatches, SubCommand};
 
@@ -29,11 +31,16 @@ pub struct Contrast {
 }
 
 /// Return the input for the `libs` subcommand
-pub fn get(matches: &ArgMatches) -> Result<Contrast> {
+pub fn get(matches: &ArgMatches, interactive: bool) -> Result<Contrast> {
     let mut colors = match matches.values_of("COLORS") {
         Some(values) => util::values_to_colors(values)?,
         None => vec![],
     };
+
+    if !interactive && colors.is_empty() {
+        let text = util::read_stdin()?;
+        colors = util::values_to_colors(iter::once(text.as_str()))?;
+    }
     if colors.len() == 1 {
         let white = Color::Rgb(Rgb::new(255.0, 255.0, 255.0));
         colors.push((white, ColorFormat::Html));
