@@ -33,3 +33,9 @@ $ colo s cmy 1 50% 66.7%
 `colo print <TEXT> <COLORS>...` prints text with certain colors applied. There are also flags to make the text bold (`-b`), italic (`-i`) or underlined (`-u`), and a flag to continue printing in the same line (`-n`):
 
 ![text](/assets/img/text.png)
+
+## Get color contrast
+
+Check the contrast between two colors, and find out if white or black text is better readable on a background color.
+
+![contrast](/assets/img/contrast.png)
