@@ -20,8 +20,7 @@ The input colors. You can specify up to 2 colors (text and background color). Su
 * Hexadecimal RGB color, e.g. '07F', '0077FF'
 * Color components, e.g. 'hsl(30, 100%, 50%)'
   Commas and parentheses are optional.
-  For supported color spaces, see
-  <https://aloso.github.io/colo/color_spaces>
+  For supported color spaces, see <https://aloso.github.io/colo/color_spaces>
 ";
 
 /// Returns the `print` subcommand

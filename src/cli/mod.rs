@@ -50,7 +50,7 @@ pub fn app<'a, 'b>(interactive: bool) -> App<'a, 'b> {
         .setting(AppSettings::SubcommandRequiredElseHelp)
         .version(APP_VERSION)
         .author("Ludwig Stecher <ludwig.stecher@gmx.de>")
-        .about("Displays colors in various color spaces.")
+        .about("Manages colors in various color spaces.")
         .subcommand(show::command(interactive))
         .subcommand(print::command(interactive))
         .subcommand(term::command())
@@ -58,5 +58,5 @@ pub fn app<'a, 'b>(interactive: bool) -> App<'a, 'b> {
         .subcommand(textcolor::command(interactive))
         .subcommand(list::command())
         .subcommand(libs::command())
-        .set_term_width(80)
+        .max_term_width(100)
 }

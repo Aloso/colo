@@ -14,8 +14,7 @@ The input colors. Multiple colors can be specified. Supported formats:
 * Hexadecimal RGB color, e.g. '07F', '0077FF'
 * Color components, e.g. 'hsl(30, 100%, 50%)'
   Commas and parentheses are optional.
-  For supported color spaces, see
-  <https://aloso.github.io/colo/color_spaces>
+  For supported color spaces, see <https://aloso.github.io/colo/color_spaces>
 
 If colo is used behind a pipe or outside of a terminal, the colors can be provided via stdin, e.g.
 
@@ -24,6 +23,7 @@ $ echo orange blue FF7700 | colo textcolor";
 /// Returns the `list` subcommand
 pub fn command<'a, 'b>(interactive: bool) -> App<'a, 'b> {
     SubCommand::with_name("textcolor")
+        .alias("textcolour")
         .about("Get a readable text color for a given background color")
         .long_about(
             "Return a readable text color (black or white) for each given background color. \
