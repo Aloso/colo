@@ -6,21 +6,36 @@ use clap::{App, Arg, ArgMatches, SubCommand};
 use super::util;
 use crate::color::{space::Rgb, Color, ColorFormat};
 
+const COLOR_HELP: &str = "\
+At most 2 colors. If only one color is provided, the other color defaults to white. Supported formats:
+
+* HTML color name, e.g. 'rebeccapurple'
+* Hexadecimal RGB color, e.g. '07F', '0077FF'
+* Color components, e.g. 'hsl(30, 100%, 50%)'
+  Commas and parentheses are optional.
+  For supported color spaces, see
+  <https://aloso.github.io/colo/color_spaces>
+
+If colo is used behind a pipe or outside of a terminal, the colors can be provided via stdin, e.g.
+
+$ echo orange blue | colo contrast
+";
+
 /// Returns the `list` subcommand
-pub fn command<'a, 'b>() -> App<'a, 'b> {
+pub fn command<'a, 'b>(interactive: bool) -> App<'a, 'b> {
     SubCommand::with_name("contrast")
-        .about(
+        .about("Get the contrast between two colors")
+        .long_about(
             "Return the contrast between two colors according to the W3 specification. \
-            If only one color is provided, the other color defaults to white. \
             The contrast is a value between 1 and 21. \
             Text contrast should always be at least 4.5, or 3 for large text.",
         )
-        .version(super::APP_VERSION)
         .arg(
-            Arg::with_name("COLORS")
-                .help("TODO!")
+            Arg::with_name("colors")
+                .help(COLOR_HELP)
                 .index(1)
-                .multiple(true),
+                .multiple(true)
+                .required(interactive),
         )
 }
 
@@ -32,7 +47,7 @@ pub struct Contrast {
 
 /// Return the input for the `libs` subcommand
 pub fn get(matches: &ArgMatches, interactive: bool) -> Result<Contrast> {
-    let mut colors = match matches.values_of("COLORS") {
+    let mut colors = match matches.values_of("colors") {
         Some(values) => util::values_to_colors(values)?,
         None => vec![],
     };

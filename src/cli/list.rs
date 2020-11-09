@@ -3,9 +3,7 @@ use clap::{App, ArgMatches, SubCommand};
 
 /// Returns the `list` subcommand
 pub fn command<'a, 'b>() -> App<'a, 'b> {
-    SubCommand::with_name("list")
-        .about("Lists all HTML colors")
-        .version(super::APP_VERSION)
+    SubCommand::with_name("list").about("Lists all HTML colors")
 }
 
 /// The struct representing the `list` subcommand

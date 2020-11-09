@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Improve help pages
+
 ## [0.3.1] - 2020-11-09
 
 - [`#30`](https://github.com/Aloso/colo/pull/30): Align square vertically with text
