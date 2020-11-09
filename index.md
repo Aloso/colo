@@ -45,3 +45,17 @@ Check the contrast between two colors, and find out if white or black text is be
 Display the default colors of your terminal.
 
 ![terminal colors](/assets/img/terminal_colors.png)
+
+## Experimental features
+
+To get these features, build `colo` from the main branch:
+
+```sh
+$ cargo install --git https://github.com/Aloso/colo
+```
+
+### Random values
+
+Random values can be used anywhere where colors can be used. For example:
+
+![rand](/assets/img/rand.png)
