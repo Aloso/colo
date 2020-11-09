@@ -39,3 +39,9 @@ $ colo s cmy 1 50% 66.7%
 Check the contrast between two colors, and find out if white or black text is better readable on a background color.
 
 ![contrast](/assets/img/contrast.png)
+
+## Show terminal colors
+
+Display the default colors of your terminal.
+
+![terminal colors](/assets/img/terminal_colors.png)
