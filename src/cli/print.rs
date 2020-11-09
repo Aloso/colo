@@ -6,14 +6,22 @@ use clap::{App, Arg, ArgMatches, SubCommand};
 use super::util;
 use crate::color::{Color, ColorFormat};
 
+const TEXT_HELP: &str = "\
+Text to print in the specified color. If colo is used behind a pipe \
+or outside of the terminal, the text must be passed via stdin instead, e.g.
+
+$ echo Hello world! | colo print orange
+ ";
+
 const COLOR_HELP: &str = "\
 The input colors. You can specify up to 2 colors (text and background color). Supported formats:
 
-* HTML color name (e.g. 'rebeccapurple')
-* Hexadecimal RGB color (e.g. '07F', '0077FF')
-* Color components (e.g. '127, 0, 255', 'hsl(30, 1, .5)').
-  If no color space is specified, it defaults to 'rgb'.
+* HTML color name, e.g. 'rebeccapurple'
+* Hexadecimal RGB color, e.g. '07F', '0077FF'
+* Color components, e.g. 'hsl(30, 100%, 50%)'
   Commas and parentheses are optional.
+  For supported color spaces, see
+  <https://aloso.github.io/colo/color_spaces>
 ";
 
 /// Returns the `print` subcommand
@@ -28,12 +36,7 @@ pub fn command<'a, 'b>(interactive: bool) -> App<'a, 'b> {
         .args(&[
             Arg::with_name("TEXT")
                 .index(1)
-                .help(
-                    "Text to print in the specified color. If colo is \
-                    used behind a pipe or outside of the terminal, \
-                    the text must be passed via stdin instead, e.g.\n\n\
-                    $ echo Hello world! | colo print orange\n ",
-                )
+                .help(TEXT_HELP)
                 .required(interactive),
             Arg::with_name("COLOR")
                 .index(2)

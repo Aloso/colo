@@ -1,3 +1,4 @@
+use crate::color::contrast::contrast;
 use color_space::{FromRgb, ToRgb};
 use std::fmt;
 
@@ -11,6 +12,7 @@ mod convert;
 mod parse;
 
 pub mod ansi;
+pub mod contrast;
 pub mod format;
 pub mod hex;
 pub mod html;
@@ -123,18 +125,14 @@ impl Color {
     }
 
     pub fn text_color(&self) -> TextColor {
-        let lab = match self.to_color_space(ColorSpace::Lab) {
-            Color::Lab(lab) => lab,
-            _ => unreachable!("Conversion to Lab unsuccessful"),
-        };
+        let rgb = self.to_rgb();
+        let wc = contrast(rgb, Rgb::new(0.0, 0.0, 0.0));
+        let bc = contrast(rgb, Rgb::new(255.0, 255.0, 255.0));
 
-        let lab_distance = (lab.a.abs().powi(2) + lab.b.abs().powi(2)).sqrt();
-        let colorfulness = lab_distance.min(100.0) / 12.0; // empirically determined values
-
-        if lab.l < (60.0 - colorfulness) {
-            TextColor::White
-        } else {
+        if wc >= bc {
             TextColor::Black
+        } else {
+            TextColor::White
         }
     }
 
