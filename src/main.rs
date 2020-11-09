@@ -31,6 +31,12 @@ fn main() -> Result<()> {
         ("list", Some(matches)) => {
             output::list::list(cli::list::get(&matches)?)?;
         }
+        ("contrast", Some(matches)) => {
+            output::contrast::contrast(cli::contrast::get(&matches)?)?;
+        }
+        ("textcolor", Some(matches)) => {
+            output::textcolor::textcolor(cli::textcolor::get(&matches, interactive)?)?;
+        }
         _ => {
             cli::app(interactive).print_help().unwrap();
         }

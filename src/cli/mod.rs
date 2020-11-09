@@ -1,10 +1,13 @@
 use clap::{App, AppSettings};
 
+pub mod contrast;
 pub mod libs;
 pub mod list;
 pub mod print;
 pub mod show;
 pub mod term;
+pub mod textcolor;
+
 mod util;
 
 /// Name of the program
@@ -49,5 +52,7 @@ pub fn app<'a, 'b>(interactive: bool) -> App<'a, 'b> {
         .subcommand(print::command(interactive))
         .subcommand(list::command())
         .subcommand(show::command(interactive))
+        .subcommand(contrast::command())
+        .subcommand(textcolor::command())
         .set_term_width(80)
 }

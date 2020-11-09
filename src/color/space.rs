@@ -18,6 +18,16 @@ pub enum ColorSpace {
     Yxy,
 }
 
+impl ColorSpace {
+    /// Returns the number of color components (between 1 and 4).
+    pub fn num_components(&self) -> usize {
+        match self {
+            ColorSpace::Cmyk => 4,
+            _ => 3,
+        }
+    }
+}
+
 impl fmt::Display for ColorSpace {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         f.write_str(match self {

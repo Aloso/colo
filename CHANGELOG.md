@@ -6,7 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-- Align square vertically with text
+- [`#30`](https://github.com/Aloso/colo/pull/30): Align square vertically with text
+- [`#31`](https://github.com/Aloso/colo/pull/31): Support piping
+- `textcolor` and `contrast` commands
 
 ## [0.3.0] - 2020-11-04
 
