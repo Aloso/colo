@@ -136,6 +136,15 @@ impl Color {
         }
     }
 
+    pub fn random_rgb() -> Self {
+        let rgb = Rgb::new(
+            fastrand::u8(..) as f64,
+            fastrand::u8(..) as f64,
+            fastrand::u8(..) as f64,
+        );
+        Color::Rgb(rgb)
+    }
+
     fn clamp_rgb(rgb: Rgb) -> Rgb {
         Rgb {
             r: rgb.r.min(255.0).max(0.0),

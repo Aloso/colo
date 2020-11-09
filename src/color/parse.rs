@@ -47,6 +47,9 @@ pub enum ParseError {
 
     #[error("Unknown color {got:?}, did you mean {suggestion:?}?")]
     Misspelled { got: String, suggestion: String },
+
+    #[error("This value in the {cs:?} color space can't be randomly generated")]
+    UnsupportedRand { cs: ColorSpace },
 }
 
 /// Parses a string that can contain an arbitrary number of colors in different
@@ -68,13 +71,17 @@ pub fn parse(mut input: &str) -> Result<Vec<(Color, ColorFormat)>, ParseError> {
             let expected = cs.num_components();
             let mut nums = [0.0, 0.0, 0.0, 0.0];
 
-            for num in nums.iter_mut().take(expected) {
+            for (i, num) in nums.iter_mut().enumerate().take(expected) {
                 input_i = input_i.trim_start();
                 input_i = skip(input_i, ',');
                 input_i = input_i.trim_start();
-                let (n, input_ii) = parse_number(input_i)?.ok_or_else(|| MissingFloat {
-                    got: input_i.into(),
-                })?;
+                let (n, input_ii) = parse_number(input_i)?
+                    .map(Ok)
+                    .or_else(|| parse_rand_component(input_i, cs, i).transpose())
+                    .transpose()?
+                    .ok_or_else(|| MissingFloat {
+                        got: input_i.into(),
+                    })?;
                 *num = n;
 
                 input_i = input_ii.trim_start();
@@ -88,7 +95,10 @@ pub fn parse(mut input: &str) -> Result<Vec<(Color, ColorFormat)>, ParseError> {
             let (word, input_ii) = take_word(input_i).ok_or_else(|| ParseError::ExpectedWord {
                 string: input_i.into(),
             })?;
-            let color = if let Some(color) = html::get(word) {
+
+            let color = if word == "rand" {
+                (Color::random_rgb(), ColorFormat::Hex)
+            } else if let Some(color) = html::get(word) {
                 (Color::Rgb(color), ColorFormat::Html)
             } else {
                 match hex::parse(word) {
@@ -187,6 +197,43 @@ fn parse_number(input: &str) -> Result<Option<(f64, &str)>, ParseError> {
         num /= 100.0;
     }
     Ok(Some((num, rest)))
+}
+
+fn parse_rand_component(
+    input: &str,
+    cs: ColorSpace,
+    i: usize,
+) -> Result<Option<(f64, &str)>, ParseError> {
+    if let Some((word, rest)) = take_word(input) {
+        if word == "rand" {
+            return Ok(Some((
+                match cs {
+                    ColorSpace::Rgb => fastrand::u8(..) as f64,
+                    ColorSpace::Cmy => fastrand::f64(),
+                    ColorSpace::Cmyk => fastrand::f64(),
+                    ColorSpace::Hsv | ColorSpace::Hsl => match i {
+                        0 => fastrand::u32(0..360) as f64,
+                        _ => fastrand::f64(),
+                    },
+                    ColorSpace::Lch => match i {
+                        0 | 1 => fastrand::u32(0..=100) as f64,
+                        _ => fastrand::u32(0..360) as f64,
+                    },
+                    ColorSpace::Luv => match i {
+                        0 | 1 => fastrand::u32(0..=100) as f64,
+                        _ => fastrand::u32(0..=360) as f64,
+                    },
+                    ColorSpace::Lab if i == 0 => fastrand::u32(0..=100) as f64,
+                    ColorSpace::HunterLab if i == 0 => fastrand::u32(0..=100) as f64,
+                    ColorSpace::Xyz if i == 1 => fastrand::u32(0..=100) as f64,
+                    ColorSpace::Yxy if i == 0 => fastrand::u32(0..=100) as f64,
+                    _ => return Err(ParseError::UnsupportedRand { cs }),
+                },
+                rest,
+            )));
+        }
+    }
+    Ok(None)
 }
 
 fn take_word(input: &str) -> Option<(&str, &str)> {
