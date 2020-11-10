@@ -11,6 +11,17 @@ Run `colo s <COLOR>` to view a color. Colo supports HTML color names, hex colors
     <img src="./assets/img/main_example.png" alt="">
 </div>
 
+<pre class="terminal-text">
+<span class="terminal-arrow">&lt;</span> <span class="terminal-command">colo</span> <span style="color:#8fa1b3;">s</span><span style="color:#c0c5ce;"> ff3377</span>
+
+<span style="color:#ff3377"> ████████</span>  <b>#ff3377</b>                    rgb(255, 51, 119)
+<span style="color:#ff3377"> ████████</span>  hsl(-20, 100%, 60%)        hsv(340, 80%, 100%)
+<span style="color:#ff3377"> ████████</span>  cmy(0%, 80%, 53.3%)        cmyk(0%, 80%, 53.3%, 0%)
+<span style="color:#ff3377"> ████████</span>  lch(57, 78.1, 9.2)         luv(57, 136.2, -0.1)
+
+<span class="terminal-arrow">&lt;</span> <span style="background-color: white"> </span>
+</pre>
+
 ## 11 supported color spaces
 
 Colo supports widely used color spaces, that should cover the needs for professional developers and designers. [More information](color_spaces.md).

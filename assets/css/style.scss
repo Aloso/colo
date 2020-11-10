@@ -3,6 +3,30 @@
 
 @import "{{ site.theme }}";
 
+@font-face {
+    font-family: "JetBrains Mono";
+    src: url("../fonts/JBM/JetBrainsMono-Regular.ttf");
+}
+
+@font-face {
+    font-family: "JetBrains Mono";
+    src: url("../fonts/JBM/JetBrainsMono-Italic.ttf");
+    font-style: italic;
+}
+
+@font-face {
+    font-family: "JetBrains Mono";
+    src: url("../fonts/JBM/JetBrainsMono-Bold.ttf");
+    font-weight: bold;
+}
+
+@font-face {
+    font-family: "JetBrains Mono";
+    src: url("../fonts/JBM/JetBrainsMono-Bold-Italic.ttf");
+    font-style: italic;
+    font-style: bold;
+}
+
 body {
     color: 30363a;
 }
@@ -107,8 +131,8 @@ body {
 }
 
 .main-content {
-    code {
-        font-family: 'Noto Mono', 'Roboto Mono', Consolas, Hack, Menlo, 'Liberation Mono', monospace;
+    pre, code {
+        font-family: 'JetBrains Mono', 'Noto Mono', 'Roboto Mono', Consolas, Hack, Menlo, 'Liberation Mono', monospace;
     }
 
     blockquote {
@@ -125,9 +149,39 @@ body {
     background-color: #141414;
     border-radius: 0.4rem;
     overflow: hidden;
+    margin: 0 0 1rem 0;
 
     img {
         display: block;
+    }
+}
+
+pre.terminal-text {
+    margin: 0 0 1rem 0;
+    padding: 1rem;
+    border: none;
+    background-color: #141414;
+    border-radius: 0.4rem;
+    overflow: auto;
+    color: white;
+    font-size: 110%;
+    line-height: 120%;
+
+    .terminal-arrow {
+        color: #32d132;
+    }
+
+    .terminal-command {
+        color: #418ef3;
+    }
+
+    .dimmed {
+        opacity: 0.67;
+    }
+
+    &::selection, & ::selection {
+        color: inherit;
+        background-color: #1b247c;
     }
 }
 
