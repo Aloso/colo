@@ -33,14 +33,14 @@ Colors in the sRGB color space are represented as three values between 0 and 255
 ### Examples
 
 <pre class="color-examples">
-rgb(  0,   0,   0)   <img src="/assets/colors/black.png" alt="">
-rgb(255,   0,   0)   <img src="/assets/colors/red.png" alt="">
-rgb(  0, 255,   0)   <img src="/assets/colors/green.png" alt="">
-rgb(  0,   0, 255)   <img src="/assets/colors/blue.png" alt="">
-rgb(255, 255,   0)   <img src="/assets/colors/yellow.png" alt="">
-rgb(  0, 255, 255)   <img src="/assets/colors/cyan.png" alt="">
-rgb(255,   0, 255)   <img src="/assets/colors/magenta.png" alt="">
-rgb(255, 255, 255)   <img src="/assets/colors/white.png" alt="">
+rgb(  0,   0,   0)   <img src="./assets/colors/black.png" alt="">
+rgb(255,   0,   0)   <img src="./assets/colors/red.png" alt="">
+rgb(  0, 255,   0)   <img src="./assets/colors/green.png" alt="">
+rgb(  0,   0, 255)   <img src="./assets/colors/blue.png" alt="">
+rgb(255, 255,   0)   <img src="./assets/colors/yellow.png" alt="">
+rgb(  0, 255, 255)   <img src="./assets/colors/cyan.png" alt="">
+rgb(255,   0, 255)   <img src="./assets/colors/magenta.png" alt="">
+rgb(255, 255, 255)   <img src="./assets/colors/white.png" alt="">
 </pre>
 
 ## CMY (`cmy`)
@@ -52,14 +52,14 @@ CMY colors are represented as three values between 0 and 1, or 100%.
 ### Examples
 
 <pre class="color-examples">
-cmy(0, 0, 0)   <img src="/assets/colors/white.png" alt="">
-cmy(1, 0, 0)   <img src="/assets/colors/cyan.png" alt="">
-cmy(0, 1, 0)   <img src="/assets/colors/magenta.png" alt="">
-cmy(0, 0, 1)   <img src="/assets/colors/yellow.png" alt="">
-cmy(0, 1, 1)   <img src="/assets/colors/red.png" alt="">
-cmy(1, 0, 1)   <img src="/assets/colors/green.png" alt="">
-cmy(1, 1, 0)   <img src="/assets/colors/blue.png" alt="">
-cmy(1, 1, 1)   <img src="/assets/colors/black.png" alt="">
+cmy(0, 0, 0)   <img src="./assets/colors/white.png" alt="">
+cmy(1, 0, 0)   <img src="./assets/colors/cyan.png" alt="">
+cmy(0, 1, 0)   <img src="./assets/colors/magenta.png" alt="">
+cmy(0, 0, 1)   <img src="./assets/colors/yellow.png" alt="">
+cmy(0, 1, 1)   <img src="./assets/colors/red.png" alt="">
+cmy(1, 0, 1)   <img src="./assets/colors/green.png" alt="">
+cmy(1, 1, 0)   <img src="./assets/colors/blue.png" alt="">
+cmy(1, 1, 1)   <img src="./assets/colors/black.png" alt="">
 </pre>
 
 ## CMYK (`cmyk`)
@@ -69,14 +69,14 @@ CMYK is a variation of CMY that adds a fourth component, the **key**. This is us
 ### Examples
 
 <pre class="color-examples">
-cmy(0, 0, 0, 0)   <img src="/assets/colors/white.png" alt="">
-cmy(1, 0, 0, 0)   <img src="/assets/colors/cyan.png" alt="">
-cmy(0, 1, 0, 0)   <img src="/assets/colors/magenta.png" alt="">
-cmy(0, 0, 1, 0)   <img src="/assets/colors/yellow.png" alt="">
-cmy(0, 1, 1, 0)   <img src="/assets/colors/red.png" alt="">
-cmy(1, 0, 1, 0)   <img src="/assets/colors/green.png" alt="">
-cmy(1, 1, 0, 0)   <img src="/assets/colors/blue.png" alt="">
-cmy(0, 0, 0, 1)   <img src="/assets/colors/black.png" alt="">
+cmy(0, 0, 0, 0)   <img src="./assets/colors/white.png" alt="">
+cmy(1, 0, 0, 0)   <img src="./assets/colors/cyan.png" alt="">
+cmy(0, 1, 0, 0)   <img src="./assets/colors/magenta.png" alt="">
+cmy(0, 0, 1, 0)   <img src="./assets/colors/yellow.png" alt="">
+cmy(0, 1, 1, 0)   <img src="./assets/colors/red.png" alt="">
+cmy(1, 0, 1, 0)   <img src="./assets/colors/green.png" alt="">
+cmy(1, 1, 0, 0)   <img src="./assets/colors/blue.png" alt="">
+cmy(0, 0, 0, 1)   <img src="./assets/colors/black.png" alt="">
 </pre>
 
 ## HSL (`hsl`)
@@ -90,14 +90,14 @@ Saturation and lightness are values between 0 and 1 (or 100%). When the lightnes
 ### Examples
 
 <pre class="color-examples">
-hsl(  ?, ?,   0)   <img src="/assets/colors/black.png" alt="">
-hsl(  ?, ?,   1)   <img src="/assets/colors/white.png" alt="">
-hsl(  0, 1, 0.5)   <img src="/assets/colors/red.png" alt="">
-hsl( 60, 1, 0.5)   <img src="/assets/colors/yellow.png" alt="">
-hsl(120, 1, 0.5)   <img src="/assets/colors/green.png" alt="">
-hsl(180, 1, 0.5)   <img src="/assets/colors/cyan.png" alt="">
-hsl(240, 1, 0.5)   <img src="/assets/colors/blue.png" alt="">
-hsl(300, 1, 0.5)   <img src="/assets/colors/magenta.png" alt="">
+hsl(  ?, ?,   0)   <img src="./assets/colors/black.png" alt="">
+hsl(  ?, ?,   1)   <img src="./assets/colors/white.png" alt="">
+hsl(  0, 1, 0.5)   <img src="./assets/colors/red.png" alt="">
+hsl( 60, 1, 0.5)   <img src="./assets/colors/yellow.png" alt="">
+hsl(120, 1, 0.5)   <img src="./assets/colors/green.png" alt="">
+hsl(180, 1, 0.5)   <img src="./assets/colors/cyan.png" alt="">
+hsl(240, 1, 0.5)   <img src="./assets/colors/blue.png" alt="">
+hsl(300, 1, 0.5)   <img src="./assets/colors/magenta.png" alt="">
 </pre>
 
 ## HSV (`hsv`)
@@ -109,14 +109,14 @@ Saturation and value are again values between 0 and 1. When the value is 0, the 
 ### Examples
 
 <pre class="color-examples">
-hsv(  ?, ?, 0)   <img src="/assets/colors/black.png" alt="">
-hsv(  ?, 0, 1)   <img src="/assets/colors/white.png" alt="">
-hsv(  0, 1, 1)   <img src="/assets/colors/red.png" alt="">
-hsv( 60, 1, 1)   <img src="/assets/colors/yellow.png" alt="">
-hsv(120, 1, 1)   <img src="/assets/colors/green.png" alt="">
-hsv(180, 1, 1)   <img src="/assets/colors/cyan.png" alt="">
-hsv(240, 1, 1)   <img src="/assets/colors/blue.png" alt="">
-hsv(300, 1, 1)   <img src="/assets/colors/magenta.png" alt="">
+hsv(  ?, ?, 0)   <img src="./assets/colors/black.png" alt="">
+hsv(  ?, 0, 1)   <img src="./assets/colors/white.png" alt="">
+hsv(  0, 1, 1)   <img src="./assets/colors/red.png" alt="">
+hsv( 60, 1, 1)   <img src="./assets/colors/yellow.png" alt="">
+hsv(120, 1, 1)   <img src="./assets/colors/green.png" alt="">
+hsv(180, 1, 1)   <img src="./assets/colors/cyan.png" alt="">
+hsv(240, 1, 1)   <img src="./assets/colors/blue.png" alt="">
+hsv(300, 1, 1)   <img src="./assets/colors/magenta.png" alt="">
 </pre>
 
 
