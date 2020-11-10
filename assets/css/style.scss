@@ -156,7 +156,7 @@ body {
     }
 }
 
-pre.terminal-text {
+pre.toh-text {
     margin: 0 0 1rem 0;
     padding: 1rem;
     border: none;
@@ -164,19 +164,46 @@ pre.terminal-text {
     border-radius: 0.4rem;
     overflow: auto;
     color: white;
-    font-size: 110%;
+    font-size: 100%;
     line-height: 120%;
 
-    .terminal-arrow {
+    .toh-arrow {
         color: #32d132;
+        user-select: none;
     }
 
-    .terminal-command {
-        color: #418ef3;
+    .toh-cmd {
+        color: #419df3;
     }
 
-    .dimmed {
+    .toh-dim {
         opacity: 0.67;
+    }
+
+    .toh-hl {
+        color: #00ffff;
+        font-weight: bold;
+    }
+
+    .toh-arg {
+        color: white;
+    }
+
+    .toh-str {
+        color: #ffba24;
+    }
+
+    .toh-pipe, .toh-op {
+        color: #a2be00;
+    }
+
+    .toh-flag {
+        color: #ff7167;
+    }
+
+    .toh-caret {
+        background-color: white;
+        user-select: none;
     }
 
     &::selection, & ::selection {

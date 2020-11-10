@@ -7,19 +7,29 @@ title: colo – Simple color management in the terminal
 
 Run `colo s <COLOR>` to view a color. Colo supports HTML color names, hex colors and 11 different color spaces.
 
-<div class="terminal">
-    <img src="./assets/img/main_example.png" alt="">
-</div>
+<pre class="toh-text">
+<span class="toh-arrow">&gt;</span> <span class="toh-cmd">colo</span> <span class="toh-hl">s</span> <span class="toh-arg">ff3377</span>
 
-<pre class="terminal-text">
-<span class="terminal-arrow">&lt;</span> <span class="terminal-command">colo</span> <span style="color:#8fa1b3;">s</span><span style="color:#c0c5ce;"> ff3377</span>
+<span style="color:#ff3377"> ████████</span>  <b>#ff3377</b>                    <span class="toh-dim">rgb(255, 51, 119)        </span>
+<span style="color:#ff3377"> ████████</span>  <span class="toh-dim">hsl(-20, 100%, 60%)      </span>  <span class="toh-dim">hsv(340, 80%, 100%)      </span>
+<span style="color:#ff3377"> ████████</span>  <span class="toh-dim">cmy(0%, 80%, 53.3%)      </span>  <span class="toh-dim">cmyk(0%, 80%, 53.3%, 0%) </span>
+<span style="color:#ff3377"> ████████</span>  <span class="toh-dim">lch(57, 78.1, 9.2)       </span>  <span class="toh-dim">luv(57, 136.2, -0.1)     </span>
 
-<span style="color:#ff3377"> ████████</span>  <b>#ff3377</b>                    rgb(255, 51, 119)
-<span style="color:#ff3377"> ████████</span>  hsl(-20, 100%, 60%)        hsv(340, 80%, 100%)
-<span style="color:#ff3377"> ████████</span>  cmy(0%, 80%, 53.3%)        cmyk(0%, 80%, 53.3%, 0%)
-<span style="color:#ff3377"> ████████</span>  lch(57, 78.1, 9.2)         luv(57, 136.2, -0.1)
+<span class="toh-arrow">&gt;</span> <span class="toh-cmd">colo</span> <span class="toh-hl">s</span> <span class="toh-arg">orange</span>
 
-<span class="terminal-arrow">&lt;</span> <span style="background-color: white"> </span>
+<span style="color:#ffa500"> ████████</span>  <b>#ffa500</b>  <span class="toh-dim">orange          </span>  <span class="toh-dim">rgb(255, 165, 0)         </span>
+<span style="color:#ffa500"> ████████</span>  <span class="toh-dim">hsl(38.8, 100%, 50%)     </span>  <span class="toh-dim">hsv(38.8, 100%, 100%)    </span>
+<span style="color:#ffa500"> ████████</span>  <span class="toh-dim">cmy(0%, 35.3%, 100%)     </span>  <span class="toh-dim">cmyk(0%, 35.3%, 100%, 0%)</span>
+<span style="color:#ffa500"> ████████</span>  <span class="toh-dim">lch(74.9, 82.5, 73.1)    </span>  <span class="toh-dim">luv(74.9, 74.9, 74)      </span>
+
+<span class="toh-arrow">&gt;</span> <span class="toh-cmd">colo</span> <span class="toh-hl">s</span> <span class="toh-str">"hsv(300, 100%, 100%)"</span>
+
+<span style="color:#ff00ff"> ████████</span>  <span class="toh-dim">#ff00ff</span>  <span class="toh-dim">fuchsia         </span>  <span class="toh-dim">rgb(255, 0, 255)         </span>
+<span style="color:#ff00ff"> ████████</span>  <span class="toh-dim">hsl(-60, 100%, 50%)      </span>  <b>hsv(300, 100%, 100%)     </b>
+<span style="color:#ff00ff"> ████████</span>  <span class="toh-dim">cmy(0%, 100%, 0%)        </span>  <span class="toh-dim">cmyk(0%, 100%, 0%, 0%)   </span>
+<span style="color:#ff00ff"> ████████</span>  <span class="toh-dim">lch(60.3, 115.6, 328.2)  </span>  <span class="toh-dim">luv(60.3, 84.1, -108.7)  </span>
+
+<span class="toh-arrow">&gt;</span> <span class="toh-caret"> </span>
 </pre>
 
 ## 11 supported color spaces
@@ -30,19 +40,35 @@ Colo supports widely used color spaces, that should cover the needs for professi
 
 Colo supports piping input from/to other commands or files.
 
-<div class="terminal">
-    <img src="./assets/img/pipes.png" alt="">
-</div>
+<pre class="toh-text">
+<span class="toh-arrow">&gt;</span> <span class="toh-cmd">echo</span> <span class="toh-arg">orange</span> <span class="toh-arg">ff4400</span> <span class="toh-pipe">|</span> <span class="toh-cmd">colo</span> <span class="toh-hl">s</span> <span class="toh-flag">-o</span> <span class="toh-arg">hsl</span> <span class="toh-pipe">&gt;</span> <span class="toh-pipe">somefile.txt</span>
+<span class="toh-arrow">&gt;</span> <span class="toh-cmd">cat</span> <span class="toh-arg">somefile.txt</span>
+#ffa500
+#ff4400
+<span class="toh-arrow">&gt;</span> <span class="toh-cmd">colo</span> <span class="toh-hl">s</span> <span class="toh-pipe">&lt;</span> <span class="toh-pipe">somefile.txt</span>
+
+<span style="color:#ffa500"> ████████</span>  <b>#ffa500</b>  <span class="toh-dim">orange          </span>  <span class="toh-dim">rgb(255, 165, 0)         </span>
+<span style="color:#ffa500"> ████████</span>  <span class="toh-dim">hsl(38.8, 100%, 50%)     </span>  <span class="toh-dim">hsv(38.8, 100%, 100%)    </span>
+<span style="color:#ffa500"> ████████</span>  <span class="toh-dim">cmy(0%, 35.3%, 100%)     </span>  <span class="toh-dim">cmyk(0%, 35.3%, 100%, 0%)</span>
+<span style="color:#ffa500"> ████████</span>  <span class="toh-dim">lch(74.9, 82.5, 73.1)    </span>  <span class="toh-dim">luv(74.9, 74.9, 74)      </span>
+
+<span style="color:#ff4400"> ████████</span>  <b>#ff4400</b>                    <span class="toh-dim">rgb(255, 68, 0)          </span>
+<span style="color:#ff4400"> ████████</span>  <span class="toh-dim">hsl(16, 100%, 50%)       </span>  <span class="toh-dim">hsv(16, 100%, 100%)      </span>
+<span style="color:#ff4400"> ████████</span>  <span class="toh-dim">cmy(0%, 73.3%, 100%)     </span>  <span class="toh-dim">cmyk(0%, 73.3%, 100%, 0%)</span>
+<span style="color:#ff4400"> ████████</span>  <span class="toh-dim">lch(57.5, 96.9, 45.3)    </span>  <span class="toh-dim">luv(57.5, 151.7, 45.3)   </span>
+
+<span class="toh-arrow">&gt;</span> <span class="toh-caret"> </span>
+</pre>
 
 ## Flexible input
 
 Hex colors can be entered in the formats `RGB`, `RRGGBB`, `RRRGGGBBB`, etc. Colors in different color spaces are entered in the format `color_space(value1, value2, value3)`, for example `hsl(30, 100%, 60%)`. The parentheses and commas are optional, so the following commands are equivalent:
 
-```bash
-$ colo s 'cmy(100%, 50%, 66.7%)'
-$ colo s cmy 100% 50% 66.7%
-$ colo s cmy 1 50% 66.7%
-```
+<pre class="toh-text">
+<span class="toh-arrow">&gt;</span> <span class="toh-cmd">colo</span> <span class="toh-hl">s</span> <span class="toh-str">"cmy(100%, 50%, 66.7%)"</span>
+<span class="toh-arrow">&gt;</span> <span class="toh-cmd">colo</span> <span class="toh-hl">s</span> <span class="toh-arg">cmy</span> <span class="toh-arg">100%</span> <span class="toh-arg">50%</span> <span class="toh-arg">66.7%</span>
+<span class="toh-arrow">&gt;</span> <span class="toh-cmd">colo</span> <span class="toh-hl">s</span> <span class="toh-arg">cmy</span> <span class="toh-arg">1</span> <span class="toh-arg">50%</span> <span class="toh-arg">66.7%</span>
+</pre>
 
 ## Print colored text
 
@@ -72,14 +98,24 @@ Display the default colors of your terminal.
 
 To get these features, build `colo` from the main branch:
 
-```sh
-$ cargo install --git https://github.com/Aloso/colo
-```
+<pre class="toh-text">
+<span class="toh-arrow">&gt;</span> <span class="toh-cmd">cargo</span> <span class="toh-hl">install</span> <span class="toh-flag">--git</span> <span class="toh-arg">https://github.com/Aloso/colo</span>
+</pre>
 
 ### Random values
 
 Random values can be used anywhere where colors can be used. For example:
 
-<div class="terminal">
-    <img src="./assets/img/rand.png" alt="">
-</div>
+<pre class="toh-text">
+<span class="toh-arrow">&gt;</span> <span class="toh-cmd">colo</span> <span class="toh-hl">contrast</span> <span class="toh-arg">rand</span> <span class="toh-arg">rand</span>
+ <span style="color:#fab294">████</span><span style="color:#317fd7">████</span>  <span style="color:#A00">2.30</span>
+ <span style="color:#fab294">████</span><span style="color:#317fd7">████</span>  <span class="toh-dim">(relative luminance: 0.543 / 0.207)</span>
+<span class="toh-arrow">&gt;</span> <span class="toh-cmd">colo</span> <span class="toh-hl">s</span> <span class="toh-str">"hsl(rand, 100%, 50%)"</span>
+
+<span style="color:#bf00ff"> ████████</span>  <span class="toh-dim">#bf00ff</span>                    <span class="toh-dim">rgb(191.3, 0, 255)       </span>
+<span style="color:#bf00ff"> ████████</span>  <b>hsl(285, 100%, 50%)      </b>  <span class="toh-dim">hsv(285, 100%, 100%)     </span>
+<span style="color:#bf00ff"> ████████</span>  <span class="toh-dim">cmy(25%, 100%, 0%)       </span>  <span class="toh-dim">cmyk(25%, 100%, 0%, 0%)  </span>
+<span style="color:#bf00ff"> ████████</span>  <span class="toh-dim">lch(49.9, 118.8, 318.8)  </span>  <span class="toh-dim">luv(49.9, 42.1, -126.2)  </span>
+
+<span class="toh-arrow">&gt;</span> <span class="toh-caret"> </span>
+</pre>
