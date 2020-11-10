@@ -1,11 +1,10 @@
-use std::iter;
-
 use anyhow::Result;
 use clap::{App, Arg, ArgMatches, SubCommand};
-
-use crate::color::{Color, ColorFormat};
+use std::iter;
 
 use super::util;
+use crate::color::{Color, ColorFormat};
+use crate::State;
 
 const COLOR_HELP_MESSAGE: &str = "\
 The input colors. Multiple colors can be specified. Supported formats:
@@ -21,7 +20,7 @@ If colo is used behind a pipe or outside of a terminal, the colors can be provid
 $ echo orange blue FF7700 | colo textcolor";
 
 /// Returns the `list` subcommand
-pub fn command<'a, 'b>(interactive: bool) -> App<'a, 'b> {
+pub fn command<'a, 'b>(state: State) -> App<'a, 'b> {
     SubCommand::with_name("textcolor")
         .alias("textcolour")
         .about("Get a readable text color for a given background color")
@@ -35,7 +34,7 @@ pub fn command<'a, 'b>(interactive: bool) -> App<'a, 'b> {
                 .help(COLOR_HELP_MESSAGE)
                 .index(1)
                 .multiple(true)
-                .required(interactive),
+                .required(state.interactive),
         )
 }
 
@@ -45,13 +44,13 @@ pub struct TextColor {
 }
 
 /// Return the input for the `libs` subcommand
-pub fn get(matches: &ArgMatches, interactive: bool) -> Result<TextColor> {
+pub fn get(matches: &ArgMatches, state: State) -> Result<TextColor> {
     let mut colors = match matches.values_of("colors") {
         Some(values) => util::values_to_colors(values)?,
         None => vec![],
     };
 
-    if !interactive && colors.is_empty() {
+    if !state.interactive && colors.is_empty() {
         let text = util::read_stdin()?;
         colors = util::values_to_colors(iter::once(text.as_str()))?;
     }

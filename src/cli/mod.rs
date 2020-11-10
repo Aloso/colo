@@ -1,5 +1,7 @@
 use clap::{App, AppSettings};
 
+use crate::State;
+
 pub mod contrast;
 pub mod libs;
 pub mod list;
@@ -40,7 +42,7 @@ const COLOR_FORMATS: &[&str] = &[
 ///
 /// Note that, if the `--version` or `--help` flag was provided,
 /// clap terminates the application, so this function never returns.
-pub fn app<'a, 'b>(interactive: bool) -> App<'a, 'b> {
+pub fn app<'a, 'b>(state: State) -> App<'a, 'b> {
     App::new(APP_NAME)
         .global_setting(AppSettings::ColorAuto)
         .global_setting(AppSettings::ColoredHelp)
@@ -51,11 +53,11 @@ pub fn app<'a, 'b>(interactive: bool) -> App<'a, 'b> {
         .version(APP_VERSION)
         .author("Ludwig Stecher <ludwig.stecher@gmx.de>")
         .about("Manages colors in various color spaces.")
-        .subcommand(show::command(interactive))
-        .subcommand(print::command(interactive))
+        .subcommand(show::command(state))
+        .subcommand(print::command(state))
         .subcommand(term::command())
-        .subcommand(contrast::command(interactive))
-        .subcommand(textcolor::command(interactive))
+        .subcommand(contrast::command(state))
+        .subcommand(textcolor::command(state))
         .subcommand(list::command())
         .subcommand(libs::command())
         .max_term_width(100)

@@ -5,6 +5,7 @@ use clap::{App, Arg, ArgMatches, SubCommand};
 
 use super::util;
 use crate::color::{space::Rgb, Color, ColorFormat};
+use crate::State;
 
 const COLOR_HELP: &str = "\
 At most 2 colors. If only one color is provided, the other color defaults to white. Supported formats:
@@ -21,7 +22,7 @@ $ echo orange blue | colo contrast
 ";
 
 /// Returns the `list` subcommand
-pub fn command<'a, 'b>(interactive: bool) -> App<'a, 'b> {
+pub fn command<'a, 'b>(state: State) -> App<'a, 'b> {
     SubCommand::with_name("contrast")
         .about("Get the contrast between two colors")
         .long_about(
@@ -34,7 +35,7 @@ pub fn command<'a, 'b>(interactive: bool) -> App<'a, 'b> {
                 .help(COLOR_HELP)
                 .index(1)
                 .multiple(true)
-                .required(interactive),
+                .required(state.interactive),
         )
 }
 
@@ -45,13 +46,13 @@ pub struct Contrast {
 }
 
 /// Return the input for the `libs` subcommand
-pub fn get(matches: &ArgMatches, interactive: bool) -> Result<Contrast> {
+pub fn get(matches: &ArgMatches, state: State) -> Result<Contrast> {
     let mut colors = match matches.values_of("colors") {
         Some(values) => util::values_to_colors(values)?,
         None => vec![],
     };
 
-    if !interactive && colors.is_empty() {
+    if !state.interactive && colors.is_empty() {
         let text = util::read_stdin()?;
         colors = util::values_to_colors(iter::once(text.as_str()))?;
     }

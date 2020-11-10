@@ -1,19 +1,16 @@
-use std::io::{stdout, Write};
-
-use crate::color::{contrast::contrast, space::Rgb, Color};
 use anyhow::Result;
-use atty::Stream;
 use color_space::ToRgb;
 use colored::Colorize;
+use std::io::{stdout, Write};
 
 use crate::cli::textcolor::TextColor;
+use crate::color::{contrast::contrast, space::Rgb, Color};
+use crate::State;
 
-pub fn textcolor(TextColor { colors }: TextColor) -> Result<()> {
+pub fn textcolor(TextColor { colors }: TextColor, state: State) -> Result<()> {
     let mut stdout = stdout();
 
     for (color, _) in colors {
-        let interactive = atty::is(Stream::Stdout);
-
         let rgb = color.to_rgb();
         let black = Rgb::new(0.0, 0.0, 0.0);
         let white = Rgb::new(255.0, 255.0, 255.0);
@@ -22,7 +19,7 @@ pub fn textcolor(TextColor { colors }: TextColor) -> Result<()> {
 
         let other_color_name = if wc >= bc { "white" } else { "black" };
 
-        if interactive {
+        if state.ansi_output {
             let other_color = Color::Rgb(match other_color_name {
                 "white" => white,
                 _ => black,

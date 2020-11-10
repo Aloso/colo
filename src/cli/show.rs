@@ -4,6 +4,7 @@ use anyhow::{Context, Result};
 use clap::{App, Arg, ArgMatches, SubCommand};
 
 use crate::color::{Color, ColorFormat};
+use crate::State;
 
 use super::util;
 
@@ -21,14 +22,14 @@ If colo is used behind a pipe or outside of a terminal, the colors can be provid
 $ echo orange blue FF7700 | colo show";
 
 /// Returns the arguments for displaying a color
-pub fn command<'a, 'b>(interactive: bool) -> App<'a, 'b> {
+pub fn command<'a, 'b>(state: State) -> App<'a, 'b> {
     SubCommand::with_name("show")
         .visible_alias("s")
         .about("Output colors")
         .args(&[
             Arg::with_name("colors")
                 .takes_value(true)
-                .required(interactive)
+                .required(state.interactive)
                 .help(COLOR_HELP_MESSAGE)
                 .multiple(true)
                 .use_delimiter(false),
@@ -66,7 +67,7 @@ fn parse_size(s: &str) -> Result<u32> {
 }
 
 /// Returns all the arguments relevant for displaying colors
-pub fn get(matches: &ArgMatches, interactive: bool) -> Result<Show> {
+pub fn get(matches: &ArgMatches, state: State) -> Result<Show> {
     let size = matches.value_of("size").map(parse_size).unwrap_or(Ok(4))?;
 
     let mut colors = match matches.values_of("colors") {
@@ -74,7 +75,7 @@ pub fn get(matches: &ArgMatches, interactive: bool) -> Result<Show> {
         None => vec![],
     };
 
-    if !interactive && colors.is_empty() {
+    if !state.interactive && colors.is_empty() {
         let text = util::read_stdin()?;
         colors = util::values_to_colors(iter::once(text.as_str()))?;
     }

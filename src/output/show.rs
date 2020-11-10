@@ -1,12 +1,11 @@
 use anyhow::{Context, Result};
-use atty::Stream;
 use color_space::ToRgb;
 use colored::{ColoredString, Colorize};
 use std::io::{stdout, Stdout, Write};
 use std::iter;
 
-use crate::cli::show::Show;
 use crate::color::{format, Color, ColorFormat};
+use crate::{cli::show::Show, State};
 
 pub fn show(
     Show {
@@ -14,22 +13,22 @@ pub fn show(
         output,
         size,
     }: Show,
+    state: State,
 ) -> Result<()> {
-    let interactive = atty::is(Stream::Stdout);
     let mut stdout = stdout();
 
-    if interactive && size > 0 {
+    if state.ansi_output && size > 0 {
         writeln!(stdout)?;
     }
     for (color, input) in colors {
-        show_color(interactive, &mut stdout, color, input, output, size)?;
+        show_color(state, &mut stdout, color, input, output, size)?;
     }
     Ok(())
 }
 
 /// Print a colored square
 fn show_color(
-    interactive: bool,
+    state: State,
     stdout: &mut Stdout,
     color: Color,
     _input: ColorFormat,
@@ -43,7 +42,7 @@ fn show_color(
         b: rgb.b.round() as u8,
     };
 
-    if !interactive {
+    if !state.ansi_output {
         let color = output
             .format(color)
             .or_else(|| ColorFormat::Hex.format(color))

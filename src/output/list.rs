@@ -1,10 +1,10 @@
 use anyhow::Result;
-use atty::Stream;
 use color_space::Rgb;
 use colored::{Color::TrueColor, Colorize};
 use std::io::{stdout, Write};
 
 use crate::color::{html::HTML_COLOR_NAMES, Color};
+use crate::State;
 use crate::{cli::list::List, color::TextColor};
 
 const WHITE: colored::Color = TrueColor {
@@ -14,19 +14,17 @@ const WHITE: colored::Color = TrueColor {
 };
 const BLACK: colored::Color = TrueColor { r: 0, g: 0, b: 0 };
 
-pub fn list(_: List) -> Result<()> {
+pub fn list(_: List, state: State) -> Result<()> {
     let mut stdout = stdout();
 
     let mut even = false;
-
-    let is_atty = atty::is(Stream::Stdout);
 
     for &(name, color) in HTML_COLOR_NAMES {
         if name == "magenta" || name == "aqua" || name.ends_with("grey") {
             continue;
         }
 
-        if !is_atty {
+        if !state.ansi_output {
             writeln!(stdout, "{}", name)?;
             continue;
         }
