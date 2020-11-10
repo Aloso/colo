@@ -1,3 +1,5 @@
 theme: jekyll-theme-cayman
 
 exclude: [target]
+
+latest_version: "0.3.1"

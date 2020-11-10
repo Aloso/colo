@@ -49,10 +49,7 @@ body {
         max-width: 64rem;
         margin: 0 auto;
         padding: 0 5rem;
-
-        .github-link {
-            float: right;
-        }
+        display: flex;
 
         .home-link {
             font-size: 1.2em;
@@ -61,11 +58,11 @@ body {
         }
 
         a {
-            display: inline-block;
             color: white;
             text-decoration: none;
             padding: 1.35rem 1rem;
             line-height: 1rem;
+            text-align: center;
 
             &:hover {
                 background: rgba(255, 255, 255, 0.2);

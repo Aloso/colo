@@ -22,8 +22,12 @@
     <body>
         <section class="page-header-small">
             <div class="inner">
-                <a class="home-link" href="{{ site.url }}/colo">{{ site.title | default: site.github.repository_name }}</a>
+                <a class="home-link" href="{{ site.url }}{% if jekyll.environment == "production" %}/colo{% endif %}">
+                    {{ site.title | default: site.github.repository_name }}
+                </a>
+                <div style="flex-grow: 1;"></div>
 
+                <a href="{{ site.github.repository_url }}/blob/v{{ site.latest_version }}/CHANGELOG.md">What's new</a>
                 <a class="github-link" href="{{ site.github.repository_url }}">View on GitHub</a>
             </div>
         </section>
