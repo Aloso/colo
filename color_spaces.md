@@ -32,16 +32,16 @@ Colors in the sRGB color space are represented as three values between 0 and 255
 
 ### Examples
 
-|                         |                      |
-| ----------------------- |--------------------- |
-| `rgb(0, 0, 0)`          | ![color](./assets/colors/black.png)
-| `rgb(255, 0, 0)`        | ![color](./assets/colors/red.png)
-| `rgb(0, 255, 0)`        | ![color](./assets/colors/green.png)
-| `rgb(0, 0, 255)`        | ![color](./assets/colors/blue.png)
-| `rgb(255, 255, 0)`      | ![color](./assets/colors/yellow.png)
-| `rgb(0, 255, 255)`      | ![color](./assets/colors/cyan.png)
-| `rgb(255, 0, 255)`      | ![color](./assets/colors/magenta.png)
-| `rgb(255, 255, 255)`    | ![color](./assets/colors/white.png)
+<pre class="color-examples">
+rgb(  0,   0,   0)   <img src="/assets/colors/black.png" alt="">
+rgb(255,   0,   0)   <img src="/assets/colors/red.png" alt="">
+rgb(  0, 255,   0)   <img src="/assets/colors/green.png" alt="">
+rgb(  0,   0, 255)   <img src="/assets/colors/blue.png" alt="">
+rgb(255, 255,   0)   <img src="/assets/colors/yellow.png" alt="">
+rgb(  0, 255, 255)   <img src="/assets/colors/cyan.png" alt="">
+rgb(255,   0, 255)   <img src="/assets/colors/magenta.png" alt="">
+rgb(255, 255, 255)   <img src="/assets/colors/white.png" alt="">
+</pre>
 
 ## CMY (`cmy`)
 
@@ -51,16 +51,16 @@ CMY colors are represented as three values between 0 and 1, or 100%.
 
 ### Examples
 
-|                |                      |
-| ---------------|--------------------- |
-| `cmy(0, 0, 0)` | ![color](assets/colors/white.png)
-| `cmy(1, 0, 0)` | ![color](assets/colors/cyan.png)
-| `cmy(0, 1, 0)` | ![color](assets/colors/magenta.png)
-| `cmy(0, 0, 1)` | ![color](assets/colors/yellow.png)
-| `cmy(0, 1, 1)` | ![color](assets/colors/red.png)
-| `cmy(1, 0, 1)` | ![color](assets/colors/green.png)
-| `cmy(1, 1, 0)` | ![color](assets/colors/blue.png)
-| `cmy(1, 1, 1)` | ![color](assets/colors/black.png)
+<pre class="color-examples">
+cmy(0, 0, 0)   <img src="/assets/colors/white.png" alt="">
+cmy(1, 0, 0)   <img src="/assets/colors/cyan.png" alt="">
+cmy(0, 1, 0)   <img src="/assets/colors/magenta.png" alt="">
+cmy(0, 0, 1)   <img src="/assets/colors/yellow.png" alt="">
+cmy(0, 1, 1)   <img src="/assets/colors/red.png" alt="">
+cmy(1, 0, 1)   <img src="/assets/colors/green.png" alt="">
+cmy(1, 1, 0)   <img src="/assets/colors/blue.png" alt="">
+cmy(1, 1, 1)   <img src="/assets/colors/black.png" alt="">
+</pre>
 
 ## CMYK (`cmyk`)
 
@@ -68,16 +68,16 @@ CMYK is a variation of CMY that adds a fourth component, the **key**. This is us
 
 ### Examples
 
-|                   |                      |
-| ------------------|--------------------- |
-| `cmy(0, 0, 0, 0)` | ![color](assets/colors/white.png)
-| `cmy(1, 0, 0, 0)` | ![color](assets/colors/cyan.png)
-| `cmy(0, 1, 0, 0)` | ![color](assets/colors/magenta.png)
-| `cmy(0, 0, 1, 0)` | ![color](assets/colors/yellow.png)
-| `cmy(0, 1, 1, 0)` | ![color](assets/colors/red.png)
-| `cmy(1, 0, 1, 0)` | ![color](assets/colors/green.png)
-| `cmy(1, 1, 0, 0)` | ![color](assets/colors/blue.png)
-| `cmy(0, 0, 0, 1)` | ![color](assets/colors/black.png)
+<pre class="color-examples">
+cmy(0, 0, 0, 0)   <img src="/assets/colors/white.png" alt="">
+cmy(1, 0, 0, 0)   <img src="/assets/colors/cyan.png" alt="">
+cmy(0, 1, 0, 0)   <img src="/assets/colors/magenta.png" alt="">
+cmy(0, 0, 1, 0)   <img src="/assets/colors/yellow.png" alt="">
+cmy(0, 1, 1, 0)   <img src="/assets/colors/red.png" alt="">
+cmy(1, 0, 1, 0)   <img src="/assets/colors/green.png" alt="">
+cmy(1, 1, 0, 0)   <img src="/assets/colors/blue.png" alt="">
+cmy(0, 0, 0, 1)   <img src="/assets/colors/black.png" alt="">
+</pre>
 
 ## HSL (`hsl`)
 
@@ -89,16 +89,16 @@ Saturation and lightness are values between 0 and 1 (or 100%). When the lightnes
 
 ### Examples
 
-|                   |                      |
-| ------------------|--------------------- |
-| <code>hsl(&nbsp; ?, ?,  0)</code> | ![color](assets/colors/black.png)
-| <code>hsl(&nbsp; ?, ?,  1)</code> | ![color](assets/colors/white.png)
-| <code>hsl(&nbsp; 0, 1, .5)</code> | ![color](assets/colors/red.png)
-| `hsl( 60, 1, .5)` | ![color](assets/colors/yellow.png)
-| `hsl(120, 1, .5)` | ![color](assets/colors/green.png)
-| `hsl(180, 1, .5)` | ![color](assets/colors/cyan.png)
-| `hsl(240, 1, .5)` | ![color](assets/colors/blue.png)
-| `hsl(300, 1, .5)` | ![color](assets/colors/magenta.png)
+<pre class="color-examples">
+hsl(  ?, ?,   0)   <img src="/assets/colors/black.png" alt="">
+hsl(  ?, ?,   1)   <img src="/assets/colors/white.png" alt="">
+hsl(  0, 1, 0.5)   <img src="/assets/colors/red.png" alt="">
+hsl( 60, 1, 0.5)   <img src="/assets/colors/yellow.png" alt="">
+hsl(120, 1, 0.5)   <img src="/assets/colors/green.png" alt="">
+hsl(180, 1, 0.5)   <img src="/assets/colors/cyan.png" alt="">
+hsl(240, 1, 0.5)   <img src="/assets/colors/blue.png" alt="">
+hsl(300, 1, 0.5)   <img src="/assets/colors/magenta.png" alt="">
+</pre>
 
 ## HSV (`hsv`)
 
@@ -106,16 +106,18 @@ Saturation and lightness are values between 0 and 1 (or 100%). When the lightnes
 
 Saturation and value are again values between 0 and 1. When the value is 0, the color is full black. When the value is 1, the color depends on the hue and saturation.
 
-|                  |                      |
-| -----------------|--------------------- |
-| <code>hsv(&nbsp; ?, ?, 0)</code> | ![color](assets/colors/black.png)
-| <code>hsv(&nbsp; ?, 0, 1)</code> | ![color](assets/colors/white.png)
-| <code>hsv(&nbsp; 0, 1, 1)</code> | ![color](assets/colors/red.png)
-| `hsv( 60, 1, 1)` | ![color](assets/colors/yellow.png)
-| `hsv(120, 1, 1)` | ![color](assets/colors/green.png)
-| `hsv(180, 1, 1)` | ![color](assets/colors/cyan.png)
-| `hsv(240, 1, 1)` | ![color](assets/colors/blue.png)
-| `hsv(300, 1, 1)` | ![color](assets/colors/magenta.png)
+### Examples
+
+<pre class="color-examples">
+hsv(  ?, ?, 0)   <img src="/assets/colors/black.png" alt="">
+hsv(  ?, 0, 1)   <img src="/assets/colors/white.png" alt="">
+hsv(  0, 1, 1)   <img src="/assets/colors/red.png" alt="">
+hsv( 60, 1, 1)   <img src="/assets/colors/yellow.png" alt="">
+hsv(120, 1, 1)   <img src="/assets/colors/green.png" alt="">
+hsv(180, 1, 1)   <img src="/assets/colors/cyan.png" alt="">
+hsv(240, 1, 1)   <img src="/assets/colors/blue.png" alt="">
+hsv(300, 1, 1)   <img src="/assets/colors/magenta.png" alt="">
+</pre>
 
 
 ## CIELAB (`lab`)

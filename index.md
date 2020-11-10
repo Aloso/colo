@@ -7,7 +7,9 @@ title: colo – Simple color management in the terminal
 
 Run `colo s <COLOR>` to view a color. Colo supports HTML color names, hex colors and 11 different color spaces.
 
-![example](/assets/img/main_example.png)
+<div class="terminal">
+    <img src="/assets/img/main_example.png" alt="">
+</div>
 
 ## 11 supported color spaces
 
@@ -17,7 +19,9 @@ Colo supports widely used color spaces, that should cover the needs for professi
 
 Colo supports piping input from/to other commands or files.
 
-![pipes](/assets/img/pipes.png)
+<div class="terminal">
+    <img src="/assets/img/pipes.png" alt="">
+</div>
 
 ## Flexible input
 
@@ -33,19 +37,25 @@ $ colo s cmy 1 50% 66.7%
 
 `colo print <TEXT> <COLORS>...` prints text with certain colors applied. There are also flags to make the text bold (`-b`), italic (`-i`) or underlined (`-u`), and a flag to continue printing in the same line (`-n`):
 
-![text](/assets/img/text.png)
+<div class="terminal">
+    <img src="/assets/img/text.png" alt="">
+</div>
 
 ## Get color contrast
 
 Check the contrast between two colors, and find out if white or black text is better readable on a background color.
 
-![contrast](/assets/img/contrast.png)
+<div class="terminal">
+    <img src="/assets/img/contrast.png" alt="">
+</div>
 
 ## Show terminal colors
 
 Display the default colors of your terminal.
 
-![terminal colors](/assets/img/terminal_colors.png)
+<div class="terminal">
+    <img src="/assets/img/terminal_colors.png" alt="">
+</div>
 
 ## Experimental features
 
@@ -59,4 +69,6 @@ $ cargo install --git https://github.com/Aloso/colo
 
 Random values can be used anywhere where colors can be used. For example:
 
-![rand](/assets/img/rand.png)
+<div class="terminal">
+    <img src="/assets/img/rand.png" alt="">
+</div>

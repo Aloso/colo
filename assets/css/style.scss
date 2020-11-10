@@ -123,3 +123,24 @@ body {
     }
 
 }
+
+.terminal {
+    background-color: #141414;
+    border-radius: 0.4rem;
+    overflow: hidden;
+
+    img {
+        display: block;
+    }
+}
+
+pre.color-examples {
+    background-color: #f6f6f6;
+    color: #666666;
+
+    img {
+        display: inline-block;
+        margin: 0 0 3px 0;
+        vertical-align: middle;
+    }
+}
