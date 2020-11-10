@@ -1,5 +1,6 @@
 ---
 layout: startpage
+title: colo – Simple color management in the terminal
 ---
 
 ## Simple color management in the terminal

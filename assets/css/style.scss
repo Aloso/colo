@@ -8,12 +8,21 @@ body {
 }
 
 .page-header {
-    padding: 2.5rem;
+    padding: 0;
     background-image: linear-gradient(120deg, #155799, #2db034, #b69b00);
+    text-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
+
+    .page-header-inner {
+        max-width: 64rem;
+        margin: 0 auto;
+        text-align: left;
+        padding: 2.5rem 6rem;
+    }
 
     .project-tagline {
         opacity: 0.9;
         text-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
+        margin: 0 0 3rem 0;
     }
 
     .btn, .btn:hover {
@@ -22,7 +31,13 @@ body {
 
     .logo {
         width: 120px;
+        float: left;
+        margin-right: 2rem;
         filter: drop-shadow(0 0 8px rgba(0, 0, 0, 0.1));
+    }
+
+    p.view {
+        margin-bottom: 0;
     }
 }
 
@@ -61,8 +76,15 @@ body {
 
 @media screen and (min-width: 42em) and (max-width: 64em) {
     .page-header {
-        padding: 2rem;
-        background-image: linear-gradient(120deg, #155799, #26bd2e, #b69b00);
+        .page-header-inner {
+            padding: 2rem 4rem;
+            background-image: linear-gradient(120deg, #155799, #26bd2e, #b69b00);
+        }
+
+        .logo {
+            width: 100px;
+            margin-right: 1.3rem;
+        }
     }
 
     .page-header-small .inner {
@@ -72,7 +94,14 @@ body {
 
 @media screen and (max-width: 42em) {
     .page-header {
-        padding: 1.5rem 1rem;
+        .page-header-inner {
+            padding: 1.5rem 1rem 0.01rem 1rem;
+        }
+
+        .logo {
+            width: 80px;
+            margin-right: 1rem;
+        }
     }
 
     .page-header-small .inner {
@@ -89,8 +118,8 @@ body {
         color: #5b6468;
     }
 
-h1 code, h2 code, h3 code, h4 code, h5 code, h6 code {
-    font-size: 85% !important;
-}
+    h1 code, h2 code, h3 code, h4 code, h5 code, h6 code {
+        font-size: 85% !important;
+    }
 
 }

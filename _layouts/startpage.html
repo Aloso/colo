@@ -21,17 +21,19 @@
 
 <body>
     <section class="page-header">
-        <h1 class="project-name">{{ site.title | default: site.github.repository_name }}</h1>
+        <div class="page-header-inner">
+            <img class="logo" src="{{ "/assets/logo.svg" | relative_url}}" alt="Logo" />
 
-        <img class="logo" src="{{ "/assets/logo.svg" | relative_url}}" alt="Logo" />
+            <h1 class="project-name">{{ site.title | default: site.github.repository_name }}</h1>
 
-        <h2 class="project-tagline">{{ site.description | default: site.github.project_tagline }}</h2>
+            <h2 class="project-tagline">{{ site.description | default: site.github.project_tagline }}</h2>
 
-        <p class="view">
-            <a class="btn" href="{{ site.github.repository_url }}">View on GitHub</a>
-            <a class="btn" href="{{ site.github.repository_url }}/releases">Install</a>
-            <a class="btn" href="{{ site.github.repository_url }}/blob/v0.3.1/CHANGELOG.md">What's new in colo 0.3.1</a>
-        </p>
+            <p class="view">
+                <a class="btn" href="{{ site.github.repository_url }}">View on GitHub</a>
+                <a class="btn" href="{{ site.github.repository_url }}/releases">Install</a>
+                <a class="btn" href="{{ site.github.repository_url }}/blob/v0.3.1/CHANGELOG.md">What's new in colo 0.3.1</a>
+            </p>
+        </div>
     </section>
 
     <section class="main-content">
