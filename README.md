@@ -2,7 +2,7 @@
 
 Command-line tool for displaying colors, written in Rust
 
-[![Crates.io](https://img.shields.io/crates/l/colo)](./LICENSE) [![Crates.io](https://img.shields.io/crates/v/colo)](https://crates.io/crates/colo)
+[![Crates.io](https://img.shields.io/crates/l/colo)](./LICENSE) [![Crates.io](https://img.shields.io/crates/v/colo)](https://crates.io/crates/colo) [![Tests](https://github.com/Aloso/colo/workflows/Test/badge.svg)](https://github.com/Aloso/colo/actions?query=workflow%3ATest)
 
 
 ## Changelog
