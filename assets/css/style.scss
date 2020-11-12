@@ -22,7 +22,7 @@
 
 @font-face {
     font-family: "JetBrains Mono";
-    src: url("../fonts/JBM/JetBrainsMono-Bold-Italic.ttf");
+    src: url("../fonts/JBM/JetBrainsMono-BoldItalic.ttf");
     font-style: italic;
     font-style: bold;
 }
@@ -156,7 +156,7 @@ body {
     }
 }
 
-pre.toh-text {
+pre.terminal {
     margin: 0 0 1rem 0;
     padding: 1rem;
     border: none;
@@ -167,48 +167,56 @@ pre.toh-text {
     font-size: 100%;
     line-height: 120%;
 
-    .toh-arrow {
+    @media (min-width: 42em) and (max-width: 64em) {
+        font-size: 90%;
+    }
+
+    @media (max-width: 42em) {
+        font-size: 82%;
+    }
+
+    .shell {
         color: #32d132;
         user-select: none;
     }
 
-    .toh-cmd {
+    .cmd {
         color: #419df3;
     }
 
-    .toh-dim {
+    .faint {
         opacity: 0.67;
     }
 
-    .toh-hl {
+    .hl {
         color: #00ffff;
         font-weight: bold;
     }
 
-    .toh-arg {
+    .arg {
         color: white;
     }
 
-    .toh-str {
+    .str {
         color: #ffba24;
     }
 
-    .toh-pipe, .toh-op {
+    .pipe, .op {
         color: #a2be00;
     }
 
-    .toh-flag {
+    .flag {
         color: #ff7167;
     }
 
-    .toh-caret {
+    .caret {
         background-color: white;
         user-select: none;
     }
 
     &::selection, & ::selection {
         color: inherit;
-        background-color: #1b247c;
+        background-color: rgba(0, 78, 173, 0.5);
     }
 }
 
