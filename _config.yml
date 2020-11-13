@@ -3,4 +3,4 @@ theme: jekyll-theme-cayman
 exclude: [target]
 
 description: Manage colors in various color spaces in the terminal.
-latest_version: "0.3.1"
+latest_version: "0.3.2"
