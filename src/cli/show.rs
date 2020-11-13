@@ -80,7 +80,7 @@ pub fn get(matches: &ArgMatches, state: State) -> Result<Show> {
         colors = util::values_to_colors(iter::once(text.as_str()))?;
     }
 
-    let output = util::get_color_format(&matches, "output-formats")?
+    let output = util::get_color_format(&matches, "output-format")?
         .or_else(|| {
             if colors.len() == 1 {
                 Some(colors[0].1).filter(|&c| c != ColorFormat::Html)
