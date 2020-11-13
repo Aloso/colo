@@ -8,7 +8,6 @@ repository = "https://github.com/Aloso/colo"
 documentation = "https://docs.rs/colo"
 homepage = "https://github.com/Aloso/colo"
 readme = "README.md"
-exclude = ["docs/*"]
 edition = "2018"
 
 keywords = ["color", "cli"]

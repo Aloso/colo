@@ -11,7 +11,6 @@ pub use space::ColorSpace;
 mod convert;
 mod parse;
 
-pub mod ansi;
 pub mod contrast;
 pub mod format;
 pub mod hex;

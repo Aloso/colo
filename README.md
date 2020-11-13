@@ -2,26 +2,26 @@
 
 Command-line tool for displaying colors, written in Rust
 
-[![Crates.io](https://img.shields.io/crates/l/colo)](./LICENSE) [![Crates.io](https://img.shields.io/crates/v/colo)](https://crates.io/crates/colo)
+[![Crates.io](https://img.shields.io/crates/l/colo)](./LICENSE) [![Crates.io](https://img.shields.io/crates/v/colo)](https://crates.io/crates/colo) [![Tests](https://github.com/Aloso/colo/workflows/Test/badge.svg)](https://github.com/Aloso/colo/actions?query=workflow%3ATest)
 
 
-## Changelog
+## Changelog ☑
 
 [The changelog can be found here](./CHANGELOG.md).
 
-Note that `colo` is very young and evolving rapidly. There will likely be big changes in the next releases.
+Note that `colo` is young and evolving rapidly. There will likely be big changes in the next releases.
 
-## Usage
+## Usage 📚
 
 How to use `colo` is explained [on the website](https://aloso.github.io/colo).
 
 [Here](https://aloso.github.io/colo/color_spaces) is the list of supported color spaces.
 
-## Installation
+## Installation 🚀
 
 How to install `colo` is explained on the [releases page](https://github.com/Aloso/colo/releases).
 
-### Build from source
+### Build from source 🛠
 
 If you want to build `colo` from source, make sure you have the Rust toolchain (including Cargo) installed. Then clone this repository and run
 
@@ -37,11 +37,11 @@ cargo install --git https://github.com/Aloso/colo
 
 This builds the code from the main branch. You can specify a different branch with `--branch` or a tag with `--tag`.
 
-## Code of Conduct
+## Code of Conduct 🤝
 
 Since this program is written in Rust, the [Rust code of conduct](https://www.rust-lang.org/policies/code-of-conduct) applies. Please be friendly and treat everyone with respect.
 
-## Contributing
+## Contributing 🙌
 
 I appreciate your help! The easiest way to help is to file bug reports or suggest new features in the [issue tracker](https://github.com/Aloso/colo/issues).
 
@@ -55,10 +55,8 @@ Also, to pass continuous integration, the code must
 
   * be properly formatted with `cargo fmt`
   * pass `cargo clippy`
-  * compile on the latest stable Rust version
-  * all tests must succeed
-
-You can also look in the issue tracker for issues with the label [help wanted](https://github.com/Aloso/colo/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22).
+  * compile on the latest stable Rust version on Ubuntu, Windows and macOS.
+  * all tests must pass
 
 To contribute to the website, send a PR to the [`gh-pages`](https://github.com/Aloso/colo/tree/gh-pages) branch.
 

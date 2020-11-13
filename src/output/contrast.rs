@@ -1,15 +1,13 @@
-use std::io::{stdout, Write};
-
-use crate::color::contrast::{contrast as calc_contrast, relative_luminance};
 use anyhow::Result;
-use atty::Stream;
 use color_space::ToRgb;
 use colored::Colorize;
+use std::io::{stdout, Write};
 
 use crate::cli::contrast::Contrast;
+use crate::color::contrast::{contrast as calc_contrast, relative_luminance};
+use crate::State;
 
-pub fn contrast(Contrast { color1, color2 }: Contrast) -> Result<()> {
-    let interactive = atty::is(Stream::Stdout);
+pub fn contrast(Contrast { color1, color2 }: Contrast, state: State) -> Result<()> {
     let mut stdout = stdout();
 
     let rgb1 = color1.to_rgb();
@@ -27,7 +25,7 @@ pub fn contrast(Contrast { color1, color2 }: Contrast) -> Result<()> {
         _ => colored::Color::Green,
     };
 
-    if interactive {
+    if state.color {
         writeln!(
             stdout,
             " {}{}  {:.4}",

@@ -5,6 +5,7 @@ use clap::{App, Arg, ArgMatches, SubCommand};
 
 use super::util;
 use crate::color::{Color, ColorFormat};
+use crate::State;
 
 const TEXT_HELP: &str = "\
 Text to print in the specified color. If colo is used behind a pipe \
@@ -24,20 +25,20 @@ The input colors. You can specify up to 2 colors (text and background color). Su
 ";
 
 /// Returns the `print` subcommand
-pub fn command<'a, 'b>(interactive: bool) -> App<'a, 'b> {
+pub fn command<'a, 'b>(state: State) -> App<'a, 'b> {
     SubCommand::with_name("print")
         .about("Print formatted text")
         .args(&[
             Arg::with_name("text")
                 .index(1)
                 .help(TEXT_HELP)
-                .required(interactive),
+                .required(state.interactive),
             Arg::with_name("colors")
                 .index(2)
                 .help(COLOR_HELP)
                 .multiple(true)
                 .use_delimiter(false)
-                .required(interactive),
+                .required(state.interactive),
             Arg::with_name("bold")
                 .long("bold")
                 .short("b")
@@ -71,8 +72,8 @@ pub struct Print {
 }
 
 /// Returns the input for the `print` subcommand
-pub fn get(matches: &ArgMatches, interactive: bool) -> Result<Print> {
-    let (colors, text) = if interactive {
+pub fn get(matches: &ArgMatches, state: State) -> Result<Print> {
+    let (colors, text) = if state.interactive {
         let text = matches
             .value_of("text")
             .expect("text not present")
