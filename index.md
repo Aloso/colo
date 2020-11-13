@@ -114,15 +114,7 @@ The appearance of these colors depends on your terminal.
 <span class="shell">&gt;</span> <span class="caret"> </span>
 </pre>
 
-## Experimental features
-
-To get these features, build `colo` from the main branch:
-
-<pre class="terminal">
-<span class="shell">&gt;</span> <span class="cmd">cargo</span> <span class="hl">install</span> <span class="flag">--git</span> <span class="arg">https://github.com/Aloso/colo</span>
-</pre>
-
-### Random values
+## Random values
 
 Random values can be used anywhere where colors can be used. For example:
 
@@ -139,3 +131,15 @@ Random values can be used anywhere where colors can be used. For example:
 
 <span class="shell">&gt;</span> <span class="caret"> </span>
 </pre>
+
+<!--
+
+## Experimental features
+
+To get these features, build `colo` from the main branch:
+
+<pre class="terminal">
+<span class="shell">&gt;</span> <span class="cmd">cargo</span> <span class="hl">install</span> <span class="flag">--git</span> <span class="arg">https://github.com/Aloso/colo</span>
+</pre>
+
+-->
