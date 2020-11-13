@@ -102,14 +102,14 @@ Display the default colors of your terminal.
 <span class="shell">&gt;</span> <span class="cmd">colo</span> <span class="hl">term</span>
 The appearance of these colors depends on your terminal.
 
-   <span style='background:#FFF'><span style='color:#000'>  White    </span></span><span style='background:#555'><span style='color:#FFF'>  DarkGrey     </span></span>    <span style='color:#FFF'>  White   </span><span style='color:#555'>  DarkGrey    </span>
-   <span style='background:#AAA'><span style='color:#000'>  Grey     </span></span><span style='background:#000'><span style='color:#FFF'>  Black        </span></span>    <span style='color:#AAA'>  Grey    </span><span style='color:#000'>  Black       </span>
-   <span style='background:#F55'><span style='color:#000'>  Red      </span></span><span style='background:#A00'><span style='color:#FFF'>  DarkRed      </span></span>    <span style='color:#F55'>  Red     </span><span style='color:#A00'>  DarkRed     </span>
-   <span style='background:#FF5'><span style='color:#000'>  Yellow   </span></span><span style='background:#A50'><span style='color:#FFF'>  DarkYellow   </span></span>    <span style='color:#FF5'>  Yellow  </span><span style='color:#A50'>  DarkYellow  </span>
-   <span style='background:#5F5'><span style='color:#000'>  Green    </span></span><span style='background:#0A0'><span style='color:#FFF'>  DarkGreen    </span></span>    <span style='color:#5F5'>  Green   </span><span style='color:#0A0'>  DarkGreen   </span>
-   <span style='background:#5FF'><span style='color:#000'>  Cyan     </span></span><span style='background:#0AA'><span style='color:#FFF'>  DarkCyan     </span></span>    <span style='color:#5FF'>  Cyan    </span><span style='color:#0AA'>  DarkCyan    </span>
-   <span style='background:#55F'><span style='color:#000'>  Blue     </span></span><span style='background:#00A'><span style='color:#FFF'>  DarkBlue     </span></span>    <span style='color:#55F'>  Blue    </span><span style='color:#00A'>  DarkBlue    </span>
-   <span style='background:#F5F'><span style='color:#000'>  Magenta  </span></span><span style='background:#A0A'><span style='color:#FFF'>  DarkMagenta  </span></span>    <span style='color:#F5F'>  Magenta </span><span style='color:#A0A'>  DarkMagenta </span>
+   <span style='background:#FFF'><span style='color:#000'>  BrightWhite    </span></span><span style='background:#AAA'><span style='color:#000'>  White    </span></span>  <span style='color:#FFF'>  BrightWhite</span>   <span style='color:#AAA'>  White</span>
+   <span style='background:#555'><span style='color:#FFF'>  BrightBlack    </span></span><span style='background:#000'><span style='color:#FFF'>  Black    </span></span>  <span style='color:#555'>  BrightBlack</span>   <span style='color:#000'>  Black</span>
+   <span style='background:#F55'><span style='color:#000'>  BrightRed      </span></span><span style='background:#A00'><span style='color:#FFF'>  Red      </span></span>  <span style='color:#F55'>  BrightRed</span>     <span style='color:#A00'>  Red</span>
+   <span style='background:#FF5'><span style='color:#000'>  BrightYellow   </span></span><span style='background:#A50'><span style='color:#FFF'>  Yellow   </span></span>  <span style='color:#FF5'>  BrightYellow</span>  <span style='color:#A50'>  Yellow</span>
+   <span style='background:#5F5'><span style='color:#000'>  BrightGreen    </span></span><span style='background:#0A0'><span style='color:#FFF'>  Green    </span></span>  <span style='color:#5F5'>  BrightGreen</span>   <span style='color:#0A0'>  Green</span>
+   <span style='background:#5FF'><span style='color:#000'>  BrightCyan     </span></span><span style='background:#0AA'><span style='color:#FFF'>  Cyan     </span></span>  <span style='color:#5FF'>  BrightCyan</span>    <span style='color:#0AA'>  Cyan</span>
+   <span style='background:#55F'><span style='color:#000'>  BrightBlue     </span></span><span style='background:#00A'><span style='color:#FFF'>  Blue     </span></span>  <span style='color:#55F'>  BrightBlue</span>    <span style='color:#00A'>  Blue</span>
+   <span style='background:#F5F'><span style='color:#000'>  BrightMagenta  </span></span><span style='background:#A0A'><span style='color:#FFF'>  Magenta  </span></span>  <span style='color:#F5F'>  BrightMagenta</span> <span style='color:#A0A'>  Magenta</span>
 
 <span class="shell">&gt;</span> <span class="caret"> </span>
 </pre>
