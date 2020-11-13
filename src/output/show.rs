@@ -17,7 +17,7 @@ pub fn show(
 ) -> Result<()> {
     let mut stdout = stdout();
 
-    if state.ansi_output && size > 0 {
+    if state.color && size > 0 {
         writeln!(stdout)?;
     }
     for (color, input) in colors {
@@ -42,7 +42,7 @@ fn show_color(
         b: rgb.b.round() as u8,
     };
 
-    if !state.ansi_output {
+    if !state.color {
         let color = output
             .format(color)
             .or_else(|| ColorFormat::Hex.format(color))

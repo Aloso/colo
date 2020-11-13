@@ -24,7 +24,7 @@ pub fn list(_: List, state: State) -> Result<()> {
             continue;
         }
 
-        if !state.ansi_output {
+        if !state.color {
             writeln!(stdout, "{}", name)?;
             continue;
         }

@@ -1,4 +1,4 @@
-use clap::{App, AppSettings};
+use clap::{App, AppSettings, Arg};
 
 use crate::State;
 
@@ -60,5 +60,13 @@ pub fn app<'a, 'b>(state: State) -> App<'a, 'b> {
         .subcommand(textcolor::command(state))
         .subcommand(list::command())
         .subcommand(libs::command())
+        .arg(
+            Arg::with_name("color")
+                .long("color")
+                .takes_value(true)
+                .possible_values(&["always", "never", "auto"])
+                .default_value("auto")
+                .help("Define if the output should be colored. By default colo disables color output when used behind a pipe or not in a tty"),
+        )
         .max_term_width(100)
 }

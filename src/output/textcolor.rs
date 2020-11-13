@@ -19,7 +19,7 @@ pub fn textcolor(TextColor { colors }: TextColor, state: State) -> Result<()> {
 
         let other_color_name = if wc >= bc { "white" } else { "black" };
 
-        if state.ansi_output {
+        if state.color {
             let other_color = Color::Rgb(match other_color_name {
                 "white" => white,
                 _ => black,

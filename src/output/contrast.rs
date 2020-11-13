@@ -25,7 +25,7 @@ pub fn contrast(Contrast { color1, color2 }: Contrast, state: State) -> Result<(
         _ => colored::Color::Green,
     };
 
-    if state.ansi_output {
+    if state.color {
         writeln!(
             stdout,
             " {}{}  {:.4}",
