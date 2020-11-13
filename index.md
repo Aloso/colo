@@ -43,17 +43,17 @@ Colo supports piping input from/to other commands or files.
 <pre class="terminal">
 <span class="shell">&gt;</span> <span class="cmd">echo</span> <span class="arg">orange</span> <span class="arg">ff4400</span> <span class="pipe">|</span> <span class="cmd">colo</span> <span class="hl">s</span> <span class="flag">-o</span> <span class="arg">hsl</span> <span class="pipe">&gt;</span> <span class="pipe">somefile.txt</span>
 <span class="shell">&gt;</span> <span class="cmd">cat</span> <span class="arg">somefile.txt</span>
-#ffa500
-#ff4400
+hsl(38.8, 100%, 50%)
+hsl(16, 100%, 50%)
 <span class="shell">&gt;</span> <span class="cmd">colo</span> <span class="hl">s</span> <span class="pipe">&lt;</span> <span class="pipe">somefile.txt</span>
 
-<span style='color:#ffa500'> ████████</span>  <b>#ffa500</b>  <span class='faint'>orange          </span>  <span class='faint'>rgb(255, 165, 0)         </span>
-<span style='color:#ffa500'> ████████</span>  <span class='faint'>hsl(38.8, 100%, 50%)     </span>  <span class='faint'>hsv(38.8, 100%, 100%)    </span>
+<span style='color:#ffa500'> ████████</span>  <span class='faint'>#ffa500</span>  <span class='faint'>orange          </span>  <span class='faint'>rgb(255, 164.9, 0)       </span>
+<span style='color:#ffa500'> ████████</span>  <b>hsl(38.8, 100%, 50%)     </b>  <span class='faint'>hsv(38.8, 100%, 100%)    </span>
 <span style='color:#ffa500'> ████████</span>  <span class='faint'>cmy(0%, 35.3%, 100%)     </span>  <span class='faint'>cmyk(0%, 35.3%, 100%, 0%)</span>
 <span style='color:#ffa500'> ████████</span>  <span class='faint'>lch(74.9, 82.5, 73.1)    </span>  <span class='faint'>luv(74.9, 74.9, 74)      </span>
 
-<span style='color:#ff4400'> ████████</span>  <b>#ff4400</b>                    <span class='faint'>rgb(255, 68, 0)          </span>
-<span style='color:#ff4400'> ████████</span>  <span class='faint'>hsl(16, 100%, 50%)       </span>  <span class='faint'>hsv(16, 100%, 100%)      </span>
+<span style='color:#ff4400'> ████████</span>  <span class='faint'>#ff4400</span>                    <span class='faint'>rgb(255, 68, 0)          </span>
+<span style='color:#ff4400'> ████████</span>  <b>hsl(16, 100%, 50%)       </b>  <span class='faint'>hsv(16, 100%, 100%)      </span>
 <span style='color:#ff4400'> ████████</span>  <span class='faint'>cmy(0%, 73.3%, 100%)     </span>  <span class='faint'>cmyk(0%, 73.3%, 100%, 0%)</span>
 <span style='color:#ff4400'> ████████</span>  <span class='faint'>lch(57.5, 96.9, 45.3)    </span>  <span class='faint'>luv(57.5, 151.7, 45.3)   </span>
 
