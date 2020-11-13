@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
 ## [0.3.2] - 2020-11-13
 
 Announcing the [new website](https://aloso.github.io/colo/), which explains how to use colo with nice terminal graphics! The graphics are [rendered as HTML](https://github.com/Aloso/to-html), so you can copy+paste the commands.
