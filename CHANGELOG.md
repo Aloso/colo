@@ -6,10 +6,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.3.2] - 2020-11-13
 
-- Improve help pages
-- Fix bugs with pipes
-- Revamp the `colo term` command
-- Add the `--color` flag
+Announcing the [new website](https://aloso.github.io/colo/), which explains how to use colo with nice terminal graphics! The graphics are [rendered as HTML](https://github.com/Aloso/to-html), so you can copy+paste the commands.
+
+### Additions
+
+- [`#39`](https://github.com/Aloso/colo/pull/39): Colors can now be randomly generated. Random colors can be used everywhere:
+
+    ```sh
+    > colo s rand
+    > colo contrast rand rand
+    > colo print "Hello world" rand
+    ```
+
+    The `rand` keyword creates a random color in the sRGB space. You can also use a different color space and specify some of the values:
+
+    ```sh
+    > colo s "hsl(rand, 100%, 50%)"
+    > colo s "cmy(100%, rand, rand)"
+    ```
+- [`#41`](https://github.com/Aloso/colo/pull/41): The `--color` flag can override the behavior when the output uses color:
+    * `never`: Don't use color
+    * `always`: Always print with color
+    * `auto`: Use color if the standard output is a tty, i.e. if `colo` was invoked in the terminal and isn't behind a pipe.
+
+### Changes
+
+- [`#41`](https://github.com/Aloso/colo/pull/41): The output of `colo term` was updated.
+- [`#40`](https://github.com/Aloso/colo/pull/40): Help pages were improved significantly. Show help with `colo help` or with `colo help <subcommand>`.
+
+## Bug fixes
+
+- Fixed pipes: A few bugs were fixed where `colo` printed with color or listened to stdin when it shouldn't.
 
 ## [0.3.1] - 2020-11-09
 
