@@ -4,9 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.3.3] - 2020-11-15
 
-- Bug fix for `--output` flag
+### Bug fixes
+
+- [`#42`](https://github.com/Aloso/colo/pull/42): Regression in 0.3.2 fixed: `--output` flag didn't work because of a typo
 
 ## [0.3.2] - 2020-11-13
 
