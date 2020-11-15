@@ -39,7 +39,7 @@ This builds the code from the main branch. You can specify a different branch wi
 
 ## Code of Conduct 🤝
 
-Since this program is written in Rust, the [Rust code of conduct](https://www.rust-lang.org/policies/code-of-conduct) applies. Please be friendly and treat everyone with respect.
+Please be friendly and respectful to others. This should be a place where everyone can feel safe, therefore I intend to enforce the [Rust code of conduct](https://www.rust-lang.org/policies/code-of-conduct).
 
 ## Contributing 🙌
 

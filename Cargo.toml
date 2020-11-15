@@ -1,6 +1,6 @@
 [package]
 name = "colo"
-version = "0.3.2"
+version = "0.3.3"
 authors = ["Ludwig Stecher <ludwig.stecher@gmx.de>"]
 description = "CLI tool to show and convert colors between various color spaces"
 categories = ["command-line-interface"]

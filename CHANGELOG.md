@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+- Bug fix for `--output` flag
+
 ## [0.3.2] - 2020-11-13
 
 Announcing the [new website](https://aloso.github.io/colo/), which explains how to use colo with nice terminal graphics! The graphics are [rendered as HTML](https://github.com/Aloso/to-html), so you can copy+paste the commands.
@@ -34,7 +38,7 @@ Announcing the [new website](https://aloso.github.io/colo/), which explains how 
 - [`#41`](https://github.com/Aloso/colo/pull/41): The output of `colo term` was updated.
 - [`#40`](https://github.com/Aloso/colo/pull/40): Help pages were improved significantly. Show help with `colo help` or with `colo help <subcommand>`.
 
-## Bug fixes
+### Bug fixes
 
 - Fixed pipes: A few bugs were fixed where `colo` printed with color or listened to stdin when it shouldn't.
 
