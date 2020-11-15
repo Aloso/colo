@@ -145,18 +145,7 @@ body {
 
 }
 
-.terminal {
-    background-color: #141414;
-    border-radius: 0.4rem;
-    overflow: hidden;
-    margin: 0 0 1rem 0;
-
-    img {
-        display: block;
-    }
-}
-
-pre.terminal {
+pre.h-terminal {
     margin: 0 0 1rem 0;
     padding: 1rem;
     border: none;
@@ -175,41 +164,43 @@ pre.terminal {
         font-size: 82%;
     }
 
-    .shell {
+    .h-shell {
         color: #32d132;
         user-select: none;
+        pointer-events: none;
     }
 
-    .cmd {
+    .h-cmd {
         color: #419df3;
     }
 
-    .faint {
-        opacity: 0.67;
-    }
-
-    .hl {
+    .h-hl {
         color: #00ffff;
         font-weight: bold;
     }
 
-    .arg {
+    .h-arg {
         color: white;
     }
 
-    .str {
+    .h-str {
         color: #ffba24;
     }
 
-    .pipe, .op {
+    .h-pipe, .h-punct {
         color: #a2be00;
     }
 
-    .flag {
+    .h-flag {
         color: #ff7167;
     }
 
-    .caret {
+    .h-esc {
+        color: #d558f5;
+        font-weight: bold;
+    }
+
+    .h-caret {
         background-color: white;
         user-select: none;
     }
