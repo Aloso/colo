@@ -209,6 +209,14 @@ pre.h-terminal {
         color: inherit;
         background-color: rgba(0, 78, 173, 0.5);
     }
+
+    & > * {
+        display: inline-block;
+        vertical-align: text-top;
+        overflow: hidden;
+        margin-bottom: -1px;
+        padding-bottom: 1px;
+    }
 }
 
 pre.color-examples {
