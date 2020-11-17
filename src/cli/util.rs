@@ -1,4 +1,4 @@
-use anyhow::{Error, Result};
+use anyhow::{Context, Error, Result};
 use clap::ArgMatches;
 use std::{io::Read, iter};
 
@@ -35,4 +35,10 @@ pub(super) fn read_stdin() -> Result<String> {
         text.truncate(text.len() - 1);
     }
     Ok(text)
+}
+
+/// Parse a u32
+pub(super) fn parse_size(s: &str) -> Result<u32> {
+    s.parse()
+        .with_context(|| format!("The size {:?} could not be parsed", s))
 }

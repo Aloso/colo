@@ -5,6 +5,7 @@ use crate::State;
 pub mod contrast;
 pub mod libs;
 pub mod list;
+pub mod pick;
 pub mod print;
 pub mod show;
 pub mod term;
@@ -55,6 +56,7 @@ pub fn app<'a, 'b>(state: State) -> App<'a, 'b> {
         .about("Manages colors in various color spaces.")
         .subcommand(show::command(state))
         .subcommand(print::command(state))
+        .subcommand(pick::command())
         .subcommand(term::command())
         .subcommand(contrast::command(state))
         .subcommand(textcolor::command(state))
