@@ -78,7 +78,8 @@ Hex colors can be entered in the formats `RGB`, `RRGGBB`, `RRRGGGBBB`, etc. Colo
 <span class="h-shell">&gt; </span><span class="h-cmd">colo</span> <span class="h-hl">print</span> <span class='h-str'>&#39;Hello &#39;</span> <span class="h-arg">lime</span> <span class="h-flag">-n</span> <span class='h-punct'>&amp;&amp;</span>
   <span class="h-cmd">colo</span> <span class="h-hl">print</span> <span class='h-str'>&#39;world!&#39;</span> <span class="h-arg">black</span> <span class="h-arg">lime</span> <span class="h-flag">-ib</span>
 <span style='color:#00ff00'>Hello </span><b><i><span style='background:#00ff00'><span style='color:#000000'>world!
-</span></span></i></b><span class="h-shell">&gt; </span><span class="h-caret"> </span>
+</span></span></i></b>
+<span class="h-shell">&gt; </span><span class="h-caret"> </span>
 </pre>
 
 ## Get color contrast
