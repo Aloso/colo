@@ -6,6 +6,7 @@ use atty::Stream;
 mod cli;
 mod color;
 mod output;
+mod picker;
 
 #[derive(Debug, Copy, Clone)]
 pub struct State {
@@ -48,6 +49,9 @@ fn main() -> Result<()> {
         }
         ("show", Some(matches)) => {
             output::show::show(cli::show::get(&matches, state)?, state)?;
+        }
+        ("pick", Some(matches)) => {
+            output::show::show(cli::pick::get(&matches)?, state)?;
         }
         ("list", Some(matches)) => {
             output::list::list(cli::list::get(&matches)?, state)?;

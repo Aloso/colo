@@ -1,6 +1,6 @@
 use std::iter;
 
-use anyhow::{Context, Result};
+use anyhow::Result;
 use clap::{App, Arg, ArgMatches, SubCommand};
 
 use crate::color::{Color, ColorFormat};
@@ -60,15 +60,12 @@ pub struct Show {
     pub size: u32,
 }
 
-/// Parse a u32
-fn parse_size(s: &str) -> Result<u32> {
-    s.parse()
-        .with_context(|| format!("The size {:?} could not be parsed", s))
-}
-
 /// Returns all the arguments relevant for displaying colors
 pub fn get(matches: &ArgMatches, state: State) -> Result<Show> {
-    let size = matches.value_of("size").map(parse_size).unwrap_or(Ok(4))?;
+    let size = matches
+        .value_of("size")
+        .map(util::parse_size)
+        .unwrap_or(Ok(4))?;
 
     let mut colors = match matches.values_of("colors") {
         Some(values) => util::values_to_colors(values)?,
