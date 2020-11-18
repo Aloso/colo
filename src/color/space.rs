@@ -1,4 +1,4 @@
-use std::{error::Error, fmt, str::FromStr};
+use std::{fmt, str::FromStr};
 
 pub use color_space::{Cmy, Cmyk, Hsl, Hsv, HunterLab, Lab, Lch, Luv, Rgb, Xyz, Yxy};
 
@@ -46,24 +46,22 @@ impl fmt::Display for ColorSpace {
     }
 }
 
-#[derive(Debug, PartialEq, Clone)]
-pub struct ColorSpaceParseError {
-    input: String,
-}
-
-impl Error for ColorSpaceParseError {}
-
-impl fmt::Display for ColorSpaceParseError {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{:?} is not a valid color space", self.input)
-    }
-}
+#[derive(Debug, PartialEq, Clone, thiserror::Error)]
+#[error("The string is not a valid color space")]
+pub struct ColorSpaceParseError;
 
 impl FromStr for ColorSpace {
     type Err = ColorSpaceParseError;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        Ok(match s {
+        let lower;
+        let lower = if s.contains(|c: char| c.is_ascii_uppercase()) {
+            lower = s.to_ascii_lowercase();
+            &lower
+        } else {
+            s
+        };
+        Ok(match lower {
             "rgb" => ColorSpace::Rgb,
             "cmy" => ColorSpace::Cmy,
             "cmyk" => ColorSpace::Cmyk,
@@ -75,7 +73,7 @@ impl FromStr for ColorSpace {
             "hunterlab" => ColorSpace::HunterLab,
             "xyz" => ColorSpace::Xyz,
             "yxy" => ColorSpace::Yxy,
-            s => return Err(ColorSpaceParseError { input: s.into() }),
+            _ => return Err(ColorSpaceParseError),
         })
     }
 }

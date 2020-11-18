@@ -93,11 +93,13 @@ fn get_color_options(matches: &ArgMatches<'_>) -> Result<(Option<Color>, Option<
 }
 
 fn get_color_space_option(matches: &ArgMatches<'_>) -> Option<ColorSpace> {
-    matches.value_of("color-space").map(|cs| match cs {
-        "rgb" => ColorSpace::Rgb,
-        "hsl" => ColorSpace::Hsl,
-        "hsv" => ColorSpace::Hsv,
-        "cmy" => ColorSpace::Cmy,
-        _ => panic!("Invalid color space {:?}", cs),
-    })
+    matches
+        .value_of("color-space")
+        .map(|cs| match cs.to_lowercase().as_str() {
+            "rgb" => ColorSpace::Rgb,
+            "hsl" => ColorSpace::Hsl,
+            "hsv" => ColorSpace::Hsv,
+            "cmy" => ColorSpace::Cmy,
+            _ => panic!("Invalid color space {:?}", cs),
+        })
 }
