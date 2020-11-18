@@ -49,7 +49,7 @@ impl Cmd for Show {
                     .case_insensitive(true)
                     .help(
                         "Output format (html, hex, or color space) [possible values: rgb, cmy, \
-                        cmyk, hsv, hsl, lch, luv, lab, hunterlab, xyz, yxy, hex, html]",
+                        cmyk, hsv, hsl, lch, luv, lab, hunterlab, xyz, yxy, gry, hex, html]",
                     ),
                 Arg::with_name("size")
                     .long("size")

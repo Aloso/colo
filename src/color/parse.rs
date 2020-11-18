@@ -245,6 +245,7 @@ fn parse_rand_component(
                     ColorSpace::HunterLab if i == 0 => fastrand::u32(0..=100) as f64,
                     ColorSpace::Xyz if i == 1 => fastrand::u32(0..=100) as f64,
                     ColorSpace::Yxy if i == 0 => fastrand::u32(0..=100) as f64,
+                    ColorSpace::Gray => fastrand::f64(),
                     _ => return Err(ParseError::UnsupportedRand { cs }),
                 },
                 rest,

@@ -31,6 +31,7 @@ impl ColorPicker {
                 ColorSpace::HunterLab => 0,
                 ColorSpace::Xyz => 0,
                 ColorSpace::Yxy => 0,
+                ColorSpace::Gray => 1,
             },
             None => 1,
         };

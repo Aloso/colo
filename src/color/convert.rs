@@ -30,6 +30,7 @@ impl TryFrom<(ColorSpace, &[f64])> for Color {
             ColorSpace::HunterLab => Color::try_from(HunterLab::new(vals[0], vals[1], vals[2])),
             ColorSpace::Xyz => Color::try_from(Xyz::new(vals[0], vals[1], vals[2])),
             ColorSpace::Yxy => Color::try_from(Yxy::new(vals[0], vals[1], vals[2])),
+            ColorSpace::Gray => Color::try_from(Gray::new(vals[0])),
         }
     }
 }
@@ -93,8 +94,13 @@ try_from_color! { Lab ->
 try_from_color! { HunterLab ->
     l: 0.0 to 100.0;
 }
-try_from_color! { Xyz -> }
-try_from_color! { Yxy -> }
+try_from_color! { Xyz ->
+}
+try_from_color! { Yxy ->
+}
+try_from_color! { Gray ->
+    l: 0.0 to 1.0;
+}
 
 /// Checks that the value is in the specified range. If it isn't, an error is
 /// returned.

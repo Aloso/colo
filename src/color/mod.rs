@@ -32,6 +32,7 @@ pub enum Color {
     HunterLab(HunterLab),
     Xyz(Xyz),
     Yxy(Yxy),
+    Gray(Gray),
 }
 
 impl Color {
@@ -54,6 +55,7 @@ impl Color {
             Color::HunterLab(_) => ColorSpace::HunterLab,
             Color::Xyz(_) => ColorSpace::Xyz,
             Color::Yxy(_) => ColorSpace::Yxy,
+            Color::Gray(_) => ColorSpace::Gray,
         }
     }
 
@@ -76,6 +78,7 @@ impl Color {
             Color::HunterLab(color) => (ColorSpace::HunterLab, vec![color.l, color.a, color.b]),
             Color::Xyz(color) => (ColorSpace::Xyz, vec![color.x, color.y, color.z]),
             Color::Yxy(color) => (ColorSpace::Yxy, vec![color.y1, color.x, color.y2]),
+            Color::Gray(color) => (ColorSpace::Gray, vec![color.l]),
         }
     }
 
@@ -117,6 +120,7 @@ impl Color {
             ColorSpace::HunterLab => Color::HunterLab(HunterLab::from_rgb(&rgb)),
             ColorSpace::Xyz => Color::Xyz(Xyz::from_rgb(&rgb)),
             ColorSpace::Yxy => Color::Yxy(Yxy::from_rgb(&rgb)),
+            ColorSpace::Gray => Color::Gray(Gray::from_rgb(&rgb)),
         }
     }
 
@@ -210,6 +214,7 @@ impl ToRgb for Color {
             Color::HunterLab(color) => color.to_rgb(),
             Color::Xyz(color) => color.to_rgb(),
             Color::Yxy(color) => color.to_rgb(),
+            Color::Gray(color) => color.to_rgb(),
         }
     }
 }

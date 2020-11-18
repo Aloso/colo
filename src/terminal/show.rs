@@ -34,7 +34,12 @@ fn show_color(
     output: ColorFormat,
     square_size: u32,
 ) -> Result<()> {
+    let color = match output {
+        ColorFormat::Normal(s) => color.to_color_space(s),
+        ColorFormat::Hex | ColorFormat::Html => color,
+    };
     let rgb = color.to_rgb();
+
     let term_color = colored::Color::TrueColor {
         r: rgb.r.round() as u8,
         g: rgb.g.round() as u8,

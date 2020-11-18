@@ -47,6 +47,7 @@ const COLOR_FORMATS: &[&str] = &[
     "yxy",
     "html",
     "hex",
+    "gry",
 ];
 
 /// A clap (sub)command.

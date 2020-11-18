@@ -1,6 +1,31 @@
 use std::{fmt, str::FromStr};
 
 pub use color_space::{Cmy, Cmyk, Hsl, Hsv, HunterLab, Lab, Lch, Luv, Rgb, Xyz, Yxy};
+use color_space::{FromRgb, ToRgb};
+
+#[derive(Debug, Copy, Clone, PartialEq)]
+pub struct Gray {
+    pub l: f64,
+}
+
+impl Gray {
+    pub fn new(l: f64) -> Self {
+        Self { l }
+    }
+}
+
+impl ToRgb for Gray {
+    fn to_rgb(&self) -> Rgb {
+        Hsl::new(0.0, 0.0, self.l).into()
+    }
+}
+
+impl FromRgb for Gray {
+    fn from_rgb(rgb: &Rgb) -> Self {
+        let hsl = Hsl::from_rgb(rgb);
+        Self { l: hsl.l }
+    }
+}
 
 /// A C-like enum listing all supported color spaces
 #[derive(Debug, Copy, Clone, Eq, PartialEq)]
@@ -16,6 +41,7 @@ pub enum ColorSpace {
     HunterLab,
     Xyz,
     Yxy,
+    Gray,
 }
 
 impl ColorSpace {
@@ -23,6 +49,7 @@ impl ColorSpace {
     pub fn num_components(&self) -> usize {
         match self {
             ColorSpace::Cmyk => 4,
+            ColorSpace::Gray => 1,
             _ => 3,
         }
     }
@@ -42,6 +69,7 @@ impl fmt::Display for ColorSpace {
             ColorSpace::HunterLab => "hunterlab",
             ColorSpace::Xyz => "xyz",
             ColorSpace::Yxy => "yxy",
+            ColorSpace::Gray => "gry",
         })
     }
 }
@@ -73,6 +101,7 @@ impl FromStr for ColorSpace {
             "hunterlab" => ColorSpace::HunterLab,
             "xyz" => ColorSpace::Xyz,
             "yxy" => ColorSpace::Yxy,
+            "gry" => ColorSpace::Gray,
             _ => return Err(ColorSpaceParseError),
         })
     }
