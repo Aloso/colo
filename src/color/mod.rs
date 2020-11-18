@@ -1,17 +1,18 @@
-use crate::color::contrast::contrast;
+use self::contrast::relative_luminance;
 use color_space::{FromRgb, ToRgb};
 use std::fmt;
 
 use space::*;
 
-pub use format::ColorFormat;
-pub use parse::{parse, ParseError};
-pub use space::ColorSpace;
+pub(crate) use self::contrast::contrast;
+pub(crate) use format::ColorFormat;
+pub(crate) use parse::{parse, ParseError};
+pub(crate) use space::ColorSpace;
 
+mod contrast;
 mod convert;
 mod parse;
 
-pub mod contrast;
 pub mod format;
 pub mod hex;
 pub mod html;
@@ -54,6 +55,11 @@ impl Color {
             Color::Xyz(_) => ColorSpace::Xyz,
             Color::Yxy(_) => ColorSpace::Yxy,
         }
+    }
+
+    /// Return the color format of this color
+    pub fn get_color_format(&self) -> ColorFormat {
+        ColorFormat::Normal(self.get_color_space())
     }
 
     /// Return the color space and the color components separately.
@@ -123,16 +129,24 @@ impl Color {
         }
     }
 
+    /// Returns whether black or white is better readable
+    /// (i.e. has the bigger contrast) on this background color.
     pub fn text_color(&self) -> TextColor {
-        let rgb = self.to_rgb();
-        let wc = contrast(rgb, Rgb::new(0.0, 0.0, 0.0));
-        let bc = contrast(rgb, Rgb::new(255.0, 255.0, 255.0));
+        let lum = self.relative_luminance();
+        let white_contrast = contrast(lum, 1.0);
+        let black_contrast = contrast(lum, 0.0);
 
-        if wc >= bc {
+        if white_contrast >= black_contrast {
             TextColor::Black
         } else {
             TextColor::White
         }
+    }
+
+    /// The relative brightness of any point in a colorspace,
+    /// normalized to 0 for darkest black and 1 for lightest white
+    pub fn relative_luminance(&self) -> f64 {
+        relative_luminance(self.to_rgb())
     }
 
     pub fn random_rgb() -> Self {
@@ -142,6 +156,14 @@ impl Color {
             fastrand::u8(..) as f64,
         );
         Color::Rgb(rgb)
+    }
+
+    pub fn black() -> Self {
+        Color::Rgb(Rgb::new(0.0, 0.0, 0.0))
+    }
+
+    pub fn white() -> Self {
+        Color::Rgb(Rgb::new(255.0, 255.0, 255.0))
     }
 
     fn clamp_rgb(rgb: Rgb) -> Rgb {

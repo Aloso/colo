@@ -1,16 +1,24 @@
+//! Calculate text contrast and relative luminance of colors.
+//!
+//! - https://www.w3.org/TR/2008/REC-WCAG20-20081211/#contrast-ratiodef
+//! - https://www.w3.org/TR/2008/REC-WCAG20-20081211/#relativeluminancedef
+//!
+
 use super::space::Rgb;
 
-/// https://www.w3.org/TR/2008/REC-WCAG20-20081211/#contrast-ratiodef
-pub fn contrast(c1: Rgb, c2: Rgb) -> f64 {
-    let (l1, l2) = (relative_luminance(c1), relative_luminance(c2));
-    let (l1, l2) = (f64::max(l1, l2), f64::min(l1, l2));
+/// Visible contrast between two colors, which is
+/// a value between 1 (no contrast) and 21 (high contrast).
+pub(crate) fn contrast(l1: f64, l2: f64) -> f64 {
+    let higher = f64::max(l1, l2);
+    let lower = f64::min(l1, l2);
 
-    (l1 + 0.05) / (l2 + 0.05)
+    (higher + 0.05) / (lower + 0.05)
 }
 
-/// https://www.w3.org/TR/2008/REC-WCAG20-20081211/#relativeluminancedef
+/// The relative brightness of any point in a colorspace,
+/// normalized to 0 for darkest black and 1 for lightest white
 #[allow(non_snake_case)]
-pub fn relative_luminance(color: Rgb) -> f64 {
+pub(crate) fn relative_luminance(color: Rgb) -> f64 {
     let r = clamp_rgb(color.r) / 255.0;
     let g = clamp_rgb(color.g) / 255.0;
     let b = clamp_rgb(color.b) / 255.0;

@@ -1,10 +1,11 @@
 use anyhow::{bail, Result};
 use clap::{App, Arg, ArgMatches, SubCommand};
 
-use super::{show::Show, util};
+use super::{show::Show, util, Cmd};
 use crate::{
     color::{Color, ColorFormat, ColorSpace},
-    picker::ColorPicker,
+    terminal::ColorPicker,
+    State,
 };
 
 const COLOR_HELP_MESSAGE: &str = "\
@@ -16,63 +17,76 @@ The initial color of the color picker. Supported formats:
   Commas and parentheses are optional.
   For supported color spaces, see <https://aloso.github.io/colo/color_spaces>";
 
-pub fn command<'a, 'b>() -> App<'a, 'b> {
-    SubCommand::with_name("pick")
-        .about("Terminal color picker")
-        .args(&[
-            Arg::with_name("output-format")
-                .long("out")
-                .short("o")
-                .takes_value(true)
-                .possible_values(super::COLOR_FORMATS)
-                .case_insensitive(true)
-                .help("Output format (html, hex, or color space)"),
-            Arg::with_name("size")
-                .long("size")
-                .short("s")
-                .takes_value(true)
-                .default_value("4")
-                .help("Size of the color square in terminal rows"),
-            Arg::with_name("color-space")
-                .index(1)
-                .takes_value(true)
-                .possible_values(&["rgb", "hsl", "hsv", "cmy"])
-                .case_insensitive(true)
-                .help("Initial color space of the color picker"),
-            Arg::with_name("color")
-                .long("color")
-                .short("c")
-                .takes_value(true)
-                .multiple(true)
-                .use_delimiter(false)
-                .help(COLOR_HELP_MESSAGE),
-        ])
+/// The `pick` subcommand
+pub struct Pick(pub Show);
+
+impl Cmd for Pick {
+    fn command<'a, 'b>(_state: State) -> App<'a, 'b> {
+        SubCommand::with_name("pick")
+            .about("Terminal color picker")
+            .args(&[
+                Arg::with_name("output-format")
+                    .long("out")
+                    .short("o")
+                    .takes_value(true)
+                    .possible_values(super::COLOR_FORMATS)
+                    .case_insensitive(true)
+                    .help("Output format (html, hex, or color space)"),
+                Arg::with_name("size")
+                    .long("size")
+                    .short("s")
+                    .takes_value(true)
+                    .default_value("4")
+                    .help("Size of the color square in terminal rows"),
+                Arg::with_name("color-space")
+                    .index(1)
+                    .takes_value(true)
+                    .possible_values(&["rgb", "hsl", "hsv", "cmy"])
+                    .case_insensitive(true)
+                    .help("Initial color space of the color picker"),
+                Arg::with_name("color")
+                    .long("color")
+                    .short("c")
+                    .takes_value(true)
+                    .multiple(true)
+                    .use_delimiter(false)
+                    .help(COLOR_HELP_MESSAGE),
+            ])
+    }
+
+    fn parse(matches: &ArgMatches, &mut state: &mut State) -> Result<Self> {
+        let size = matches
+            .value_of("size")
+            .map(util::parse_size)
+            .unwrap_or(Ok(4))?;
+        let output = util::get_color_format(&matches, "output-format")?.unwrap_or_default();
+
+        let (color, cs) = get_color_options(matches, state)?;
+        let cs = get_color_space_option(matches).or(cs);
+
+        let color = ColorPicker::new(color, cs).display(state)?;
+
+        let show = Show {
+            colors: vec![(color, color.get_color_format())],
+            output,
+            size,
+        };
+        Ok(Pick(show))
+    }
+
+    fn run(&self, state: State) -> Result<()> {
+        self.0.run(state)
+    }
 }
 
-pub fn get(matches: &ArgMatches<'_>) -> Result<Show> {
-    let size = matches
-        .value_of("size")
-        .map(util::parse_size)
-        .unwrap_or(Ok(4))?;
-    let output = util::get_color_format(&matches, "output-format")?.unwrap_or_default();
-
-    let (color, cs) = get_color_options(matches)?;
-    let cs = get_color_space_option(matches).or(cs);
-
-    let color = ColorPicker::new(color, cs).display()?;
-
-    Ok(Show {
-        colors: vec![(color, ColorFormat::Normal(color.get_color_space()))],
-        output,
-        size,
-    })
-}
-
-fn get_color_options(matches: &ArgMatches<'_>) -> Result<(Option<Color>, Option<ColorSpace>)> {
+fn get_color_options(
+    matches: &ArgMatches<'_>,
+    state: State,
+) -> Result<(Option<Color>, Option<ColorSpace>)> {
     let values = matches
         .values_of("color")
         .map(|values| {
-            let colors = util::values_to_colors(values)?;
+            let colors = util::values_to_colors(values, state)?;
 
             if colors.len() > 1 {
                 bail!("Only one color can be specified, found {}", colors.len());

@@ -2,8 +2,7 @@
 
 use std::convert::TryFrom;
 
-use super::space::*;
-use super::{Color, ColorSpace, ParseError};
+use super::{space::*, Color, ColorSpace, ParseError};
 
 impl TryFrom<(ColorSpace, &[f64])> for Color {
     type Error = ParseError;

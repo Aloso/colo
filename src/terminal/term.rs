@@ -5,9 +5,7 @@ use colored::{
 };
 use std::io::{stdout, Stdout, Write};
 
-use crate::cli::term::Term;
-
-pub fn term(_: Term) -> Result<()> {
+pub fn term_colors() -> Result<()> {
     let mut stdout = stdout();
 
     let colors = &[

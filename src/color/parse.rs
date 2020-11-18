@@ -1,10 +1,13 @@
+use anyhow::anyhow;
 use std::{cmp::Ordering, num::ParseFloatError};
 use thiserror::Error;
 
-use super::{
-    hex::{self, ParseHexError},
-    html, Color, ColorFormat, ColorSpace,
+use super::{hex, html, Color, ColorFormat, ColorSpace};
+use crate::{
+    terminal::{stdin, ColorPicker},
+    State,
 };
+
 use ParseError::*;
 
 /// Error caused by parsing a number in a certain color space.
@@ -13,7 +16,7 @@ use ParseError::*;
 /// was supplied (e.g. `rgb` with only 2 components), or if a
 /// color component is out of range (for example, `rgb` requires
 /// that all components are in 0..=255).
-#[derive(Debug, Clone, PartialEq, Error)]
+#[derive(Debug, Error)]
 #[non_exhaustive]
 pub enum ParseError {
     #[error("Wrong number of color components (expected {expected}, got {got})")]
@@ -43,18 +46,21 @@ pub enum ParseError {
     #[error("Expected hex color or HTML color, got {string:?}")]
     ExpectedWord { string: String },
     #[error(transparent)]
-    ParseHexError(#[from] ParseHexError),
+    ParseHexError(#[from] hex::ParseHexError),
 
     #[error("Unknown color {got:?}, did you mean {suggestion:?}?")]
     Misspelled { got: String, suggestion: String },
 
     #[error("This value in the {cs:?} color space can't be randomly generated")]
     UnsupportedRand { cs: ColorSpace },
+
+    #[error(transparent)]
+    Other(#[from] anyhow::Error),
 }
 
 /// Parses a string that can contain an arbitrary number of colors in different
 /// formats
-pub fn parse(mut input: &str) -> Result<Vec<(Color, ColorFormat)>, ParseError> {
+pub fn parse(mut input: &str, state: State) -> Result<Vec<(Color, ColorFormat)>, ParseError> {
     let mut output = Vec::new();
     loop {
         let input_i = input.trim_start();
@@ -91,12 +97,24 @@ pub fn parse(mut input: &str) -> Result<Vec<(Color, ColorFormat)>, ParseError> {
             let color: Color = Color::new(cs, nums).map_err(|err| err)?;
             output.push((color, ColorFormat::Normal(cs)));
             input_i = input_i.trim_start();
+        } else if input_i.starts_with("- ") || input_i.starts_with("-,") {
+            input_i = input_i[2..].trim_start();
+
+            let new_values = stdin::read_line(state)?;
+            let colors = parse(&new_values, state)?;
+            if colors.len() != 1 {
+                return Err(anyhow!("Expected 1 color, got {}", colors.len()).into());
+            }
+            output.push(colors[0]);
         } else {
             let (word, input_ii) = take_word(input_i).ok_or_else(|| ParseError::ExpectedWord {
                 string: input_i.into(),
             })?;
 
-            let color = if word == "rand" {
+            let color = if word == "pick" {
+                let color = ColorPicker::new(None, None).display(state)?;
+                (color, color.get_color_format())
+            } else if word == "rand" {
                 (Color::random_rgb(), ColorFormat::Hex)
             } else if let Some(color) = html::get(word) {
                 (Color::Rgb(color), ColorFormat::Html)

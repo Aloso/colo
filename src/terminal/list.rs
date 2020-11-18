@@ -1,11 +1,11 @@
 use anyhow::Result;
-use color_space::Rgb;
 use colored::{Color::TrueColor, Colorize};
 use std::io::{stdout, Write};
 
-use crate::color::{html::HTML_COLOR_NAMES, Color};
-use crate::State;
-use crate::{cli::list::List, color::TextColor};
+use crate::{
+    color::{html::HTML_COLOR_NAMES, space::Rgb, Color, TextColor},
+    State,
+};
 
 const WHITE: colored::Color = TrueColor {
     r: 255,
@@ -14,7 +14,7 @@ const WHITE: colored::Color = TrueColor {
 };
 const BLACK: colored::Color = TrueColor { r: 0, g: 0, b: 0 };
 
-pub fn list(_: List, state: State) -> Result<()> {
+pub fn list(state: State) -> Result<()> {
     let mut stdout = stdout();
 
     let mut even = false;

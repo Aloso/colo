@@ -1,8 +1,11 @@
 use anyhow::{Context, Error, Result};
 use clap::ArgMatches;
-use std::{io::Read, iter};
+use std::iter;
 
-use crate::color::{self, Color, ColorFormat, ParseError};
+use crate::{
+    color::{self, Color, ColorFormat, ParseError},
+    State,
+};
 
 pub(super) fn get_color_format(
     matches: &ArgMatches,
@@ -20,21 +23,12 @@ pub(super) fn get_color_format(
 
 pub(super) fn values_to_colors<'a>(
     values: impl Iterator<Item = &'a str>,
+    state: State,
 ) -> Result<Vec<(Color, ColorFormat)>, ParseError> {
     let color_input: String = values
         .flat_map(|s| iter::once(s).chain(iter::once(" ")))
         .collect();
-    color::parse(&color_input)
-}
-
-pub(super) fn read_stdin() -> Result<String> {
-    let mut text = Vec::new();
-    std::io::stdin().read_to_end(&mut text)?;
-    let mut text = String::from_utf8(text)?;
-    if text.ends_with('\n') {
-        text.truncate(text.len() - 1);
-    }
-    Ok(text)
+    color::parse(&color_input, state)
 }
 
 /// Parse a u32

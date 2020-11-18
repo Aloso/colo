@@ -4,24 +4,24 @@ use colored::{ColoredString, Colorize};
 use std::io::{stdout, Stdout, Write};
 use std::iter;
 
-use crate::color::{format, Color, ColorFormat};
-use crate::{cli::show::Show, State};
+use crate::{
+    color::{format, Color, ColorFormat},
+    State,
+};
 
-pub fn show(
-    Show {
-        colors,
-        output,
-        size,
-    }: Show,
+pub fn show_colors(
     state: State,
+    colors: impl IntoIterator<Item = Color>,
+    output: ColorFormat,
+    square_size: u32,
 ) -> Result<()> {
     let mut stdout = stdout();
 
-    if state.color && size > 0 {
+    if state.color && square_size > 0 {
         writeln!(stdout)?;
     }
-    for (color, input) in colors {
-        show_color(state, &mut stdout, color, input, output, size)?;
+    for color in colors {
+        show_color(state, &mut stdout, color, output, square_size)?;
     }
     Ok(())
 }
@@ -31,9 +31,8 @@ fn show_color(
     state: State,
     stdout: &mut Stdout,
     color: Color,
-    _input: ColorFormat,
     output: ColorFormat,
-    size: u32,
+    square_size: u32,
 ) -> Result<()> {
     let rgb = color.to_rgb();
     let term_color = colored::Color::TrueColor {
@@ -49,10 +48,10 @@ fn show_color(
             .with_context(|| format!("Color could not be formatted as {:?}", output))?;
 
         writeln!(stdout, "{}", color)?;
-    } else if size >= 1 {
+    } else if square_size >= 1 {
         let formats = format::PREFERRED_FORMATS
             .iter()
-            .take(size as usize)
+            .take(square_size as usize)
             .map(|&c| {
                 c.iter().copied().flat_map(|c| {
                     Some((
@@ -68,8 +67,8 @@ fn show_color(
             .map(Some)
             .chain(iter::once(None).cycle());
 
-        print_color(stdout, term_color, &make_square(size), formats, true)?;
-        if size > 0 {
+        print_color(stdout, term_color, &make_square(square_size), formats, true)?;
+        if square_size > 0 {
             writeln!(stdout)?;
         }
     } else {
@@ -99,7 +98,7 @@ fn show_color(
             iter::once(Some(formats)),
             false,
         )?;
-        if size > 0 {
+        if square_size > 0 {
             writeln!(stdout)?;
         }
     }
