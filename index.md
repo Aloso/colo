@@ -5,7 +5,7 @@ title: colo – Simple color management in the terminal
 
 ## Simple color management in the terminal
 
-Run `colo s <COLOR>` to view a color. Colo supports HTML color names, hex colors and 11 different color spaces.
+Run `colo s <COLOR>` to view a color. Colo supports HTML color names, hex colors and 12 different color spaces.
 
 <pre class="h-terminal">
 <span class="h-shell">&gt; </span><span class="h-cmd">colo</span> <span class="h-hl">s</span> <span class="h-arg">ff3377</span>
@@ -32,7 +32,7 @@ Run `colo s <COLOR>` to view a color. Colo supports HTML color names, hex colors
 <span class="h-shell">&gt; </span><span class="h-caret"> </span>
 </pre>
 
-## 11 supported color spaces
+## 12 supported color spaces
 
 Colo supports widely used color spaces, that should cover the needs for professional developers and designers. [More information](color_spaces.md).
 
@@ -60,16 +60,6 @@ hsl(16, 100%, 50%)
 <span class="h-shell">&gt; </span><span class="h-caret"> </span>
 </pre>
 
-## Flexible input
-
-Hex colors can be entered in the formats `RGB`, `RRGGBB`, `RRRGGGBBB`, etc. Colors in different color spaces are entered in the format `color_space(value1, value2, value3)`, for example `hsl(30, 100%, 60%)`. The parentheses and commas are optional, so the following commands are equivalent:
-
-<pre class="h-terminal">
-<span class="h-shell">&gt; </span><span class="h-cmd">colo</span> <span class="h-hl">s</span> <span class='h-str'>&#39;cmy(100%, 50%, 66.7%)&#39;</span>
-<span class="h-shell">&gt; </span><span class="h-cmd">colo</span> <span class="h-hl">s</span> <span class="h-arg">cmy</span> <span class="h-arg">100%</span> <span class="h-arg">50%</span> <span class="h-arg">66.7%</span>
-<span class="h-shell">&gt; </span><span class="h-cmd">colo</span> <span class="h-hl">s</span> <span class="h-arg">cmy</span> <span class="h-arg">1</span> <span class="h-arg">50%</span> <span class="h-arg">66.7%</span>
-</pre>
-
 ## Print colored text
 
 `colo print <TEXT> <COLORS>...` prints text with certain colors applied. There are also flags to make the text bold (`-b`), italic (`-i`) or underlined (`-u`), and a flag to continue printing in the same line (`-n`):
@@ -95,6 +85,32 @@ Check the contrast between two colors, and find out if white or black text is be
 <span class="h-shell">&gt; </span><span class="h-caret"> </span>
 </pre>
 
+## Flexible input
+
+Hex colors can be entered in the formats `RGB`, `RRGGBB`, `RRRGGGBBB`, etc. Colors in different color spaces are entered in the format `color_space(value1, value2, value3)`, for example `hsl(30, 100%, 60%)`. The parentheses and commas are optional, so the following commands are equivalent:
+
+<pre class="h-terminal">
+<span class="h-shell">&gt; </span><span class="h-cmd">colo</span> <span class="h-hl">s</span> <span class='h-str'>&#39;cmy(100%, 50%, 66.7%)&#39;</span>
+<span class="h-shell">&gt; </span><span class="h-cmd">colo</span> <span class="h-hl">s</span> <span class="h-arg">cmy</span> <span class="h-arg">100%</span> <span class="h-arg">50%</span> <span class="h-arg">66.7%</span>
+<span class="h-shell">&gt; </span><span class="h-cmd">colo</span> <span class="h-hl">s</span> <span class="h-arg">cmy</span> <span class="h-arg">1</span> <span class="h-arg">50%</span> <span class="h-arg">66.7%</span>
+</pre>
+
+Random values can be used anywhere where colors or numbers can be used. For example:
+
+<pre class="h-terminal">
+<span class="h-shell">&gt; </span><span class="h-cmd">colo</span> <span class="h-hl">contrast</span> <span class="h-arg">rand</span> <span class="h-arg">rand</span>
+ <span style='color:#14389f'>████</span><span style='color:#7388c9'>████</span>  <span style='color:#a00'>2.90</span>
+ <span style='color:#14389f'>████</span><span style='color:#7388c9'>████</span>  <span style='opacity:0.67'>(relative luminance: 0.055 / 0.255)</span>
+<span class="h-shell">&gt; </span><span class="h-cmd">colo</span> <span class="h-hl">s</span> <span class='h-str'>&#39;hsl(rand, 100%, 50%)&#39;</span>
+
+<span style='color:#ff0090'> ████████</span>  <span style='opacity:0.67'>#ff0090</span>                    <span style='opacity:0.67'>rgb(255, 0, 144.5)       </span>
+<span style='color:#ff0090'> ████████</span>  <b>hsl(326, 100%, 50%)      </b>  <span style='opacity:0.67'>hsv(326, 100%, 100%)     </span>
+<span style='color:#ff0090'> ████████</span>  <span style='opacity:0.67'>cmy(0%, 100%, 43.3%)     </span>  <span style='opacity:0.67'>cmyk(0%, 100%, 43.3%, 0%)</span>
+<span style='color:#ff0090'> ████████</span>  <span style='opacity:0.67'>lch(55.4, 86, 356.6)     </span>  <span style='opacity:0.67'>luv(55.4, 134.5, -23.8)  </span>
+
+<span class="h-shell">&gt; </span><span class="h-caret"> </span>
+</pre>
+
 ## Show terminal colors
 
 Display the default colors of your terminal.
@@ -111,24 +127,6 @@ The appearance of these colors depends on your terminal.
    <span style='background:#5ff'><span style='color:#000'>  BrightCyan     </span></span><span style='background:#0aa'><span style='color:#fff'>  Cyan     </span></span>  <span style='color:#5ff'>  BrightCyan</span>    <span style='color:#0aa'>  Cyan</span>
    <span style='background:#55f'><span style='color:#000'>  BrightBlue     </span></span><span style='background:#00a'><span style='color:#fff'>  Blue     </span></span>  <span style='color:#55f'>  BrightBlue</span>    <span style='color:#00a'>  Blue</span>
    <span style='background:#f5f'><span style='color:#000'>  BrightMagenta  </span></span><span style='background:#a0a'><span style='color:#fff'>  Magenta  </span></span>  <span style='color:#f5f'>  BrightMagenta</span> <span style='color:#a0a'>  Magenta</span>
-
-<span class="h-shell">&gt; </span><span class="h-caret"> </span>
-</pre>
-
-## Random values
-
-Random values can be used anywhere where colors can be used. For example:
-
-<pre class="h-terminal">
-<span class="h-shell">&gt; </span><span class="h-cmd">colo</span> <span class="h-hl">contrast</span> <span class="h-arg">rand</span> <span class="h-arg">rand</span>
- <span style='color:#14389f'>████</span><span style='color:#7388c9'>████</span>  <span style='color:#a00'>2.90</span>
- <span style='color:#14389f'>████</span><span style='color:#7388c9'>████</span>  <span style='opacity:0.67'>(relative luminance: 0.055 / 0.255)</span>
-<span class="h-shell">&gt; </span><span class="h-cmd">colo</span> <span class="h-hl">s</span> <span class='h-str'>&#39;hsl(rand, 100%, 50%)&#39;</span>
-
-<span style='color:#ff0090'> ████████</span>  <span style='opacity:0.67'>#ff0090</span>                    <span style='opacity:0.67'>rgb(255, 0, 144.5)       </span>
-<span style='color:#ff0090'> ████████</span>  <b>hsl(326, 100%, 50%)      </b>  <span style='opacity:0.67'>hsv(326, 100%, 100%)     </span>
-<span style='color:#ff0090'> ████████</span>  <span style='opacity:0.67'>cmy(0%, 100%, 43.3%)     </span>  <span style='opacity:0.67'>cmyk(0%, 100%, 43.3%, 0%)</span>
-<span style='color:#ff0090'> ████████</span>  <span style='opacity:0.67'>lch(55.4, 86, 356.6)     </span>  <span style='opacity:0.67'>luv(55.4, 134.5, -23.8)  </span>
 
 <span class="h-shell">&gt; </span><span class="h-caret"> </span>
 </pre>
@@ -154,3 +152,7 @@ Pick a color by entering `colo pick`, and then setting the desired values with t
  <span style="background-color:#FF0000">        </span>  <b>L</b>  50%    <font color="#000000">▕</font><span style="background-color:#050000"><font color="#000000">▌</font></span><span style="background-color:#100000"><font color="#0B0000">▌</font></span><span style="background-color:#1B0000"><font color="#150000">▌</font></span><span style="background-color:#250000"><font color="#200000">▌</font></span><span style="background-color:#300000"><font color="#2B0000">▌</font></span><span style="background-color:#3A0000"><font color="#350000">▌</font></span><span style="background-color:#450000"><font color="#400000">▌</font></span><span style="background-color:#500000"><font color="#4A0000">▌</font></span><span style="background-color:#5A0000"><font color="#550000">▌</font></span><span style="background-color:#650000"><font color="#600000">▌</font></span><span style="background-color:#700000"><font color="#6A0000">▌</font></span><span style="background-color:#7A0000"><font color="#750000">▌</font></span><span style="background-color:#850000"><font color="#800000">▌</font></span><span style="background-color:#8F0000"><font color="#8A0000">▌</font></span><span style="background-color:#9A0000"><font color="#950000">▌</font></span><span style="background-color:#A50000"><font color="#9F0000">▌</font></span><span style="background-color:#AF0000"><font color="#AA0000">▌</font></span><span style="background-color:#BA0000"><font color="#B50000">▌</font></span><span style="background-color:#C50000"><font color="#BF0000">▌</font></span><span style="background-color:#CF0000"><font color="#CA0000">▌</font></span><span style="background-color:#DA0000"><font color="#D50000">▌</font></span><span style="background-color:#E40000"><font color="#DF0000">▌</font></span><span style="background-color:#EF0000"><font color="#EA0000">▌</font></span><span style="background-color:#FA0000"><font color="#F40000">▌</font></span><span style="background-color:#FF0505"><font color="#171421">▌</font></span><span style="background-color:#FF1010"><font color="#FF0B0B">▌</font></span><span style="background-color:#FF1B1B"><font color="#FF1515">▌</font></span><span style="background-color:#FF2525"><font color="#FF2020">▌</font></span><span style="background-color:#FF3030"><font color="#FF2B2B">▌</font></span><span style="background-color:#FF3A3A"><font color="#FF3535">▌</font></span><span style="background-color:#FF4545"><font color="#FF4040">▌</font></span><span style="background-color:#FF5050"><font color="#FF4A4A">▌</font></span><span style="background-color:#FF5A5A"><font color="#FF5555">▌</font></span><span style="background-color:#FF6565"><font color="#FF6060">▌</font></span><span style="background-color:#FF7070"><font color="#FF6A6A">▌</font></span><span style="background-color:#FF7A7A"><font color="#FF7575">▌</font></span><span style="background-color:#FF8585"><font color="#FF8080">▌</font></span><span style="background-color:#FF8F8F"><font color="#FF8A8A">▌</font></span><span style="background-color:#FF9A9A"><font color="#FF9595">▌</font></span><span style="background-color:#FFA5A5"><font color="#FF9F9F">▌</font></span><span style="background-color:#FFAFAF"><font color="#FFAAAA">▌</font></span><span style="background-color:#FFBABA"><font color="#FFB5B5">▌</font></span><span style="background-color:#FFC5C5"><font color="#FFBFBF">▌</font></span><span style="background-color:#FFCFCF"><font color="#FFCACA">▌</font></span><span style="background-color:#FFDADA"><font color="#FFD5D5">▌</font></span><span style="background-color:#FFE4E4"><font color="#FFDFDF">▌</font></span><span style="background-color:#FFEFEF"><font color="#FFEAEA">▌</font></span><span style="background-color:#FFFAFA"><font color="#FFF4F4">▌</font></span><font color="#FFFFFF">▏</font>
 
 </pre>
+
+### New input keywords
+
+Colo now accepts `-` to read a color from stdin, or `pick` to select a color with the color picker.

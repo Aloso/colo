@@ -8,7 +8,7 @@ Color spaces are reproducible representations of color. Most color spaces have t
 
 ## Summary
 
-`colo` supports 11 color spaces, which are summarized in this table:
+`colo` supports 12 color spaces, which are summarized in this table:
 
 | Name                    | Description                     | Range of values     |
 |-------------------------|---------------------------------|---------------------|
@@ -23,6 +23,7 @@ Color spaces are reproducible representations of color. Most color spaces have t
 | [`hunterlab`](#hunter-lab-hunterlab) | Hunter Lab (lightness, a, b) | lightness: 0 to 100 |
 | [`xyz`](#cie-xyz-xyz)   | CIE XYZ (x, lightness, z)       | lightness: 0 to 100 |
 | [`yxy`](#cie-yxy-yxy)   | CIE Yxy (lightness, x, y)       | lightness: 0 to 100 |
+| [`gry`](#grayscale-gry) | Grayscale (light)               | light: 0 to 1       |
 
 ## sRGB (`rgb`)
 
@@ -151,3 +152,7 @@ In CIE Yxy, Y is the luminance and x and y represents the chromaticity values de
 The small x and y values are used to draw the chromacity diagram of the CIE XYZ color space. It is just another way to represent CIE XYZ.
 
 [Source](https://wolfcrow.com/what-is-the-difference-between-cie-lab-cie-rgb-cie-xyy-and-cie-xyz/)
+
+## Grayscale (`gry`)
+
+This color space only includes colors between white and black with no saturation. Its only component is _light_, which corresponds to the last HSL component. Converting a color to grayscale is not reversible, since hue and saturation are discarded.

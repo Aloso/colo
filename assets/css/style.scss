@@ -89,7 +89,7 @@ body {
             text-align: center;
 
             &:hover {
-                background: rgba(255, 255, 255, 0.2);
+                background: linear-gradient(rgba(white, 0.1), rgba(white, 0.2));
             }
         }
     }
