@@ -1,8 +1,12 @@
-use anyhow::Result;
-use color_space::{Cmy, Hsl, Hsv, Rgb, ToRgb};
+use anyhow::{bail, Result};
+use color_space::ToRgb;
 use console::{Key, Term};
 
-use crate::color::{Color, ColorSpace};
+use crate::{
+    color::space::{Cmy, Hsl, Hsv, Rgb},
+    color::{Color, ColorSpace},
+    State,
+};
 use three_lines::{InputLine, ThreeLines};
 
 mod three_lines;
@@ -27,6 +31,7 @@ impl ColorPicker {
                 ColorSpace::HunterLab => 0,
                 ColorSpace::Xyz => 0,
                 ColorSpace::Yxy => 0,
+                ColorSpace::Gray => 1,
             },
             None => 1,
         };
@@ -67,7 +72,14 @@ impl ColorPicker {
         self.current_mut().set_color(c);
     }
 
-    pub fn display(&mut self) -> Result<Color> {
+    pub fn display(&mut self, state: State) -> Result<Color> {
+        if !state.color {
+            bail!(
+                "The color picker requires terminal color support \
+                and can't be behind a pipe"
+            );
+        }
+
         let term = Term::stdout();
 
         let mut color = self.current().color();

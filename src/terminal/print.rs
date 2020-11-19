@@ -2,22 +2,17 @@ use anyhow::Result;
 use colored::Colorize;
 use std::io::{stdout, Write};
 
-use crate::cli::print::Print;
+use crate::cli::TextStyle;
 
-pub fn print(
-    Print {
+pub(crate) fn print_text(text: &str, style: TextStyle) -> Result<()> {
+    let TextStyle {
         color: (color, _),
         bg_color,
-        mut text,
         bold,
         italic,
         underline,
         no_newline,
-    }: Print,
-) -> Result<()> {
-    if !no_newline {
-        text.push('\n');
-    }
+    } = style;
 
     let fg = color.to_term_color();
     let bg = bg_color.map(|(c, _)| c.to_term_color());
@@ -38,5 +33,8 @@ pub fn print(
 
     let mut stdout = stdout();
     write!(stdout, "{}", text)?;
+    if !no_newline {
+        writeln!(stdout)?;
+    }
     Ok(())
 }

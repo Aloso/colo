@@ -1,15 +1,23 @@
 use anyhow::Result;
 use clap::{App, ArgMatches, SubCommand};
 
-/// Returns the `term` subcommand
-pub fn command<'a, 'b>() -> App<'a, 'b> {
-    SubCommand::with_name("term").about("Display the most common terminal colors")
-}
+use crate::terminal;
 
-/// Represents the input of the `term` subcommand
+use super::Cmd;
+
+/// The `term` subcommand
 pub struct Term;
 
-/// Return the input for the `term` subcommand
-pub fn get(_matches: &ArgMatches) -> Result<Term> {
-    Ok(Term)
+impl Cmd for Term {
+    fn command<'a, 'b>(_state: crate::State) -> App<'a, 'b> {
+        SubCommand::with_name("term").about("Display the most common terminal colors")
+    }
+
+    fn parse(_matches: &ArgMatches, _state: &mut crate::State) -> Result<Self> {
+        Ok(Term)
+    }
+
+    fn run(&self, _state: crate::State) -> Result<()> {
+        terminal::term_colors()
+    }
 }

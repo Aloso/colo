@@ -1,10 +1,7 @@
 use anyhow::Result;
 use colored::Colorize;
 use console::{Key, Term};
-use std::{
-    fmt,
-    io::{self, Write},
-};
+use std::{fmt, io, io::Write};
 
 use crate::color::{Color, TextColor};
 

@@ -1,36 +1,19 @@
-use std::{error::Error, fmt};
-
 use crate::color::space;
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, thiserror::Error)]
+#[non_exhaustive]
 pub enum ParseHexError {
+    #[error("{c:?} in the string {string:?} is not hexadecimal")]
     NotHexadecimal { string: String, c: char },
+
+    #[error("No digits found")]
     NoDigits,
+
+    #[error("Too many digits found in {string:?} (max: {max}, got: {got})")]
     TooManyDigits { string: String, got: u32, max: u32 },
+
+    #[error("{string:?} is not a hex color: number of digits ({got}) not a multiple of 3")]
     DigitsNotDivisibleBy3 { string: String, got: u32 },
-}
-
-impl Error for ParseHexError {}
-
-impl fmt::Display for ParseHexError {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        match self {
-            ParseHexError::NotHexadecimal { string, c } => {
-                write!(f, "{:?} in the string {:?} is not hexadecimal", c, string)
-            }
-            ParseHexError::NoDigits => write!(f, "No digits found"),
-            ParseHexError::TooManyDigits { string, got, max } => write!(
-                f,
-                "Too many digits found in {:?} (max: {}, got: {})",
-                string, max, got
-            ),
-            ParseHexError::DigitsNotDivisibleBy3 { string, got } => write!(
-                f,
-                "Number of digits ({}) in {:?} not divisible by 3",
-                got, string
-            ),
-        }
-    }
 }
 
 /// Parses a hex color (e.g. `#FF7700`).
@@ -100,7 +83,7 @@ fn scale_down(r: f64, g: f64, b: f64, len: usize) -> space::Rgb {
         6 => 0xFFFFFF,
         7 => 0xFFFFFFF,
         8 => 0xFFFFFFFFu32,
-        _ => unreachable!("The number has more than 8 hex digits"),
+        _ => panic!("The number has more than 8 hex digits"),
     } as f64;
     let factor = up / 255.0;
     space::Rgb::new(r / factor, g / factor, b / factor)

@@ -72,6 +72,7 @@ impl ColorFormat {
                     ColorSpace::HunterLab => format!("hunterlab({}, {}, {})", r(a), r(b), r(c)),
                     ColorSpace::Xyz => format!("xyz({}, {}, {})", r(a), r(b), r(c)),
                     ColorSpace::Yxy => format!("yxy({}, {}, {})", r(a), r(b), r(c)),
+                    ColorSpace::Gray => format!("gry({}%)", p(a)),
                 }
             }
             ColorFormat::Hex => format!("#{:06x}", hex::rgb_to_u32(color.to_rgb())),

@@ -1,15 +1,24 @@
 use anyhow::Result;
 use clap::{App, ArgMatches, SubCommand};
 
-/// Returns the `libs` subcommand
-pub fn command<'a, 'b>() -> App<'a, 'b> {
-    SubCommand::with_name("libs").about("Displays the dependency tree")
-}
+use super::{Cmd, APP_NAME, APP_VERSION, DEPENDENCIES};
+use crate::State;
 
-/// The struct representing the `libs` subcommand
+/// The `libs` subcommand
 pub struct Libs;
 
-/// Return the input for the `libs` subcommand
-pub fn get(_matches: &ArgMatches) -> Result<Libs> {
-    Ok(Libs)
+impl Cmd for Libs {
+    fn command<'a, 'b>(_state: crate::State) -> App<'a, 'b> {
+        SubCommand::with_name("libs").about("Displays the dependency tree")
+    }
+
+    fn parse(_matches: &ArgMatches, _state: &mut crate::State) -> Result<Self> {
+        Ok(Libs)
+    }
+
+    fn run(&self, _state: State) -> Result<()> {
+        println!("{} v{}\n{}", APP_NAME, APP_VERSION, DEPENDENCIES);
+
+        Ok(())
+    }
 }
