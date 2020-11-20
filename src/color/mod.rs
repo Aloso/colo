@@ -141,9 +141,9 @@ impl Color {
         let black_contrast = contrast(lum, 0.0);
 
         if white_contrast >= black_contrast {
-            TextColor::Black
-        } else {
             TextColor::White
+        } else {
+            TextColor::Black
         }
     }
 

@@ -69,19 +69,19 @@ try_from_color! { Cmyk ->
     k: 0.0 to 1.0;
 }
 try_from_color! { Hsv ->
-    h: 0.0 to 360.0;
+    h: -360.0 to 360.0;
     s: 0.0 to 1.0;
     v: 0.0 to 1.0;
 }
 try_from_color! { Hsl ->
-    h: 0.0 to 360.0;
+    h: -360.0 to 360.0;
     s: 0.0 to 1.0;
     l: 0.0 to 1.0;
 }
 try_from_color! { Lch ->
     l: 0.0 to 100.0;
     c: 0.0 to 100.0;
-    h: 0.0 to 360.0;
+    h: -360.0 to 360.0;
 }
 try_from_color! { Luv ->
     l: 0.0 to 100.0;

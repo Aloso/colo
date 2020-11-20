@@ -6,12 +6,14 @@ use crate::State;
 mod contrast;
 mod libs;
 mod list;
+mod mix;
 mod pick;
 mod print;
 mod show;
 mod term;
 mod textcolor;
 
+pub(crate) use self::mix::Mix;
 pub(crate) use contrast::Contrast;
 pub(crate) use libs::Libs;
 pub(crate) use list::List;
@@ -33,6 +35,22 @@ pub(crate) const APP_VERSION: &str = env!("CARGO_PKG_VERSION");
 pub(crate) const DEPENDENCIES: &str = include_str!(concat!(env!("OUT_DIR"), "/dependencies.txt"));
 
 /// Color spaces, as they can be provided in the command line
+const COLOR_SPACES: &[&str] = &[
+    "rgb",
+    "cmy",
+    "cmyk",
+    "hsv",
+    "hsl",
+    "lch",
+    "luv",
+    "lab",
+    "hunterlab",
+    "xyz",
+    "yxy",
+    "gry",
+];
+
+/// Color formats, as they can be provided in the command line
 const COLOR_FORMATS: &[&str] = &[
     "rgb",
     "cmy",
@@ -105,6 +123,7 @@ impl Cmd for MainCmd {
             .subcommand(Term::command(state))
             .subcommand(Contrast::command(state))
             .subcommand(TextColor::command(state))
+            .subcommand(Mix::command(state))
             .subcommand(List::command(state))
             .subcommand(Libs::command(state))
             .arg(
@@ -144,6 +163,7 @@ impl Cmd for MainCmd {
             ("list", Some(matches)) => Box::new(List::parse(matches, state)?),
             ("contrast", Some(matches)) => Box::new(Contrast::parse(matches, state)?),
             ("textcolor", Some(matches)) => Box::new(TextColor::parse(matches, state)?),
+            ("mix", Some(matches)) => Box::new(Mix::parse(matches, state)?),
             (c, _) => bail!("Unknown subcommand {:?}", c),
         };
 
