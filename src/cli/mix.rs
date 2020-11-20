@@ -1,6 +1,6 @@
-use std::iter;
+use std::{fmt::Write, iter};
 
-use anyhow::{bail, Result};
+use anyhow::{anyhow, bail, Result};
 use clap::{Arg, ArgMatches, SubCommand};
 use color::ColorFormat;
 
@@ -65,7 +65,17 @@ impl Cmd for Mix {
                         For supported color spaces, see \
                         <https://aloso.github.io/colo/color_spaces>",
                     )
-                    .possible_values(super::COLOR_SPACES)
+                    .possible_values(&[
+                        "rgb",
+                        "cmy",
+                        "cmyk",
+                        "lch",
+                        "luv",
+                        "lab",
+                        "hunterlab",
+                        "xyz",
+                        "yxy",
+                    ])
                     .case_insensitive(true)
                     .default_value("lab"),
                 Arg::with_name("size")
@@ -158,7 +168,25 @@ impl Cmd for Mix {
                 (self.color_space, vec![0.0, 0.0, 0.0, 0.0]),
                 |left, (right, w)| add_color(left, right, w / weight_sum),
             )?;
-        let color = Color::new(self.color_space, &components)?;
+        let color = Color::new_unchecked(self.color_space, &components);
+
+        terminal::list_small(state, "Colors", self.colors.iter().map(|&(c, ..)| c))?;
+
+        if state.color {
+            let weights =
+                self.colors
+                    .iter()
+                    .map(|&(_, _, w)| w)
+                    .fold(String::new(), |mut acc, f| {
+                        write!(acc, ", {}", f).unwrap();
+                        acc
+                    });
+            let weights = weights
+                .strip_prefix(", ")
+                .ok_or_else(|| anyhow!("No comma prefix"))?;
+
+            println!("Weights: {}", weights);
+        }
 
         terminal::show_colors(state, iter::once(color), self.output, self.size)
     }

@@ -41,6 +41,10 @@ impl Color {
         std::convert::TryFrom::try_from((color_space, components))
     }
 
+    pub fn new_unchecked(color_space: ColorSpace, components: &[f64]) -> Self {
+        convert::color_from_components_unchecked(color_space, components)
+    }
+
     /// Return the color space, without the color components
     pub fn get_color_space(&self) -> ColorSpace {
         match self {

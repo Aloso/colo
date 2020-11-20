@@ -35,6 +35,34 @@ impl TryFrom<(ColorSpace, &[f64])> for Color {
     }
 }
 
+pub(crate) fn color_from_components_unchecked(space: ColorSpace, vals: &[f64]) -> Color {
+    let required_args = space.num_components();
+
+    if vals.len() != required_args {
+        Err::<(), _>(ParseError::NumberOfComponents {
+            expected: required_args,
+            got: vals.len(),
+        })
+        .unwrap();
+    }
+
+    // Create the color and check if the values are in the valid range
+    match space {
+        ColorSpace::Rgb => Color::Rgb(Rgb::new(vals[0], vals[1], vals[2])),
+        ColorSpace::Cmy => Color::Cmy(Cmy::new(vals[0], vals[1], vals[2])),
+        ColorSpace::Cmyk => Color::Cmyk(Cmyk::new(vals[0], vals[1], vals[2], vals[3])),
+        ColorSpace::Hsv => Color::Hsv(Hsv::new(vals[0], vals[1], vals[2])),
+        ColorSpace::Hsl => Color::Hsl(Hsl::new(vals[0], vals[1], vals[2])),
+        ColorSpace::Lch => Color::Lch(Lch::new(vals[0], vals[1], vals[2])),
+        ColorSpace::Luv => Color::Luv(Luv::new(vals[0], vals[1], vals[2])),
+        ColorSpace::Lab => Color::Lab(Lab::new(vals[0], vals[1], vals[2])),
+        ColorSpace::HunterLab => Color::HunterLab(HunterLab::new(vals[0], vals[1], vals[2])),
+        ColorSpace::Xyz => Color::Xyz(Xyz::new(vals[0], vals[1], vals[2])),
+        ColorSpace::Yxy => Color::Yxy(Yxy::new(vals[0], vals[1], vals[2])),
+        ColorSpace::Gray => Color::Gray(Gray::new(vals[0])),
+    }
+}
+
 /// Implements `TryFrom<$ty>` for `Color`. The conversion fails if any
 /// color component isn't in the valid range.
 macro_rules! try_from_color {

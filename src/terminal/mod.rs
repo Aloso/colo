@@ -52,3 +52,20 @@ pub(crate) fn compare_colors(
 
     Ok(())
 }
+
+pub(crate) fn list_small(
+    state: State,
+    title: &str,
+    colors: impl IntoIterator<Item = Color>,
+) -> Result<()> {
+    if state.color {
+        let mut stdout = io::stdout();
+
+        write!(stdout, "{}: ", title)?;
+        for c in colors {
+            write!(stdout, "{}", "   ".on_color(c.to_term_color()))?;
+        }
+        writeln!(stdout)?;
+    }
+    Ok(())
+}
