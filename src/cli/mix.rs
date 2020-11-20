@@ -62,14 +62,13 @@ impl Cmd for Mix {
                     .short("c")
                     .help(
                         "The color space which the colors are mixed in. \
-                        For supported color spaces, see \
+                        Color spaces are explained here: \
                         <https://aloso.github.io/colo/color_spaces>",
                     )
                     .possible_values(&[
                         "rgb",
                         "cmy",
                         "cmyk",
-                        "lch",
                         "luv",
                         "lab",
                         "hunterlab",

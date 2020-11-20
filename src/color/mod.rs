@@ -11,6 +11,7 @@ pub(crate) use space::ColorSpace;
 
 mod contrast;
 mod convert;
+mod gray;
 mod parse;
 
 pub mod format;
@@ -93,10 +94,10 @@ impl Color {
         if current_space == color_space {
             return *self;
         }
-        let rgb = self.to_rgb();
+        let &color = self;
         match color_space {
-            ColorSpace::Rgb => Color::Rgb(rgb),
-            ColorSpace::Cmy => Color::Cmy(Cmy::from_rgb(&rgb)),
+            ColorSpace::Rgb => Color::Rgb(color.into()),
+            ColorSpace::Cmy => Color::Cmy(color.into()),
             ColorSpace::Cmyk => {
                 /// TODO: Use `Cmyk::from_rgb` from the color_space crate, as
                 /// soon as that function works correctly
@@ -113,18 +114,20 @@ impl Color {
                         ),
                     }
                 }
-
-                Color::Cmyk(cmyk_from_rgb(&rgb))
+                match color {
+                    Color::Rgb(rgb) => Color::Cmyk(cmyk_from_rgb(&rgb)),
+                    _ => Color::Cmyk(color.into()),
+                }
             }
-            ColorSpace::Hsv => Color::Hsv(Hsv::from_rgb(&rgb)),
-            ColorSpace::Hsl => Color::Hsl(Hsl::from_rgb(&rgb)),
-            ColorSpace::Lch => Color::Lch(Lch::from_rgb(&rgb)),
-            ColorSpace::Luv => Color::Luv(Luv::from_rgb(&rgb)),
-            ColorSpace::Lab => Color::Lab(Lab::from_rgb(&rgb)),
-            ColorSpace::HunterLab => Color::HunterLab(HunterLab::from_rgb(&rgb)),
-            ColorSpace::Xyz => Color::Xyz(Xyz::from_rgb(&rgb)),
-            ColorSpace::Yxy => Color::Yxy(Yxy::from_rgb(&rgb)),
-            ColorSpace::Gray => Color::Gray(Gray::from_rgb(&rgb)),
+            ColorSpace::Hsv => Color::Hsv(color.into()),
+            ColorSpace::Hsl => Color::Hsl(color.into()),
+            ColorSpace::Lch => Color::Lch(color.into()),
+            ColorSpace::Luv => Color::Luv(color.into()),
+            ColorSpace::Lab => Color::Lab(color.into()),
+            ColorSpace::HunterLab => Color::HunterLab(color.into()),
+            ColorSpace::Xyz => Color::Xyz(color.into()),
+            ColorSpace::Yxy => Color::Yxy(color.into()),
+            ColorSpace::Gray => Color::Gray(color.into()),
         }
     }
 

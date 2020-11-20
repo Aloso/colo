@@ -148,3 +148,39 @@ fn min_max(component: &'static str, min: f64, max: f64, got: f64) -> Result<(), 
         Ok(())
     }
 }
+
+macro_rules! from_color_for {
+    ($t:ty) => {
+        impl From<Color> for $t {
+            fn from(c: Color) -> Self {
+                match c {
+                    Color::Rgb(c) => c.into(),
+                    Color::Cmy(c) => c.into(),
+                    Color::Cmyk(c) => c.into(),
+                    Color::Hsv(c) => c.into(),
+                    Color::Hsl(c) => c.into(),
+                    Color::Lch(c) => c.into(),
+                    Color::Luv(c) => c.into(),
+                    Color::Lab(c) => c.into(),
+                    Color::HunterLab(c) => c.into(),
+                    Color::Xyz(c) => c.into(),
+                    Color::Yxy(c) => c.into(),
+                    Color::Gray(c) => c.into(),
+                }
+            }
+        }
+    };
+}
+
+from_color_for!(Rgb);
+from_color_for!(Cmy);
+from_color_for!(Cmyk);
+from_color_for!(Hsv);
+from_color_for!(Hsl);
+from_color_for!(Lch);
+from_color_for!(Luv);
+from_color_for!(Lab);
+from_color_for!(HunterLab);
+from_color_for!(Xyz);
+from_color_for!(Yxy);
+from_color_for!(Gray);
