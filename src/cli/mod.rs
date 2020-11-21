@@ -4,6 +4,7 @@ use clap::{App, AppSettings, Arg, ArgMatches};
 use crate::State;
 
 mod contrast;
+mod gradient;
 mod libs;
 mod list;
 mod mix;
@@ -13,10 +14,11 @@ mod show;
 mod term;
 mod textcolor;
 
-pub(crate) use self::mix::Mix;
 pub(crate) use contrast::Contrast;
+pub(crate) use gradient::Gradient;
 pub(crate) use libs::Libs;
 pub(crate) use list::List;
+pub(crate) use mix::Mix;
 pub(crate) use pick::Pick;
 pub(crate) use print::{Print, TextStyle};
 pub(crate) use show::Show;
@@ -108,6 +110,7 @@ impl Cmd for MainCmd {
             .subcommand(Contrast::command(state))
             .subcommand(TextColor::command(state))
             .subcommand(Mix::command(state))
+            .subcommand(Gradient::command(state))
             .subcommand(List::command(state))
             .subcommand(Libs::command(state))
             .arg(
@@ -148,6 +151,7 @@ impl Cmd for MainCmd {
             ("contrast", Some(matches)) => Box::new(Contrast::parse(matches, state)?),
             ("textcolor", Some(matches)) => Box::new(TextColor::parse(matches, state)?),
             ("mix", Some(matches)) => Box::new(Mix::parse(matches, state)?),
+            ("gradient", Some(matches)) => Box::new(Gradient::parse(matches, state)?),
             (c, _) => bail!("Unknown subcommand {:?}", c),
         };
 

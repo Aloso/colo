@@ -169,9 +169,14 @@ impl Cmd for Mix {
             )?;
         let color = Color::new_unchecked(self.color_space, &components);
 
-        terminal::list_small(state, "Colors", self.colors.iter().map(|&(c, ..)| c))?;
-
         if state.color {
+            terminal::list_small(
+                state,
+                Some("Colors"),
+                self.colors.iter().map(|&(a, b, _)| (a, b)),
+                6,
+            )?;
+
             let weights =
                 self.colors
                     .iter()

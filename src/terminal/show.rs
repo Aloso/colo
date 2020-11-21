@@ -1,4 +1,4 @@
-use anyhow::{Context, Result};
+use anyhow::Result;
 use color_space::ToRgb;
 use colored::{ColoredString, Colorize};
 use std::io::{stdout, Stdout, Write};
@@ -47,10 +47,7 @@ fn show_color(
     };
 
     if !state.color {
-        let color = output
-            .format(color)
-            .or_else(|| ColorFormat::Hex.format(color))
-            .with_context(|| format!("Color could not be formatted as {:?}", output))?;
+        let color = output.format_or_hex(color);
 
         writeln!(stdout, "{}", color)?;
     } else if square_size >= 1 {

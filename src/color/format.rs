@@ -82,6 +82,11 @@ impl ColorFormat {
             }
         })
     }
+
+    pub fn format_or_hex(&self, color: Color) -> String {
+        self.format(color)
+            .unwrap_or_else(|| ColorFormat::Hex.format(color).unwrap())
+    }
 }
 
 /// Round to 1 decimal digit

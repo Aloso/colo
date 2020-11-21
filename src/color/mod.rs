@@ -154,6 +154,20 @@ impl Color {
         }
     }
 
+    pub fn mix_with(&self, other: Color, color_space: ColorSpace, ratio: f64) -> Color {
+        let (_, items1) = self.to_color_space(color_space).divide();
+        let (_, items2) = other.to_color_space(color_space).divide();
+
+        let items = items1
+            .into_iter()
+            .map(|v| v * ratio)
+            .zip(items2.into_iter().map(|v| v * (1.0 - ratio)))
+            .map(|(a, b)| a + b)
+            .collect::<Vec<_>>();
+
+        Color::new_unchecked(color_space, &items)
+    }
+
     /// The relative brightness of any point in a colorspace,
     /// normalized to 0 for darkest black and 1 for lightest white
     pub fn relative_luminance(&self) -> f64 {
