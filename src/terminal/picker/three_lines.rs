@@ -288,12 +288,7 @@ impl InputLine {
             round10(v).to_string()
         }
         fn from_str(s: &str) -> Option<f64> {
-            let s = if s.ends_with('.') {
-                &s[..s.len() - 1]
-            } else {
-                s
-            };
-            s.parse::<f64>().ok()
+            s.strip_suffix('.').unwrap_or(s).parse::<f64>().ok()
         }
 
         Self {
@@ -328,12 +323,11 @@ impl InputLine {
             format!("{}%", round10(v * 100.0))
         }
         fn from_str(s: &str) -> Option<f64> {
-            let s = if s.ends_with('.') {
-                &s[..s.len() - 1]
-            } else {
-                s
-            };
-            s.parse::<f64>().map(|n| n / 100.0).ok()
+            s.strip_suffix('.')
+                .unwrap_or(s)
+                .parse::<f64>()
+                .map(|n| n / 100.0)
+                .ok()
         }
 
         self.step = 0.01;
