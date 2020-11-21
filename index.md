@@ -91,6 +91,25 @@ hsl(16, 100%, 50%)
 <span class="h-shell">&gt; </span><span class="h-caret"> </span>
 </pre>
 
+## Mix colors and create gradients
+
+Colors can be mixed in various color spaces. The default color space is `lab`, because it is designed to approximate human vision.
+
+<pre class="h-terminal">
+<span class="h-shell">&gt; </span><span class="h-cmd">colo</span> <span class="h-hl">mix</span> <span class="h-arg">orange</span> <span class="h-arg">blue</span> <span class="h-flag">-w</span> <span class="h-arg">2,3</span>
+Colors: <span style='background:#ffa500'>   </span><span style='background:#0000ff'>   </span>
+Weights: 2, 3
+
+<span style='color:#b749af'> ████████</span>  <b>#b749af</b>                    <span style='opacity:0.67'>rgb(182.9, 72.9, 174.5)  </span>
+<span style='color:#b749af'> ████████</span>  <span style='opacity:0.67'>hsl(-55.4, 43.3%, 50.2%) </span>  <span style='opacity:0.67'>hsv(304.6, 60.1%, 71.7%) </span>
+<span style='color:#b749af'> ████████</span>  <span style='opacity:0.67'>cmy(28.3%, 71.4%, 31.6%) </span>  <span style='opacity:0.67'>cmyk(0%, 0%, 0%, 28.3%)  </span>
+<span style='color:#b749af'> ████████</span>  <span style='opacity:0.67'>lch(49.4, 66, 329.9)     </span>  <span style='opacity:0.67'>luv(49.4, 51.9, -57.2)   </span>
+
+<span class="h-shell">&gt; </span><span class="h-cmd">colo</span> <span class="h-hl">gradient</span> <span class="h-arg">orange</span> <span class="h-arg">blue</span>
+<span style='background:#0000ff'> </span><span style='background:#2302fc'> </span><span style='background:#3305fa'> </span><span style='background:#3f08f7'> </span><span style='background:#490bf5'> </span><span style='background:#510ef2'> </span><span style='background:#5911f0'> </span><span style='background:#5f14ed'> </span><span style='background:#6516eb'> </span><span style='background:#6b19e8'> </span><span style='background:#701be5'> </span><span style='background:#751de3'> </span><span style='background:#7a20e0'> </span><span style='background:#7e22de'> </span><span style='background:#8224db'> </span><span style='background:#8626d9'> </span><span style='background:#8a29d6'> </span><span style='background:#8e2bd4'> </span><span style='background:#912dd1'> </span><span style='background:#942fcf'> </span><span style='background:#9831cc'> </span><span style='background:#9b33c9'> </span><span style='background:#9e35c7'> </span><span style='background:#a137c4'> </span><span style='background:#a43ac2'> </span><span style='background:#a63cbf'> </span><span style='background:#a93ebd'> </span><span style='background:#ac40ba'> </span><span style='background:#ae42b8'> </span><span style='background:#b144b5'> </span><span style='background:#b346b3'> </span><span style='background:#b648b0'> </span><span style='background:#b84aae'> </span><span style='background:#ba4cab'> </span><span style='background:#bc4ea8'> </span><span style='background:#be50a6'> </span><span style='background:#c052a3'> </span><span style='background:#c354a1'> </span><span style='background:#c5569e'> </span><span style='background:#c6589c'> </span><span style='background:#c85a99'> </span><span style='background:#ca5b96'> </span><span style='background:#cc5d94'> </span><span style='background:#ce5f91'> </span><span style='background:#d0618f'> </span><span style='background:#d1638c'> </span><span style='background:#d36589'> </span><span style='background:#d56787'> </span><span style='background:#d76984'> </span><span style='background:#d86b81'> </span><span style='background:#da6d7f'> </span><span style='background:#db6f7c'> </span><span style='background:#dd7179'> </span><span style='background:#de7376'> </span><span style='background:#e07574'> </span><span style='background:#e17771'> </span><span style='background:#e3796e'> </span><span style='background:#e47b6b'> </span><span style='background:#e67d68'> </span><span style='background:#e77e65'> </span><span style='background:#e88062'> </span><span style='background:#ea825f'> </span><span style='background:#eb845c'> </span><span style='background:#ec8659'> </span><span style='background:#ee8856'> </span><span style='background:#ef8a52'> </span><span style='background:#f08c4f'> </span><span style='background:#f18e4b'> </span><span style='background:#f39048'> </span><span style='background:#f49244'> </span><span style='background:#f59440'> </span><span style='background:#f6963c'> </span><span style='background:#f79838'> </span><span style='background:#f89933'> </span><span style='background:#fa9b2e'> </span><span style='background:#fb9d28'> </span><span style='background:#fc9f22'> </span><span style='background:#fda11a'> </span><span style='background:#fea310'> </span><span style='background:#ffa500'> </span>
+<span class="h-shell">&gt; </span><span class="h-caret"> </span>
+</pre>
+
 ## Print colored text
 
 `colo print <TEXT> <COLORS>...` prints text with certain colors applied. There are also flags to make the text bold (`-b`), italic (`-i`) or underlined (`-u`), and a flag to continue printing in the same line (`-n`):
