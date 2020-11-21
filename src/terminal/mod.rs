@@ -8,9 +8,15 @@ mod textcolor;
 
 use anyhow::Result;
 use colored::{ColoredString, Colorize};
-use std::io::{self, Write};
+use std::{
+    io::{self, Write},
+    iter,
+};
 
-use crate::{color::Color, State};
+use crate::{
+    color::{Color, ColorFormat},
+    State,
+};
 
 pub(crate) use list::list;
 pub(crate) use picker::ColorPicker;
@@ -50,5 +56,46 @@ pub(crate) fn compare_colors(
         writeln!(stdout, "{}", line1)?;
     }
 
+    Ok(())
+}
+
+pub(crate) fn list_small(
+    state: State,
+    title: Option<&str>,
+    colors: impl IntoIterator<Item = (Color, ColorFormat)>,
+    color_width: usize,
+) -> Result<()> {
+    let mut stdout = io::stdout();
+
+    if state.color {
+        let colors = colors.into_iter().map(|(color, _)| color);
+
+        if let Some(title) = title {
+            write!(stdout, "{}: ", title)?;
+        }
+        if color_width >= 2 {
+            let s: String = iter::once(' ').cycle().take(color_width / 2).collect();
+            for c in colors {
+                write!(stdout, "{}", s.on_color(c.to_term_color()))?;
+            }
+        } else {
+            let mut it = colors.peekable();
+
+            while let Some(c1) = it.next() {
+                let s = "▌".color(c1.to_term_color());
+                if let Some(&c2) = it.peek() {
+                    write!(stdout, "{}", s.on_color(c2.to_term_color()))?;
+                    it.next().unwrap();
+                } else {
+                    write!(stdout, "{}", s)?;
+                }
+            }
+        }
+        writeln!(stdout)?;
+    } else {
+        for (color, format) in colors {
+            writeln!(stdout, "{}", format.format_or_hex(color))?;
+        }
+    }
     Ok(())
 }

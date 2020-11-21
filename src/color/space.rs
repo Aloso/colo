@@ -1,31 +1,7 @@
 use std::{fmt, str::FromStr};
 
+pub use super::gray::Gray;
 pub use color_space::{Cmy, Cmyk, Hsl, Hsv, HunterLab, Lab, Lch, Luv, Rgb, Xyz, Yxy};
-use color_space::{FromRgb, ToRgb};
-
-#[derive(Debug, Copy, Clone, PartialEq)]
-pub struct Gray {
-    pub l: f64,
-}
-
-impl Gray {
-    pub fn new(l: f64) -> Self {
-        Self { l }
-    }
-}
-
-impl ToRgb for Gray {
-    fn to_rgb(&self) -> Rgb {
-        Hsl::new(0.0, 0.0, self.l).into()
-    }
-}
-
-impl FromRgb for Gray {
-    fn from_rgb(rgb: &Rgb) -> Self {
-        let hsl = Hsl::from_rgb(rgb);
-        Self { l: hsl.l }
-    }
-}
 
 /// A C-like enum listing all supported color spaces
 #[derive(Debug, Copy, Clone, Eq, PartialEq)]

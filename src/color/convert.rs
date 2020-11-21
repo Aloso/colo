@@ -35,6 +35,34 @@ impl TryFrom<(ColorSpace, &[f64])> for Color {
     }
 }
 
+pub(crate) fn color_from_components_unchecked(space: ColorSpace, vals: &[f64]) -> Color {
+    let required_args = space.num_components();
+
+    if vals.len() != required_args {
+        Err::<(), _>(ParseError::NumberOfComponents {
+            expected: required_args,
+            got: vals.len(),
+        })
+        .unwrap();
+    }
+
+    // Create the color and check if the values are in the valid range
+    match space {
+        ColorSpace::Rgb => Color::Rgb(Rgb::new(vals[0], vals[1], vals[2])),
+        ColorSpace::Cmy => Color::Cmy(Cmy::new(vals[0], vals[1], vals[2])),
+        ColorSpace::Cmyk => Color::Cmyk(Cmyk::new(vals[0], vals[1], vals[2], vals[3])),
+        ColorSpace::Hsv => Color::Hsv(Hsv::new(vals[0], vals[1], vals[2])),
+        ColorSpace::Hsl => Color::Hsl(Hsl::new(vals[0], vals[1], vals[2])),
+        ColorSpace::Lch => Color::Lch(Lch::new(vals[0], vals[1], vals[2])),
+        ColorSpace::Luv => Color::Luv(Luv::new(vals[0], vals[1], vals[2])),
+        ColorSpace::Lab => Color::Lab(Lab::new(vals[0], vals[1], vals[2])),
+        ColorSpace::HunterLab => Color::HunterLab(HunterLab::new(vals[0], vals[1], vals[2])),
+        ColorSpace::Xyz => Color::Xyz(Xyz::new(vals[0], vals[1], vals[2])),
+        ColorSpace::Yxy => Color::Yxy(Yxy::new(vals[0], vals[1], vals[2])),
+        ColorSpace::Gray => Color::Gray(Gray::new(vals[0])),
+    }
+}
+
 /// Implements `TryFrom<$ty>` for `Color`. The conversion fails if any
 /// color component isn't in the valid range.
 macro_rules! try_from_color {
@@ -69,19 +97,19 @@ try_from_color! { Cmyk ->
     k: 0.0 to 1.0;
 }
 try_from_color! { Hsv ->
-    h: 0.0 to 360.0;
+    h: -360.0 to 360.0;
     s: 0.0 to 1.0;
     v: 0.0 to 1.0;
 }
 try_from_color! { Hsl ->
-    h: 0.0 to 360.0;
+    h: -360.0 to 360.0;
     s: 0.0 to 1.0;
     l: 0.0 to 1.0;
 }
 try_from_color! { Lch ->
     l: 0.0 to 100.0;
     c: 0.0 to 100.0;
-    h: 0.0 to 360.0;
+    h: -360.0 to 360.0;
 }
 try_from_color! { Luv ->
     l: 0.0 to 100.0;
@@ -120,3 +148,39 @@ fn min_max(component: &'static str, min: f64, max: f64, got: f64) -> Result<(), 
         Ok(())
     }
 }
+
+macro_rules! from_color_for {
+    ($t:ty) => {
+        impl From<Color> for $t {
+            fn from(c: Color) -> Self {
+                match c {
+                    Color::Rgb(c) => c.into(),
+                    Color::Cmy(c) => c.into(),
+                    Color::Cmyk(c) => c.into(),
+                    Color::Hsv(c) => c.into(),
+                    Color::Hsl(c) => c.into(),
+                    Color::Lch(c) => c.into(),
+                    Color::Luv(c) => c.into(),
+                    Color::Lab(c) => c.into(),
+                    Color::HunterLab(c) => c.into(),
+                    Color::Xyz(c) => c.into(),
+                    Color::Yxy(c) => c.into(),
+                    Color::Gray(c) => c.into(),
+                }
+            }
+        }
+    };
+}
+
+from_color_for!(Rgb);
+from_color_for!(Cmy);
+from_color_for!(Cmyk);
+from_color_for!(Hsv);
+from_color_for!(Hsl);
+from_color_for!(Lch);
+from_color_for!(Luv);
+from_color_for!(Lab);
+from_color_for!(HunterLab);
+from_color_for!(Xyz);
+from_color_for!(Yxy);
+from_color_for!(Gray);

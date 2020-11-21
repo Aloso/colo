@@ -11,6 +11,7 @@ pub(crate) use space::ColorSpace;
 
 mod contrast;
 mod convert;
+mod gray;
 mod parse;
 
 pub mod format;
@@ -39,6 +40,10 @@ impl Color {
     /// Constructs a color from the color space and the color components.
     pub fn new(color_space: ColorSpace, components: &[f64]) -> Result<Self, ParseError> {
         std::convert::TryFrom::try_from((color_space, components))
+    }
+
+    pub fn new_unchecked(color_space: ColorSpace, components: &[f64]) -> Self {
+        convert::color_from_components_unchecked(color_space, components)
     }
 
     /// Return the color space, without the color components
@@ -89,10 +94,10 @@ impl Color {
         if current_space == color_space {
             return *self;
         }
-        let rgb = self.to_rgb();
+        let &color = self;
         match color_space {
-            ColorSpace::Rgb => Color::Rgb(rgb),
-            ColorSpace::Cmy => Color::Cmy(Cmy::from_rgb(&rgb)),
+            ColorSpace::Rgb => Color::Rgb(color.into()),
+            ColorSpace::Cmy => Color::Cmy(color.into()),
             ColorSpace::Cmyk => {
                 /// TODO: Use `Cmyk::from_rgb` from the color_space crate, as
                 /// soon as that function works correctly
@@ -109,18 +114,20 @@ impl Color {
                         ),
                     }
                 }
-
-                Color::Cmyk(cmyk_from_rgb(&rgb))
+                match color {
+                    Color::Rgb(rgb) => Color::Cmyk(cmyk_from_rgb(&rgb)),
+                    _ => Color::Cmyk(color.into()),
+                }
             }
-            ColorSpace::Hsv => Color::Hsv(Hsv::from_rgb(&rgb)),
-            ColorSpace::Hsl => Color::Hsl(Hsl::from_rgb(&rgb)),
-            ColorSpace::Lch => Color::Lch(Lch::from_rgb(&rgb)),
-            ColorSpace::Luv => Color::Luv(Luv::from_rgb(&rgb)),
-            ColorSpace::Lab => Color::Lab(Lab::from_rgb(&rgb)),
-            ColorSpace::HunterLab => Color::HunterLab(HunterLab::from_rgb(&rgb)),
-            ColorSpace::Xyz => Color::Xyz(Xyz::from_rgb(&rgb)),
-            ColorSpace::Yxy => Color::Yxy(Yxy::from_rgb(&rgb)),
-            ColorSpace::Gray => Color::Gray(Gray::from_rgb(&rgb)),
+            ColorSpace::Hsv => Color::Hsv(color.into()),
+            ColorSpace::Hsl => Color::Hsl(color.into()),
+            ColorSpace::Lch => Color::Lch(color.into()),
+            ColorSpace::Luv => Color::Luv(color.into()),
+            ColorSpace::Lab => Color::Lab(color.into()),
+            ColorSpace::HunterLab => Color::HunterLab(color.into()),
+            ColorSpace::Xyz => Color::Xyz(color.into()),
+            ColorSpace::Yxy => Color::Yxy(color.into()),
+            ColorSpace::Gray => Color::Gray(color.into()),
         }
     }
 
@@ -141,10 +148,24 @@ impl Color {
         let black_contrast = contrast(lum, 0.0);
 
         if white_contrast >= black_contrast {
-            TextColor::Black
-        } else {
             TextColor::White
+        } else {
+            TextColor::Black
         }
+    }
+
+    pub fn mix_with(&self, other: Color, color_space: ColorSpace, ratio: f64) -> Color {
+        let (_, items1) = self.to_color_space(color_space).divide();
+        let (_, items2) = other.to_color_space(color_space).divide();
+
+        let items = items1
+            .into_iter()
+            .map(|v| v * ratio)
+            .zip(items2.into_iter().map(|v| v * (1.0 - ratio)))
+            .map(|(a, b)| a + b)
+            .collect::<Vec<_>>();
+
+        Color::new_unchecked(color_space, &items)
     }
 
     /// The relative brightness of any point in a colorspace,
