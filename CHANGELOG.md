@@ -4,6 +4,39 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4] - 2020-11-21
+
+This release brings many new features, including a terminal color picker and commands for mixing colors and generating gradients.
+
+### Added
+
+- [`#43`](https://github.com/Aloso/colo/pull/43): Add color picker. Pick a color with `colo pick`. You can select a color with the arrow keys, or by entering the numbers manually. You can switch between different color pickers with <kbd>Tab</kbd>. Currently supported color pickers are
+    - HSL (hue, saturation, light)
+    - HSV (hue, saturation, value)
+    - RGB (red, green, blue)
+    - CMY (cyan, magenta, yellow)
+
+- [`#45`](https://github.com/Aloso/colo/pull/45): Allow `-` and `pick` everywhere. Wherever you're supposed to enter a color, you can now enter `-` to read the color from stdin, or `pick` to select the color in the color picker. For example:
+
+    ```bash
+    colo s orange - pick rand
+    # first color: orange
+    # second color: read from stdin
+    # third color: selected in the color picker
+    # fourth color: randomly generated
+    ```
+
+- [`#45`](https://github.com/Aloso/colo/pull/45): Add `gry` (grayscale) color space. This color space can't represent color hue and saturation, but it's useful to convert a color to grayscale.
+
+- [`#46`](https://github.com/Aloso/colo/pull/46): Add `mix` command. This command mixes two (or more) colors in a given color space (defaults to `lab`). Each color is assigned a _weight_ to control the ratio in which the colors are mixed:
+
+    ```bash
+    colo mix orange blue purple    # ratio 1:1:1
+    colo mix orange blue -w 1,2,3  # ratio 1:2:3
+    ```
+
+- [`#46`](https://github.com/Aloso/colo/pull/46): Add `gradient` command. This command generates a gradient between two colors in a given color space (defaults to `lab`). Usually the gradient is displayed in the terminal; if the command is piped to another program, a list of colors is printed.
+
 ## [0.3.3] - 2020-11-15
 
 ### Bug fixes
