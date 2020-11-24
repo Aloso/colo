@@ -53,7 +53,7 @@ Pick a color by entering `colo pick`, and then setting the desired values with t
 The `pick` keyword can also be used in different context to select a color with the color picker. `-` can be used to read a color from stdin, e.g.
 
 <pre class="h-terminal">
-<span class="h-shell">&gt; </span><span class="h-cmd">colo</span> <span class="h-arg">s</span> <span class="h-flag">-</span> <span class="h-arg">pick</span> <span class="h-flag">--size</span><span class="h-arg">=0</span>
+<span class="h-shell">&gt; </span><span class="h-cmd">colo</span> <span class="h-hl">s</span> <span class="h-flag">-</span> <span class="h-arg">pick</span> <span class="h-flag">--size</span><span class="h-arg">=0</span>
 Enter color: 147
 
  <span style="background-color:#FFAA00">        </span>  HSL
