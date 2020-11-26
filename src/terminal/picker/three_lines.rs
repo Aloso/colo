@@ -1,5 +1,5 @@
 use anyhow::Result;
-use colored::Colorize;
+use colored::{Color as TermColor, Colorize};
 use console::{Key, Term};
 use std::{fmt, io, io::Write};
 
@@ -13,6 +13,7 @@ pub struct ThreeLines {
     typing: Option<String>,
     from_color: fn(Color) -> Vec<f64>,
     to_color: fn(&[f64]) -> Color,
+    expanded: bool,
 }
 
 impl ThreeLines {
@@ -30,6 +31,7 @@ impl ThreeLines {
             typing: None,
             from_color,
             to_color,
+            expanded: false,
         }
     }
 
@@ -92,7 +94,9 @@ impl ThreeLines {
     }
 
     pub fn type_char(&mut self, c: char) {
-        if let Some(mut s) = self.typing.take() {
+        if c == 's' {
+            self.expanded = !self.expanded;
+        } else if let Some(mut s) = self.typing.take() {
             s.push(c);
             if let Some(v) = (self.current().from_str)(&s) {
                 self.typing = Some(s);
@@ -127,6 +131,12 @@ impl ThreeLines {
     }
 
     pub fn print(&self, color: Color, mut term: &Term) -> Result<()> {
+        const GRAY: TermColor = TermColor::TrueColor {
+            r: 127,
+            g: 127,
+            b: 127,
+        };
+
         let color = color.to_term_color();
         let (_, term_width) = term.size();
         let term_width = (term_width.min(100) - 24) as u8;
@@ -134,119 +144,156 @@ impl ThreeLines {
         writeln!(buf)?;
 
         write!(buf, " {}  ", "        ".on_color(color))?;
-        write!(buf, "{}", self.name,)?;
-        if term_width > 60 {
-            writeln!(
-                buf,
-                "    {}",
-                "(you can Tab ↹ through the color spaces)".italic().dimmed()
-            )?;
+        writeln!(buf, "{}", self.name)?;
+
+        if !self.expanded {
+            for (i, current) in self.components.iter().enumerate() {
+                let is_current = i == self.current;
+                self.print_gradient_line(&mut buf, color, i, current, is_current, term_width)?;
+            }
         } else {
-            writeln!(buf)?;
-        }
+            let is_last = self.current == self.len() - 1;
+            let iter = self
+                .components
+                .iter()
+                .enumerate()
+                .skip(if is_last { 1 } else { 0 })
+                .chain(
+                    self.components
+                        .first()
+                        .filter(|_| is_last)
+                        .into_iter()
+                        .enumerate(),
+                );
 
-        for (i, current) in self.components.iter().enumerate() {
-            write!(buf, " {}", "        ".on_color(color))?;
+            let mut last_current = None;
+            for (i, current) in iter {
+                if i == self.current {
+                    last_current = Some(current);
+                } else if let Some(prev) = last_current {
+                    let (min_h, max_h) = prev.bounds.unwrap();
+                    let (min_v, max_v) = current.bounds.unwrap();
+                    last_current = None;
 
-            let mut name = current.name.bold();
-            if let Some(color) = current.color {
-                name = name.color(color);
-            }
-            write!(buf, "  {}", name)?;
-            write!(buf, "  {} ", FmtValue::new(current, i == self.current, 6))?;
+                    let v_highlight = ((current.value - min_v) * 29.0 / (max_v - min_v)) as u32;
 
-            if let Some((min, max)) = current.bounds {
-                let dw = (term_width * 2) as f64;
-
-                let highlighted = (current.value * dw / (max - min)) as u8;
-                let highlighted = highlighted.max(0).min(dw as u8 - 1);
-
-                let mut left_color = self.values();
-                left_color[i] = min;
-                let left_color = (self.to_color)(&left_color);
-                write!(buf, "{}", "▕".color(left_color.to_term_color()))?;
-
-                for j in 0..term_width {
-                    let v1 = max * ((2 * j) as f64 / dw);
-                    let v2 = max * ((2 * j + 1) as f64 / dw);
-
-                    let mut vals1 = self.values();
-                    let mut vals2 = vals1.clone();
-                    vals1[i] = v1;
-                    vals2[i] = v2;
-                    let c1 = (self.to_color)(&vals1);
-                    let c2 = (self.to_color)(&vals2);
-                    let tc1 = c1.to_term_color();
-                    let tc2 = c2.to_term_color();
-
-                    if j == highlighted / 2 {
-                        let t = match c1.text_color() {
-                            TextColor::Black => colored::Color::Black,
-                            TextColor::White => colored::Color::BrightWhite,
-                        };
-                        if highlighted % 2 == 0 {
-                            write_gradient_char(&mut buf, t, tc2)?;
+                    for j in 0..15 {
+                        write!(buf, " {}", "        ".on_color(color))?;
+                        if j < 2 {
+                            let input = if j == 0 { prev } else { current };
+                            let mut name = input.name.bold();
+                            if let Some(color) = input.color {
+                                name = name.color(color);
+                            }
+                            write!(buf, "  {}", name)?;
+                            write!(buf, "  {}  ", FmtValue::new(input, true, 6))?;
                         } else {
-                            write_gradient_char(&mut buf, tc1, t)?;
+                            write!(buf, "             ")?;
                         }
-                    } else {
-                        write_gradient_char(&mut buf, tc1, tc2)?;
+
+                        let values = self.values();
+                        let v_value = min_v + (max_v - min_v) * j as f64 / 15.0;
+
+                        RectGradientLine {
+                            values,
+                            to_color: self.to_color,
+                            comp: ((i + self.len() - 1) % self.len(), i),
+                            v_values: (v_value, v_value + (max_v - min_v) / 30.0),
+                            bounds: (min_h, max_h),
+                            highlight: Some(v_highlight % 2 == 0).filter(|_| j == v_highlight / 2),
+                        }
+                        .write(&mut buf, term_width)?;
+                        writeln!(buf)?;
                     }
+                } else {
+                    self.print_gradient_line(&mut buf, color, i, current, false, term_width)?;
                 }
-                let mut right_color = self.values();
-                right_color[i] = max;
-                let right_color = (self.to_color)(&right_color);
-                write!(buf, "{}", "▏".color(right_color.to_term_color()))?;
             }
-            writeln!(buf)?;
         }
 
-        fn write_gradient_char(
-            mut buf: impl Write,
-            c1: colored::Color,
-            c2: colored::Color,
-        ) -> io::Result<()> {
-            if c1 == c2 {
-                write!(buf, "{}", "█".color(c1))
-            } else {
-                write!(buf, "{}", "▌".color(c1).on_color(c2))
-            }
-        }
+        writeln!(buf, "<S>      {}", "Toggle mode".color(GRAY))?;
+        writeln!(buf, "<Tab ↹>  {}", "Toggle color space".color(GRAY))?;
 
         term.write_all(&buf)?;
         Ok(())
     }
 
+    fn print_gradient_line(
+        &self,
+        mut buf: impl Write,
+        color: TermColor,
+        i: usize,
+        current: &InputLine,
+        is_current: bool,
+        term_width: u8,
+    ) -> io::Result<()> {
+        write!(buf, " {}", "        ".on_color(color))?;
+
+        let mut name = current.name.bold();
+        if let Some(color) = current.color {
+            name = name.color(color);
+        }
+        write!(buf, "  {}", name)?;
+        write!(buf, "  {} ", FmtValue::new(current, is_current, 6))?;
+
+        if let Some(bounds) = current.bounds {
+            Gradient {
+                values: self.values(),
+                component: i,
+                bounds,
+                to_color: self.to_color,
+            }
+            .write(&mut buf, term_width)?;
+        }
+        writeln!(buf)?;
+
+        Ok(())
+    }
+
     pub fn reset_term(&self, term: &Term) -> Result<()> {
-        term.move_cursor_up(1)?;
-        term.clear_line()?;
-        term.move_cursor_up(1)?;
-        term.clear_line()?;
-        term.move_cursor_up(1)?;
-        term.clear_line()?;
-        term.move_cursor_up(1)?;
-        term.clear_line()?;
-        term.move_cursor_up(1)?;
-        term.clear_line()?;
+        let lines = if self.expanded { 20 } else { 7 };
+        for _ in 0..lines {
+            term.move_cursor_up(1)?;
+            term.clear_line()?;
+        }
         Ok(())
     }
 
     pub fn enter_key(&mut self, key: Key) {
-        match key {
-            Key::ArrowUp => self.dec_current(),
-            Key::ArrowDown => self.inc_current(),
-            Key::ArrowRight => self.inc(),
-            Key::ArrowLeft => self.dec(),
-            Key::Backspace => self.backspace(),
-            Key::Del => self.reset(),
-            Key::Home => self.set_current(0),
-            Key::End => self.set_current(self.len() - 1),
-            Key::PageUp => self.set_max(),
-            Key::PageDown => self.set_min(),
-            Key::Char(c) => self.type_char(c),
-            Key::Enter | Key::Escape | Key::Tab | Key::BackTab => {}
-            Key::Insert | Key::Unknown | Key::UnknownEscSeq(_) => {}
-            _ => {}
+        if self.expanded {
+            match key {
+                Key::ArrowUp => self.next_mut().dec(),
+                Key::ArrowDown => self.next_mut().inc(),
+                Key::ArrowRight => self.inc(),
+                Key::ArrowLeft => self.dec(),
+                Key::Backspace => self.backspace(),
+                Key::Del => self.reset(),
+                Key::Home => self.set_current(0),
+                Key::End => self.set_current(self.len() - 1),
+                Key::PageUp => self.set_max(),
+                Key::PageDown => self.set_min(),
+                Key::Char(c) => self.type_char(c),
+                Key::Enter | Key::Escape | Key::Tab | Key::BackTab => {}
+                Key::Insert | Key::Unknown | Key::UnknownEscSeq(_) => {}
+                _ => {}
+            }
+        } else {
+            match key {
+                Key::ArrowUp => self.dec_current(),
+                Key::ArrowDown => self.inc_current(),
+                Key::ArrowRight => self.inc(),
+                Key::ArrowLeft => self.dec(),
+                Key::Backspace => self.backspace(),
+                Key::Del => self.reset(),
+                Key::Home => self.set_current(0),
+                Key::End => self.set_current(self.len() - 1),
+                Key::PageUp => self.set_max(),
+                Key::PageDown => self.set_min(),
+                Key::Char(c) => self.type_char(c),
+                Key::Enter | Key::Escape | Key::Tab | Key::BackTab => {}
+                Key::Insert | Key::Unknown | Key::UnknownEscSeq(_) => {}
+                _ => {}
+            }
         }
     }
 
@@ -268,6 +315,134 @@ impl ThreeLines {
     fn current_mut(&mut self) -> &mut InputLine {
         &mut self.components[self.current]
     }
+
+    fn next_mut(&mut self) -> &mut InputLine {
+        let len = self.len();
+        &mut self.components[(self.current + 1) % len]
+    }
+}
+
+struct Gradient {
+    values: Vec<f64>,
+    component: usize,
+    bounds: (f64, f64),
+    to_color: fn(&[f64]) -> Color,
+}
+
+impl Gradient {
+    fn write(&mut self, mut buf: impl Write, term_width: u8) -> io::Result<()> {
+        let values = self.values.as_mut_slice();
+        let comp = self.component;
+        let (min, max) = self.bounds;
+
+        let dw = (term_width * 2 - 1) as f64;
+        let highlighted = (values[comp] - min) * dw;
+        let highlighted = (highlighted / (max - min)) as u8;
+
+        values[comp] = min;
+        let left_color = (self.to_color)(&values);
+        write!(buf, "{}", "▕".color(left_color.to_term_color()))?;
+
+        for i in 0..term_width {
+            let v1 = min + (max - min) * ((2 * i) as f64 / dw);
+            let v2 = min + (max - min) * ((2 * i + 1) as f64 / dw);
+
+            values[comp] = v1;
+            let c1 = (self.to_color)(&values);
+            values[comp] = v2;
+            let c2 = (self.to_color)(&values);
+            let tc1 = c1.to_term_color();
+            let tc2 = c2.to_term_color();
+
+            if i == highlighted / 2 {
+                let t = match c1.text_color() {
+                    TextColor::Black => TermColor::Black,
+                    TextColor::White => TermColor::BrightWhite,
+                };
+                if highlighted % 2 == 0 {
+                    Self::write_char(&mut buf, t, tc2)?;
+                } else {
+                    Self::write_char(&mut buf, tc1, t)?;
+                }
+            } else {
+                Self::write_char(&mut buf, tc1, tc2)?;
+            }
+        }
+
+        values[comp] = max;
+        let right_color = (self.to_color)(&values);
+        write!(buf, "{}", "▏".color(right_color.to_term_color()))?;
+
+        Ok(())
+    }
+
+    fn write_char(mut buf: impl Write, c1: TermColor, c2: TermColor) -> io::Result<()> {
+        if c1 == c2 {
+            write!(buf, "{}", "█".color(c1))
+        } else {
+            write!(buf, "{}", "▌".color(c1).on_color(c2))
+        }
+    }
+}
+
+struct RectGradientLine {
+    values: Vec<f64>,
+    to_color: fn(&[f64]) -> Color,
+    comp: (usize, usize),
+    v_values: (f64, f64),
+    bounds: (f64, f64),
+    highlight: Option<bool>,
+}
+
+impl RectGradientLine {
+    fn write(&mut self, mut buf: impl Write, term_width: u8) -> io::Result<()> {
+        let values = self.values.as_mut_slice();
+        let (comp1, comp2) = self.comp;
+        let (v_value1, v_value2) = self.v_values;
+        let (min, max) = self.bounds;
+
+        let dw = (term_width - 1) as f64;
+        let highlight_h = (values[comp1] - min) * dw;
+        let highlight_h = (highlight_h / (max - min)) as u8;
+
+        for i in 0..term_width {
+            let h_value = min + (max - min) * (i as f64 / dw);
+
+            values[comp1] = h_value;
+            values[comp2] = v_value1;
+            let c1 = (self.to_color)(&values);
+            values[comp2] = v_value2;
+            let c2 = (self.to_color)(&values);
+            let tc1 = c1.to_term_color();
+            let tc2 = c2.to_term_color();
+
+            if highlight_h == i {
+                if let Some(first) = self.highlight {
+                    let t = match c1.text_color() {
+                        TextColor::Black => TermColor::Black,
+                        TextColor::White => TermColor::BrightWhite,
+                    };
+                    if first {
+                        Self::write_char(&mut buf, t, tc2)?;
+                    } else {
+                        Self::write_char(&mut buf, tc1, t)?;
+                    }
+                    continue;
+                }
+            }
+            Self::write_char(&mut buf, tc1, tc2)?;
+        }
+
+        Ok(())
+    }
+
+    fn write_char(mut buf: impl Write, c1: TermColor, c2: TermColor) -> io::Result<()> {
+        if c1 == c2 {
+            write!(buf, "{}", "█".color(c1))
+        } else {
+            write!(buf, "{}", "▀".color(c1).on_color(c2))
+        }
+    }
 }
 
 #[derive(Copy, Clone)]
@@ -276,7 +451,7 @@ pub struct InputLine {
     value: f64,
     bounds: Option<(f64, f64)>,
     initial: f64,
-    color: Option<colored::Color>,
+    color: Option<TermColor>,
     step: f64,
     to_string: fn(f64) -> String,
     from_str: fn(&str) -> Option<f64>,
@@ -305,17 +480,18 @@ impl InputLine {
 
     pub fn with_bounds(mut self, min: f64, max: f64) -> Self {
         assert!(min <= max);
+        assert!(min.is_finite() && max.is_finite());
         self.bounds = Some((min, max));
         self
     }
 
-    pub fn with_color(mut self, c: colored::Color) -> Self {
+    pub fn with_color(mut self, c: TermColor) -> Self {
         self.color = Some(c);
         self
     }
 
     pub fn with_color_rgb(self, r: u8, g: u8, b: u8) -> Self {
-        self.with_color(colored::Color::TrueColor { r, g, b })
+        self.with_color(TermColor::TrueColor { r, g, b })
     }
 
     pub fn as_percent(mut self) -> Self {

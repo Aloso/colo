@@ -41,7 +41,7 @@ impl Cmd for Pick {
                 Arg::with_name("color-space")
                     .index(1)
                     .takes_value(true)
-                    .possible_values(&["rgb", "hsl", "hsv", "cmy"])
+                    .possible_values(&["rgb", "hsl", "hsv", "lab", "cmy"])
                     .case_insensitive(true)
                     .help("Initial color space of the color picker"),
                 Arg::with_name("color")
@@ -113,6 +113,7 @@ fn get_color_space_option(matches: &ArgMatches<'_>) -> Option<ColorSpace> {
             "rgb" => ColorSpace::Rgb,
             "hsl" => ColorSpace::Hsl,
             "hsv" => ColorSpace::Hsv,
+            "lab" => ColorSpace::Lab,
             "cmy" => ColorSpace::Cmy,
             _ => panic!("Invalid color space {:?}", cs),
         })
