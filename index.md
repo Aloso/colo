@@ -66,6 +66,9 @@ Enter color: 147
 <span class="h-shell">&gt; </span><span class="h-caret"> </span>
 </pre>
 
+Press <kbd>S</kbd> to toggle the rectangle mode. This displays a rectangle with one slider as x-axis and another slider as y-axis:
+
+![rectangle color picker](./assets/img/0_4_1_rectangle.png)
 
 ## Support for pipes/redirects
 
