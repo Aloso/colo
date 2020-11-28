@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.1] - 2020-11-28
+
+This is a patch release with a few color picker improvements.
+
+- [`#46`](https://github.com/Aloso/colo/pull/49): This adds a CIELAB color picker. Open it with `colo pick lab`. It also adds rectangle color pickers. By pressing <kbd>S</kbd>, you can now toggle between 3 sliders and a rectangle + a slider:
+
+    ![sliders](https://aloso.github.io/colo/assets/img/0_4_1_sliders.png)
+    ![rectangle](https://aloso.github.io/colo/assets/img/0_4_1_rectangle.png)
+
+    Note that when pressing <kbd>S</kbd>, the currently selected slider will serve as the x-axis of the rectangle; the next slider becomes the y-axis. Select a slider with the <kbd>ArrowUp</kbd> and <kbd>ArrowDown</kbd> keys.
+
 ## [0.4] - 2020-11-21
 
 This release brings many new features, including a terminal color picker and commands for mixing colors and generating gradients.
