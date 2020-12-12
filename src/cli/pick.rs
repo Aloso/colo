@@ -59,7 +59,7 @@ impl Cmd for Pick {
             .value_of("size")
             .map(util::parse_size)
             .unwrap_or(Ok(4))?;
-        let output = util::get_color_format(&matches, "output-format")?.unwrap_or_default();
+        let output = util::get_color_format(&matches, "output-format")?;
 
         let (color, cs) = get_color_options(matches, state)?;
         let cs = get_color_space_option(matches).or(cs);

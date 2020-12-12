@@ -25,6 +25,7 @@ thiserror = "1"
 strsim = "0.10"
 fastrand = "1.4"
 console = "0.13"
+logos = "0.11"
 
 [dependencies.clap]
 version = "2"

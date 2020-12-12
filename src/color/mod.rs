@@ -87,6 +87,82 @@ impl Color {
         }
     }
 
+    pub fn get_component(&mut self, name: &str) -> Option<&mut f64> {
+        Some(match self {
+            Color::Rgb(n) => match name {
+                "r" => &mut n.r,
+                "g" => &mut n.g,
+                "b" => &mut n.b,
+                _ => return None,
+            },
+            Color::Cmy(n) => match name {
+                "c" => &mut n.c,
+                "m" => &mut n.m,
+                "y" => &mut n.y,
+                _ => return None,
+            },
+            Color::Cmyk(n) => match name {
+                "c" => &mut n.c,
+                "m" => &mut n.m,
+                "y" => &mut n.y,
+                "k" => &mut n.k,
+                _ => return None,
+            },
+            Color::Hsv(n) => match name {
+                "h" => &mut n.h,
+                "s" => &mut n.s,
+                "v" => &mut n.v,
+                _ => return None,
+            },
+            Color::Hsl(n) => match name {
+                "h" => &mut n.h,
+                "s" => &mut n.s,
+                "l" => &mut n.l,
+                _ => return None,
+            },
+            Color::Lch(n) => match name {
+                "l" => &mut n.l,
+                "c" => &mut n.c,
+                "h" => &mut n.h,
+                _ => return None,
+            },
+            Color::Luv(n) => match name {
+                "l" => &mut n.l,
+                "u" => &mut n.u,
+                "v" => &mut n.v,
+                _ => return None,
+            },
+            Color::Lab(n) => match name {
+                "l" => &mut n.l,
+                "a" => &mut n.a,
+                "b" => &mut n.b,
+                _ => return None,
+            },
+            Color::HunterLab(n) => match name {
+                "l" => &mut n.l,
+                "a" => &mut n.a,
+                "b" => &mut n.b,
+                _ => return None,
+            },
+            Color::Xyz(n) => match name {
+                "x" => &mut n.x,
+                "y" => &mut n.y,
+                "z" => &mut n.z,
+                _ => return None,
+            },
+            Color::Yxy(n) => match name {
+                "y1" => &mut n.y1,
+                "x" => &mut n.x,
+                "y2" => &mut n.y2,
+                _ => return None,
+            },
+            Color::Gray(n) => match name {
+                "l" => &mut n.l,
+                _ => return None,
+            },
+        })
+    }
+
     /// Converts the color to a different color space. It is in the same color
     /// space, this is a no-op.
     pub fn to_color_space(&self, color_space: ColorSpace) -> Self {

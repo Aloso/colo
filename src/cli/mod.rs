@@ -4,10 +4,12 @@ use clap::{App, AppSettings, Arg, ArgMatches};
 use crate::State;
 
 mod contrast;
+mod filter;
 mod gradient;
 mod libs;
 mod list;
 mod mix;
+mod parse;
 mod pick;
 mod print;
 mod show;
@@ -15,6 +17,7 @@ mod term;
 mod textcolor;
 
 pub(crate) use contrast::Contrast;
+pub(crate) use filter::Filter;
 pub(crate) use gradient::Gradient;
 pub(crate) use libs::Libs;
 pub(crate) use list::List;
@@ -104,6 +107,7 @@ impl Cmd for MainCmd {
             .author("Ludwig Stecher <ludwig.stecher@gmx.de>")
             .about("Manages colors in various color spaces.")
             .subcommand(Show::command(state))
+            .subcommand(Filter::command(state))
             .subcommand(Print::command(state))
             .subcommand(Pick::command(state))
             .subcommand(Term::command(state))
@@ -143,6 +147,7 @@ impl Cmd for MainCmd {
 
         let subcommand: Box<dyn Cmd> = match matches.subcommand() {
             ("show", Some(matches)) => Box::new(Show::parse(matches, state)?),
+            ("filter", Some(matches)) => Box::new(Filter::parse(matches, state)?),
             ("libs", Some(matches)) => Box::new(Libs::parse(matches, state)?),
             ("term", Some(matches)) => Box::new(Term::parse(matches, state)?),
             ("print", Some(matches)) => Box::new(Print::parse(matches, state)?),
