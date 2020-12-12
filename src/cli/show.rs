@@ -22,9 +22,10 @@ If colo is used behind a pipe or outside of a terminal, the colors can be provid
 $ echo orange blue FF7700 | colo show";
 
 /// The `show`/`s` subcommand
+#[derive(Debug, Clone)]
 pub struct Show {
     pub colors: Vec<(Color, ColorFormat)>,
-    pub output: ColorFormat,
+    pub output: Option<ColorFormat>,
     pub size: u32,
 }
 
@@ -76,17 +77,15 @@ impl Cmd for Show {
             colors = color::parse(&input, state)?;
         }
 
-        let output = util::get_color_format(&matches, "output-format")?
-            .or_else(|| {
-                if colors.is_empty() {
-                    None
-                } else if colors.windows(2).all(|c| c[0].1 == c[1].1) {
-                    Some(colors[0].1).filter(|&c| c != ColorFormat::Html)
-                } else {
-                    None
-                }
-            })
-            .unwrap_or_default();
+        let output = util::get_color_format(&matches, "output-format")?.or_else(|| {
+            if colors.is_empty() {
+                None
+            } else if colors.windows(2).all(|c| c[0].1 == c[1].1) {
+                Some(colors[0].1).filter(|&c| c != ColorFormat::Html)
+            } else {
+                None
+            }
+        });
 
         Ok(Show {
             colors,
@@ -99,7 +98,7 @@ impl Cmd for Show {
         terminal::show_colors(
             state,
             self.colors.iter().map(|&(c, _)| c),
-            self.output,
+            self.output.unwrap_or_default(),
             self.size,
         )
     }
