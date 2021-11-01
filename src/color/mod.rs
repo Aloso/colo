@@ -89,12 +89,12 @@ impl Color {
 
     /// Converts the color to a different color space. It is in the same color
     /// space, this is a no-op.
-    pub fn to_color_space(&self, color_space: ColorSpace) -> Self {
+    pub fn to_color_space(self, color_space: ColorSpace) -> Self {
         let current_space = self.get_color_space();
         if current_space == color_space {
-            return *self;
+            return self;
         }
-        let &color = self;
+        let color = self;
         match color_space {
             ColorSpace::Rgb => Color::Rgb(color.into()),
             ColorSpace::Cmy => Color::Cmy(color.into()),
@@ -131,7 +131,7 @@ impl Color {
         }
     }
 
-    pub fn to_term_color(&self) -> colored::Color {
+    pub fn to_term_color(self) -> colored::Color {
         let Rgb { r, g, b } = Self::clamp_rgb(self.to_rgb());
         colored::Color::TrueColor {
             r: r.round() as u8,

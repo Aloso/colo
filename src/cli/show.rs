@@ -76,7 +76,7 @@ impl Cmd for Show {
             colors = color::parse(&input, state)?;
         }
 
-        let output = util::get_color_format(&matches, "output-format")?
+        let output = util::get_color_format(matches, "output-format")?
             .or_else(|| {
                 if colors.is_empty() {
                     None
