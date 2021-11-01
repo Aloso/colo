@@ -1,6 +1,6 @@
 mod list;
 mod picker;
-mod print;
+mod printf;
 mod show;
 pub(crate) mod stdin;
 mod term;
@@ -20,7 +20,7 @@ use crate::{
 
 pub(crate) use list::list;
 pub(crate) use picker::ColorPicker;
-pub(crate) use print::print_text;
+pub(crate) use printf::print_text;
 pub(crate) use show::show_colors;
 pub(crate) use term::term_colors;
 pub(crate) use textcolor::text_colors;

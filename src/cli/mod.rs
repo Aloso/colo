@@ -9,7 +9,7 @@ mod libs;
 mod list;
 mod mix;
 mod pick;
-mod print;
+mod printf;
 mod show;
 mod term;
 mod textcolor;
@@ -20,7 +20,7 @@ pub(crate) use libs::Libs;
 pub(crate) use list::List;
 pub(crate) use mix::Mix;
 pub(crate) use pick::Pick;
-pub(crate) use print::{Print, TextStyle};
+pub(crate) use printf::Printf;
 pub(crate) use show::Show;
 pub(crate) use term::Term;
 pub(crate) use textcolor::TextColor;
@@ -104,7 +104,7 @@ impl Cmd for MainCmd {
             .author("Ludwig Stecher <ludwig.stecher@gmx.de>")
             .about("Manages colors in various color spaces.")
             .subcommand(Show::command(state))
-            .subcommand(Print::command(state))
+            .subcommand(Printf::command(state))
             .subcommand(Pick::command(state))
             .subcommand(Term::command(state))
             .subcommand(Contrast::command(state))
@@ -145,7 +145,7 @@ impl Cmd for MainCmd {
             ("show", Some(matches)) => Box::new(Show::parse(matches, state)?),
             ("libs", Some(matches)) => Box::new(Libs::parse(matches, state)?),
             ("term", Some(matches)) => Box::new(Term::parse(matches, state)?),
-            ("print", Some(matches)) => Box::new(Print::parse(matches, state)?),
+            ("printf", Some(matches)) => Box::new(Printf::parse(matches, state)?),
             ("pick", Some(matches)) => Box::new(Pick::parse(matches, state)?),
             ("list", Some(matches)) => Box::new(List::parse(matches, state)?),
             ("contrast", Some(matches)) => Box::new(Contrast::parse(matches, state)?),
