@@ -11,14 +11,14 @@ pub(super) fn get_color_format(
     matches: &ArgMatches,
     arg_name: &str,
 ) -> Result<Option<ColorFormat>> {
-    Ok(matches
+    matches
         .value_of(arg_name)
         .map(|v| match v.to_lowercase().as_str() {
             "html" => Ok::<_, Error>(ColorFormat::Html),
             "hex" => Ok(ColorFormat::Hex),
             s => Ok(ColorFormat::Normal(s.parse()?)),
         })
-        .transpose()?)
+        .transpose()
 }
 
 pub(super) fn values_to_colors<'a>(

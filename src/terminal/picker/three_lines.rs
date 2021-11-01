@@ -340,7 +340,7 @@ impl Gradient {
         let highlighted = (highlighted / (max - min)) as u8;
 
         values[comp] = min;
-        let left_color = (self.to_color)(&values);
+        let left_color = (self.to_color)(values);
         write!(buf, "{}", "▕".color(left_color.to_term_color()))?;
 
         for i in 0..term_width {
@@ -348,9 +348,9 @@ impl Gradient {
             let v2 = min + (max - min) * ((2 * i + 1) as f64 / dw);
 
             values[comp] = v1;
-            let c1 = (self.to_color)(&values);
+            let c1 = (self.to_color)(values);
             values[comp] = v2;
-            let c2 = (self.to_color)(&values);
+            let c2 = (self.to_color)(values);
             let tc1 = c1.to_term_color();
             let tc2 = c2.to_term_color();
 
@@ -370,7 +370,7 @@ impl Gradient {
         }
 
         values[comp] = max;
-        let right_color = (self.to_color)(&values);
+        let right_color = (self.to_color)(values);
         write!(buf, "{}", "▏".color(right_color.to_term_color()))?;
 
         Ok(())
@@ -410,9 +410,9 @@ impl RectGradientLine {
 
             values[comp1] = h_value;
             values[comp2] = v_value1;
-            let c1 = (self.to_color)(&values);
+            let c1 = (self.to_color)(values);
             values[comp2] = v_value2;
-            let c2 = (self.to_color)(&values);
+            let c2 = (self.to_color)(values);
             let tc1 = c1.to_term_color();
             let tc2 = c2.to_term_color();
 

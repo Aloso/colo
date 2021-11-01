@@ -101,7 +101,7 @@ impl Cmd for Gradient {
             bail!("You have to enter exactly 2 colors");
         }
 
-        let output = util::get_color_format(&matches, "output-format")?
+        let output = util::get_color_format(matches, "output-format")?
             .or_else(|| {
                 if colors.is_empty() {
                     None

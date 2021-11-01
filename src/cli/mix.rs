@@ -132,7 +132,7 @@ impl Cmd for Mix {
                 .chain(iter::once(1.0).cycle().map(Ok))
         }
 
-        let output = util::get_color_format(&matches, "output-format")?
+        let output = util::get_color_format(matches, "output-format")?
             .or_else(|| {
                 if colors.is_empty() {
                     None

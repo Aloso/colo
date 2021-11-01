@@ -67,7 +67,7 @@ pub(crate) fn print_text(mut text: &str, colors: &[(Color, ColorFormat)]) -> Res
             _ => unreachable!(),
         }
     }
-    buf.write(text.as_bytes()).unwrap();
+    buf.extend(text.as_bytes());
 
     stdout().write_all(&buf)?;
     Ok(())
